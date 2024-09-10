@@ -1,8 +1,14 @@
 {
     "player1": {
-        "last_name": "Raymond",
-        "first_name": "Debarbu",
-        "birthdate": "01/12/1992",
+        "last_name": "Damien",
+        "first_name": "Gey",
+        "birthdate": "01/12/1994",
+        "national_id": "0255"
+    },
+    "player2": {
+        "last_name": "Damien",
+        "first_name": "Gey",
+        "birthdate": "01/12/1994",
         "national_id": ""
     }
 }

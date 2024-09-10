@@ -43,7 +43,7 @@ class TournamentView:
     def ask_start_date(self):
         print("\n" + "=" * 50)
         print("0. Revenir au menu principal")
-        start_date = input("Date de début du tournoi (JJ/MM/AAAA) : ")
+        start_date = input("Date et heure de début du tournoi (ex: 25/02/2024 09:00) : ")
         print("=" * 50 + "\n")
         return start_date
 
@@ -60,6 +60,13 @@ class TournamentView:
         rounds = input("Nombre de rounds (par défaut: 4) : ")
         print("=" * 50 + "\n")
         return rounds if rounds.strip() else None
+    
+    def ask_description(self):
+        print("\n" + "=" * 50)
+        print("0. Revenir au menu principal")
+        description = input("Entrez une description du tournoi : ")
+        print("=" * 50 + "\n")
+        return description
 
     def ask_player_selection(self):
         """
@@ -106,6 +113,35 @@ class TournamentView:
             print(
                 f"{player['first_name']} {player['last_name']} (Date de naissance: {player['birthdate']})"
             )
+
+    def display_tournaments(self, tournaments):
+        """
+        Display the list of tournaments.
+        """
+        if not tournaments:
+            print("Aucun tournoi à afficher.")
+            return
+        print("\n" + "=" * 50)
+        print("Liste des tournois :")
+        print()
+        for tournament_id, tournament in tournaments.items():  
+            print(f"ID: {tournament_id}")
+            print(f"Nom: {tournament['name']}")
+            print(f"Lieu: {tournament['location']}")
+            print(f"Date de début: {tournament['start_date']}")
+            print(f"Date de fin: {tournament['end_date']}")
+            print(f"Nombre de rounds: {tournament['number_of_rounds']}")
+            print(f"Description: {tournament['description']}")
+            print(f"Joueurs:{([player['first_name'] + ' ' + player['last_name'] for player in tournament['players'].values()])}")
+            print()
+        print("\n" + "=" * 50)
+        print("0. Revenir au menu principal")    
+        print("1. Demarrer tournoi")
+        return input("Veuilez saisir une option : ")
+    
+    def ask_confirmation_start_tournament(self, choosen_tournament_name):
+        print(f"Vous avez choisi de démarrer le tournois, {choosen_tournament_name}")
+        return input("Confirmer en apuyant sur la touche entré...")
 
     def display_error(self, message):
         print("\n" + "=" * 50)

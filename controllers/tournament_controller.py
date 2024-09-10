@@ -1,11 +1,7 @@
 from datetime import datetime
 from models.tournament import Tournament
-from utils import utils
-from utils.utils import load_from_json, set_tournament_to_json
-from views.main_view import MainView
 from views.tournament_view import TournamentView
 from settings import TOURNAMENT_FILE, PLAYERS_FILE
-
 
 class TournamentController:
     """
@@ -30,84 +26,107 @@ class TournamentController:
     def _process_choice(self, choice):
         """
         Processes the user's choice.
-
-        Args:
-            choice (str): The user's choice (1 or 2)
         """
         if choice == "1":
             self.create_tournament()
         elif choice == "2":
             self.display_tournament_list()
+        elif choice == "3":
+            self.display_tournaments()    
         elif choice == "0":
             print("Retour au menu principal...")
-            self.display_menu()
         else:
             self.view.display_error("Choix invalide")
             self.display_menu()
 
     def create_tournament(self):
         """
-        Creates a new tournament and saves it to the JSON file.
+        Handles the tournament creation process.
         """
         tournament_info = self._get_tournament_info()
         if tournament_info is None:
             return
 
-        name, location, start_date, end_date, rounds, players = tournament_info
-        self._create_tournament(name, location, start_date, end_date, rounds, players)
+        name, location, start_date, end_date, rounds, description, players = tournament_info
+        tournament = self._create_tournament(
+            name, location, start_date, end_date, rounds, description, players)
         self.view.display_success("Le tournoi a été créé avec succès!")
-        self.display_menu()
+        self._save_tournament(tournament)
 
     def _get_tournament_info(self):
         """
-        Gets the tournament's information from the user.
-
-        Returns:
-            tuple: (name, location, start_date, end_date, rounds, players) or None if cancelled
+        Collects all necessary information to create a tournament.
         """
-        name = self._get_valid_input(self.view.ask_name, "Le nom est obligatoire")
+        name = self._get_name()
         if not name:
-            self.view.display_error("Création de tournoi annulée.")
             return None
 
-        location = self._get_valid_input(
-            self.view.ask_location, "Le lieu est obligatoire"
-        )
+        location = self._get_location()
         if not location:
-            self.view.display_error("Création de tournoi annulée.")
             return None
 
-        start_date = self._get_valid_date(self.view.ask_start_date)
+        start_date = self._get_start_date()
         if not start_date:
-            self.view.display_error("Création de tournoi annulée.")
             return None
 
-        end_date = self._get_valid_date(self.view.ask_end_date)
+        end_date = self._get_end_date()
         if not end_date:
-            self.view.display_error("Création de tournoi annulée.")
             return None
 
-        rounds = self.view.ask_rounds()
-        if not rounds:
-            rounds = 4
+        rounds = self._get_rounds()
+        description = self._get_description()
 
-        players = self._select_players()
+        players = self._get_players()
         if not players:
-            self.view.display_error("Création de tournoi annulée.")
             return None
 
-        return name, location, start_date, end_date, rounds, players
+        return name, location, start_date, end_date, rounds, description, players
+
+    def _get_name(self):
+        """
+        Gets the tournament name from the user.
+        """
+        return self._get_valid_input(self.view.ask_name, "Le nom est obligatoire")
+
+    def _get_location(self):
+        """
+        Gets the tournament location from the user.
+        """
+        return self._get_valid_input(self.view.ask_location, "Le lieu est obligatoire")
+
+    def _get_start_date(self):
+        """
+        Gets a valid start date from the user.
+        """
+        return self._get_valid_date(self.view.ask_start_date)
+
+    def _get_end_date(self):
+        """
+        Gets a valid end date from the user.
+        """
+        return self._get_valid_date(self.view.ask_end_date)
+
+    def _get_rounds(self):
+        """
+        Gets the number of rounds from the user.
+        """
+        return self.view.ask_rounds() or 4
+
+    def _get_description(self):
+        """
+        Gets a description for the tournament from the user.
+        """
+        return self.view.ask_description()
+
+    def _get_players(self):
+        """
+        Handles the player selection for the tournament.
+        """
+        return self._select_players()
 
     def _get_valid_input(self, input_function, error_message):
         """
-        Gets a valid input from the user.
-
-        Args:
-            input_function (callable): The function to get the input from
-            error_message (str): The error message to display if the input is invalid
-
-        Returns:
-            str: The valid input
+        General function to get a valid input.
         """
         while True:
             value = input_function()
@@ -119,13 +138,7 @@ class TournamentController:
 
     def _get_valid_date(self, input_function):
         """
-        Gets a valid date from the user.
-
-        Args:
-            input_function (callable): The function to get the input from
-
-        Returns:
-            str: The valid date (DD/MM/YYYY) or None if cancelled
+        General function to get a valid date.
         """
         while True:
             date_str = input_function()
@@ -137,13 +150,7 @@ class TournamentController:
 
     def _is_valid_date(self, date_str):
         """
-        Checks if the provided date string is valid.
-
-        Args:
-            date_str (str): The date string to check
-
-        Returns:
-            bool: True if valid, False otherwise
+        Validates the provided date string.
         """
         for fmt in ["%d/%m/%Y", "%d/%m/%Y %H:%M"]:
             try:
@@ -155,110 +162,123 @@ class TournamentController:
 
     def _select_players(self):
         """
-        Handles the process of selecting players for the tournament.
-
-        Returns:
-            list: List of selected players or None if cancelled
+        Manages player selection for the tournament.
         """
         registration_method = self.view.ask_player_registration()
-        if registration_method == "auto":
-            pass
-        else:
-            players = load_from_json(self.file_player)
-            if not players:
-                print("Aucun joueur disponible.")
-                return []
+        if registration_method == "a":
+            return self._get_all_players()
 
-            self._display_players(players)
-            selections = self.view.ask_player_selection()
-            if selections is None:
-                self.view.display_error("Sélection des joueurs annulée.")
-                self.display_menu()
-                return None
+        return self._choose_specific_players()
 
-            return self._process_player_selections(selections, players)
+    def _get_all_players(self):
+        """
+        Loads and returns all available players from the database.
+        """
+        return load_from_json(self.file_player)
+
+    def _choose_specific_players(self):
+        """
+        Handles the process of choosing specific players.
+        """
+        players = load_from_json(self.file_player)
+        if not players:
+            self.view.display_error("Aucun joueur disponible.")
+            return []
+        self._display_players(players)
+        selected_players = self._process_player_selection(players)
+        return selected_players
 
     def _display_players(self, players):
         """
         Displays the list of available players.
-
-        Args:
-            players (dict): Dictionary of players
         """
-        print("Liste des joueurs disponibles :")
         for i, (key, player) in enumerate(players.items(), start=1):
             print(f"{i}. {player['first_name']} {player['last_name']} (ID: {key})")
 
-    def _process_player_selections(self, selections, players):
+    def _process_player_selection(self, players):
         """
-        Processes the player's selections.
+        Processes player selection from the user.
+        """
+        selections = self.view.ask_player_selection()
+        if selections is None:
+            self.view.display_error("Sélection des joueurs annulée.")
+            return None
+        selected_indices = self._parse_player_selection(selections)
+        return self._get_selected_players(selected_indices, players)
 
-        Args:
-            selections (str): Comma-separated string of player indices
-            players (dict): Dictionary of available players
-
-        Returns:
-            list: List of selected players or None if cancelled
+    def _parse_player_selection(self, selections):
+        """
+        Parses and validates player selection input.
         """
         try:
-            selected_indices = [int(x.strip()) for x in selections.split(",")]
+            return [int(x.strip()) for x in selections.split(",")]
         except ValueError:
-            print(
-                "Entrée non valide. Veuillez entrer des numéros séparés par des virgules."
-            )
+            self.view.display_error("Entrée non valide. Veuillez entrer des numéros séparés par des virgules.")
             return []
 
-        selected_players = []
+    def _get_selected_players(self, selected_indices, players):
+        """
+        Retrieves the selected players based on indices.
+        """
+        selected_players = {}
         for index in selected_indices:
             if 1 <= index <= len(players):
                 key = list(players.keys())[index - 1]
-                selected_players.append(players[key])
+                selected_players[f"player{index}"] = players[key]      
             else:
-                print(f"Le numéro {index} est invalide.")
-
-        while True:
-            self.view.display_selected_players(selected_players)
-            validation = input(
-                "Appuyer sur Entrée pour valider les joueurs sélectionnés... "
-            )
-            if validation == "":
-                break
-            else:
-                print(
-                    "Veuillez appuyer sur Entrée pour valider les joueurs sélectionnés."
-                )
-
+                self.view.display_error(f"Le numéro {index} est invalide.")
         return selected_players
 
-    def _create_tournament(
-        self, name, location, start_date, end_date, number_of_rounds, players
-    ):
+    def _create_tournament(self, name, location, start_date, end_date, number_of_rounds, description, players):
         """
-        Creates a new tournament object and saves it.
-
-        Args:
-            name (str): The tournament's name
-            location (str): The tournament's location
-            start_date (str): The tournament's start date (DD/MM/YYYY)
-            end_date (str): The tournament's end date (DD/MM/YYYY)
-            rounds (int): The number of rounds in the tournament
-            players (list): List of players participating in the tournament
+        Creates a new Tournament object.
         """
-        tournament = Tournament(
-            name, location, start_date, end_date, number_of_rounds, players
-        )
-
-        return self._save_tournament(tournament)
+        return Tournament(name, location, start_date, end_date, number_of_rounds, description, players)
 
     def _save_tournament(self, tournament):
         """
         Saves the tournament to the database.
         """
+        set_tournament_to_json(tournament.as_dict(), self.file_tournament)
 
-        return set_tournament_to_json(tournament.as_dict(), self.file_tournament)
+    def _get_all_tournaments(self):
+        return load_from_json(self.file_tournament)
+         
+    def display_tournaments(self):
+        try:
+            tournaments = self._get_all_tournaments()
+            choice = self.view.display_tournaments(tournaments)
+            return self.choice_list_tournaments(choice, tournaments)
+        except Exception as e:
+            self.view.display_error("Erreur lors de la récupération des tournois")
+            self.view.display_menu()
+            return None
+            
+    def choice_list_tournaments(self, choice, tournaments):
+        if choice == "1":
+            return self.ask_choosen_tournament(tournaments)
+        elif choice == "0":
+            self.view.display_menu()
+            return None
+        else:
+            self.view.display_error("Sélection invalide")
+            return None
 
-    def display_tournament_list(self):
-        """
-        Displays a list of tournaments. (To be implemented as needed)
-        """
-        pass
+    def ask_choosen_tournament(self, tournaments):
+        choosen_tournament_name = self.view.ask_name() #On récupère la méthodes ask_
+        return self.get_start_tournament(choosen_tournament_name, tournaments)
+    
+    def get_start_tournament(self, choosen_tournament_name, tournaments):
+        for tournament_id in tournaments:
+            if tournament_id == choosen_tournament_name:
+                return self.ask_confirmation_start(choosen_tournament_name)
+            
+    def ask_confirmation_start(self, choosen_tournament_name):
+        choice = self.view.ask_confirmation_start_tournament(choosen_tournament_name)
+        return self.start_tournament(choice, choosen_tournament_name)
+    
+    def start_tournament(self, choice, choosen_tournament_name):
+        if choice == "":
+            print(f"Demarrage du tournois,{choosen_tournament_name}")
+
+    
