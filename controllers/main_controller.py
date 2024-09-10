@@ -17,10 +17,7 @@ def run() -> None:
             tournament_controller = TournamentController()
             tournament_controller.display_menu()
 
-        elif main_menu_choice == "4":
-            pass
-
-        elif main_menu_choice == "5":
+        elif main_menu_choice == "3":
             print("Vous quittez le programme. Merci pour votre soutien !")
             time.sleep(2)
             sys.exit(0)

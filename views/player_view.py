@@ -49,10 +49,11 @@ class PlayerView:
         print("=" * 50 + "\n")
         return national_id
 
-    def player_list(self, players):
+    def display_player_list(self, players):
         print("\n" + "=" * 50)
         print("      --- Liste des joueurs ---      ")
         print("=" * 50)
+        print(f"{len(players)} joueurs, présent dans la base de données : ")
         for key, player in players.items():
             print(
                 f"{key}: {player['first_name']} {player['last_name']} "
