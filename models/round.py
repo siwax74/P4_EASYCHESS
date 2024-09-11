@@ -1,19 +1,14 @@
-from typing import List, Dict
-from models.match import Match
 from datetime import datetime
 
-
 class Round:
-    def __init__(self, name: str) -> None:
+    def __init__(self, name, start_date=None, end_date=None):
         self.name = name
-        self.matches: List[Match] = []
-        self.start_time = datetime.now()
-        self.end_time = None
+        self.matches = []
+        self.start_date = start_date or datetime.datetime.now()
+        self.end_date = end_date
 
-    def as_dict(self) -> Dict[str, any]:
-        return {
-            "name": self.name,
-            "matches": [match.to_dict() for match in self.matches],
-            "start_time": self.start_time.isoformat() if self.start_time else None,
-            "end_time": self.end_time.isoformat() if self.end_time else None,
-        }
+    def add_match(self, match):
+        self.matches.append(match)
+
+    def __repr__(self):
+        return f"Round({self.name}, {self.start_date}, {self.end_date}, {self.matches})"

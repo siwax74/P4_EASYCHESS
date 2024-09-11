@@ -93,15 +93,15 @@ class TournamentManagerController:
                 self.player_manager_controller = PlayerManagerController()
                 new_player = self.player_manager_controller.gather_player_information()
                 self.add_player_to_tournament(new_player, tournament_info)
-                response = self.validator.validate_add_another_player(self.view.ask_add_another_player)
+                response = self.validator.validate_input(self.view.ask_add_another_player)
                 if response == "o":
                     continue
                 else:
-                    return self.store_tournament_to_file(tournament_info)        
-                
+                    return self.ask_start_tournament(tournament_info)
+                    return self.store_tournament_to_file(tournament_info)    
+    
     def add_player_to_tournament(self, new_player, tournament_info):
         tournament_info["players"].append(new_player)
-        print(tournament_info)
         return tournament_info
 
     def register_players_automatically(self, tournament_info):
@@ -143,39 +143,14 @@ class TournamentManagerController:
         )
 
     ############################################################################################################
-    #                                               GET CHOICE MENU OPTION 2                                   #
+    #                                          GET CHOICE MENU OPTION 2 - DISPLAY TOURNAMENT                   #
     ############################################################################################################
-    def display_all_tournaments_upcoming(self):
-        """
-        Prepares data to display the list of upcoming tournaments.
-        """
-        tournaments = self.read_tournaments()
-        if not tournaments:
-            self.view.display_error("Aucun tournois enregistré !")
-            return self.show_menu_options()
-        upcoming_tournaments = self.filter_upcoming_tournaments(tournaments)
-        if not upcoming_tournaments:
-            self.view.display_error("Aucun tournois a venir !")
-            return self.show_menu_options()
-        tournament_data = self.prepare_tournament_data(upcoming_tournaments)
-        self.view.display_tournament_list(tournament_data)
-
     def read_tournaments(self):
         """
         Reads existing tournaments from file.
         """
         return Tournament.read(self.file_tournament)
-
-    def filter_upcoming_tournaments(self, tournaments):
-        """
-        Filters tournaments to only include upcoming ones.
-        """
-        return {
-            tournament_id: details
-            for tournament_id, details in tournaments.items()
-            if details and details.get("upcoming", True)
-        }
-
+    
     def prepare_tournament_data(self, upcoming_tournaments):
         """
         Prepares tournament data for display.
@@ -219,10 +194,37 @@ class TournamentManagerController:
             }
             player_details.append(player_info)
         return player_details
+        ############################################################################################################
+        #                                               DISPLAY UPCOMING                                           #
+        ############################################################################################################
+    def display_all_tournaments_upcoming(self):
+        """
+        Prepares data to display the list of upcoming tournaments.
+        """
+        tournaments = self.read_tournaments()
+        if not tournaments:
+            self.view.display_error("Aucun tournois enregistré !")
+            return self.show_menu_options()
+        upcoming_tournaments = self.filter_upcoming_tournaments(tournaments)
+        if not upcoming_tournaments:
+            self.view.display_error("Aucun tournois a venir !")
+            return self.show_menu_options()
+        tournament_data = self.prepare_tournament_data(upcoming_tournaments)
+        self.view.display_tournament_list(tournament_data)
 
-    ############################################################################################################
-    #                                    GET CHOICE MENU OPTION 3                                              #
-    ############################################################################################################
+    def filter_upcoming_tournaments(self, tournaments):
+        """
+        Filters tournaments to only include upcoming ones.
+        """
+        return {
+            tournament_id: details
+            for tournament_id, details in tournaments.items()
+            if details and details.get("upcoming", True)
+        }
+
+        ############################################################################################################
+        #                                               DISPLAY IN_PROGRESS                                        #
+        ############################################################################################################
     def display_all_tournaments_in_progress(self):
         """
         Prepares data to display the list of in_progress tournaments.
@@ -248,6 +250,24 @@ class TournamentManagerController:
             if details and details.get("in_progress", True)
         }    
 
+    ############################################################################################################
+    #                                                 START TOURNAMENT                                         #
+    ############################################################################################################               
+    def ask_start_tournament(self, tournament_info):
+        ask_start_tournament = self.validator.validate_input(self.view.ask_start_tournament)
+        # Appel correct à start_tournament avec self
+        self.start_tournament(ask_start_tournament, tournament_info)
+
+    def start_tournament(self, ask_start_tournament, tournament_info):
+        if self.tournament is None:
+            print("Aucun tournoi créé. Veuillez d'abord créer un tournoi.")
+            return
+
+        if ask_start_tournament.lower() == "o":  # Supposons que 'o' signifie oui
+            # Appel à la méthode de classe start
+            Tournament.start(tournament_info)
+        else:
+            print("Tournoi non démarré. Sortie.")
 ############################################################################################################
 #  VALIDATOR                                                                                               #
 ############################################################################################################
@@ -410,16 +430,17 @@ class TournamentInputValidator:
             return False
 
     ############################################################################################################
-    #                                             VALID ANOTHER PLAYER                                         #
+    #                                             VALID INPUT   o/n                                            #
     ############################################################################################################
 
-    def validate_add_another_player(self, ask_add_another_player):
+    def validate_input(self, input_function):
         while True:
-            response = ask_add_another_player().strip()
-            if self.is_valid_add_another_player(response):
+            response = input_function().strip()
+            if self.is_valid_input(response):
                 return response
             else:
                 self.view.display_error("Veuillez répondre par o ou n ! ")
 
-    def is_valid_add_another_player(self, response):
+    def is_valid_input(self, response):
         return response in ["o", "n"]
+    

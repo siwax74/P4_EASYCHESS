@@ -58,6 +58,14 @@ class Tournament:
         except Exception as e:
             logging.error(f"An error occurred while saving data to {file_path}: {e}")
 
+    @classmethod
+    def start(cls, tournament_info):
+        
+        print(f"Démarrage du tournoi avec les informations suivantes : {tournament_info}")
+        players = tournament_info.get("players", [])
+        print("Joueurs :", players)
+        
+
     @staticmethod
     def add_player_auto(file_player, tournament_data):
         try:

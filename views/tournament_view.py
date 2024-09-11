@@ -112,7 +112,13 @@ class TournamentView:
         )
         print("=" * 50 + "\n")
         return selected_player_input
-
+    
+    def ask_start_tournament(self):
+        print("\n" + "=" * 50)
+        print("0. Revenir au menu principal")
+        start_tournament_input = input("Souhaitez-vous commencer le tournoi ? : ")
+        print("=" * 50 + "\n")
+        return start_tournament_input.lower()
 
     def display_tournament_list(self, tournament_data):
         print("\n" + "=" * 50)
