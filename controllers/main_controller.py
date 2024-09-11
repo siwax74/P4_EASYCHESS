@@ -23,5 +23,5 @@ def run() -> None:
             sys.exit(0)
 
         else:
-            print("Veuillez saisir un nombre parmi 1, 2, 3, 4 ou 5.")
+            print("Veuillez saisir un nombre parmi 1, 2, ou 3.")
             time.sleep(2)

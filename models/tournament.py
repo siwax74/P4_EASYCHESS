@@ -26,6 +26,13 @@ class Tournament:
         self.players = []
         self.description = description
 
+    def __repr__(self):
+        return (
+            f"Tournament(id={self.tournament_id!r}, name={self.name!r}, location={self.location!r}, "
+            f"start_date={self.start_date!r}, end_date={self.end_date!r}, number_of_rounds={self.number_of_rounds!r}, "
+            f"current_round={self.current_round!r}, description={self.description!r}, players={self.players!r})"
+        )
+
     @classmethod
     def create(cls, name, location, start_date, end_date, description):
         return cls(
@@ -49,7 +56,10 @@ class Tournament:
         try:
             existing_data = cls.read(file_path)
             tournament_key = f"tournament{len(existing_data) + 1}"
+            tournament_data["a_venir"] = True
+            tournament_data["En_cour"] = False
             existing_data[tournament_key] = tournament_data
+
             with open(file_path, "w") as json_file:
                 json.dump(existing_data, json_file, indent=4)
         except Exception as e:

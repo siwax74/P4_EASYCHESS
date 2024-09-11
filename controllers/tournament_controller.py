@@ -1,5 +1,7 @@
 from datetime import datetime
 import re
+import time
+from controllers.player_controller import PlayerManagerController
 from models.player import Player
 from models.tournament import Tournament
 from views.tournament_view import TournamentView
@@ -28,6 +30,9 @@ class TournamentManagerController:
         valid_choice = self.validator.validate_user_menu_choice(menu_choice)
         self.process_user_choice(valid_choice)
 
+    ############################################################################################################
+    #                                                GET CHOICE MENU OPTION                                    #
+    ############################################################################################################
     def process_user_choice(self, menu_choice):
         """
         Processes user choice after validation.
@@ -43,8 +48,9 @@ class TournamentManagerController:
         else:
             self.view.display_error("Choix invalide")
             self.show_menu_options()
+
     ############################################################################################################
-    #                                                CHOICE 1                                                  #
+    #                                                IF CHOICE 1                                               #
     ############################################################################################################
     def gather_tournament_information(self):
         """
@@ -82,6 +88,18 @@ class TournamentManagerController:
             return self.register_players_automatically(tournament_info)
         elif valid_method == "2":
             return self.gather_manual_player_selection(tournament_info)
+        elif valid_method == "3":
+            self.player_manager_controller = PlayerManagerController()
+            new_player = self.player_manager_controller.gather_player_information()
+            return self.add_player_to_tournament(new_player, tournament_info)
+        
+    def add_player_to_tournament(self, new_player, tournament_info):
+        print(new_player)
+        print(tournament_info)
+        tournament_info["players"].append(new_player)  # Add the new player to the tournament info
+        self.update_tournament_file(tournament_info)  # Update the JSON file with the new tournament info
+        print(tournament_info)
+        return tournament_info
 
     def register_players_automatically(self, tournament_info):
         """
@@ -91,7 +109,7 @@ class TournamentManagerController:
             tournament_player = Tournament.add_player_auto(
                 self.file_player, tournament_info
             )
-            return self.persist_tournament_data(tournament_player)
+            return self.store_tournament_to_file(tournament_player)
         except Exception as e:
             self.view.display_error(f"Une erreur est survenue : {str(e)}")
 
@@ -117,20 +135,61 @@ class TournamentManagerController:
         Persists the tournament's information to the file.
         """
         Tournament.save(self.file_tournament, tournament_info)
-        tournament_name = tournament_info.get("name")
         return self.view.display_success(
-            f"Tous les joueurs ont été ajoutés au tournoi, {tournament_name} !"
+            f"Tous les joueurs ont été ajoutés au tournoi, {tournament_info.get("name")} !"
         )
-    
+
     ############################################################################################################
-    #                                                CHOICE 2                                                  #
+    #                                               IF CHOICE 2                                                #
     ############################################################################################################
     def display_all_tournaments(self):
         """
-        Displays the list of ongoing tournaments.
+        Prépare les données pour afficher la liste des tournois à venir.
         """
-        tournaments = Tournament.read(self.file_tournament)
-        return self.view.display_tournament_list(tournaments)
+        existing_tournaments = Tournament.read(self.file_tournament)
+        
+        if not existing_tournaments:
+            self.view.display_error("Aucun tournois enregistré !")
+            return
+        upcoming_tournaments = {
+            tournament_id: details
+            for tournament_id, details in existing_tournaments.items()
+            if details and details.get("a_venir", True)
+        } 
+        if not upcoming_tournaments:
+            self.view.display_error("Aucun tournois a venir !")
+            return
+        
+        tournament_data = []
+        
+        for tournament_id, details in upcoming_tournaments.items():
+            tournament_info = {
+                'id': tournament_id,
+                'name': details.get("name", "Nom non disponible"),
+                'location': details.get("location", "Emplacement non disponible"),
+                'start_date': details.get("start_date", "Date de début non disponible"),
+                'end_date': details.get("end_date", "Date de fin non disponible"),
+                'number_of_rounds': details.get("number_of_rounds", "Nombre de tours non disponible"),
+                'players': details.get("players", []),
+                'current_round': details.get("current_round", "Tour actuel non disponible"),
+                'list_rounds': details.get("list_rounds", []),
+                'description': details.get("description", "Description non disponible")
+            }
+            player_details = []
+            for player in tournament_info['players']:
+                player_info = {
+                    'last_name': player.get("last_name", "Nom de famille non disponible"),
+                    'first_name': player.get("first_name", "Prénom non disponible"),
+                    'birthdate': player.get("birthdate", "Date de naissance non disponible"),
+                    'national_id': player.get("national_id", "Identifiant national non disponible")
+                }
+                player_details.append(player_info)
+            
+            tournament_info['player_details'] = player_details
+            tournament_data.append(tournament_info)
+    
+        self.view.display_tournament_list(tournament_data)
+
 
 ############################################################################################################
 #  VALIDATOR                                                                                               #
@@ -152,15 +211,15 @@ class TournamentInputValidator:
                 return menu_choice
             else:
                 self.view.display_error(
-                    "Veuillez choisir une option valide : 1, 2, 3 ou 0."
+                    "Veuillez choisir une option valide : 1, 2, 3, 4, 5 ou 0."
                 )
                 menu_choice = self.view.display_tournament_menu()
 
     def is_valid_menu_option(self, menu_choice):
         """
-        Check if the menu choice is valid (i.e., one of '1', '2', '3', or '0').
+        Check if the menu choice is valid (i.e., one of '1', '2', '3', '4' '5' or '0').
         """
-        return menu_choice in ["1", "2", "3", "0"]
+        return menu_choice in ["1", "2", "3", "4", "5", "0"]
 
     ############################################################################################################
     #                                                VALID NAME                                                #
@@ -262,7 +321,7 @@ class TournamentInputValidator:
                 return choice
             else:
                 self.view.display_error(
-                    "Veuillez choisir une option valide : 1, 2 ou 0."
+                    "Veuillez choisir une option valide : 1, 2, 3 ou 0."
                 )
                 choice = self.view.display_tournament_menu()
 
@@ -270,7 +329,7 @@ class TournamentInputValidator:
         """
         Check if the registration method choice is valid (i.e., one of '1', '2', or '0').
         """
-        return choice in ["1", "2", "0"]
+        return choice in ["1", "2", "3", "0"]
 
     ############################################################################################################
     #                                             VALID PLAYER SELECTION                                       #
