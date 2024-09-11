@@ -70,7 +70,7 @@ class TournamentView:
         print("=" * 50 + "\n")
         return description
 
-    def ask_player_selection(self):
+    def ask_player_selection(self, players):
         """
         Prompts the user to select players by their index from the list.
 
@@ -79,29 +79,29 @@ class TournamentView:
         """
         print("\n" + "=" * 50)
         print("0. Revenir au menu principal")
+        for i, player in enumerate(players, start=1):
+            print(f"{i}. {player['last_name']} {player['first_name']}")
         selected_player_input = input(
-            "Entrez les indices des joueurs sélectionnés, séparés par des virgules (par exemple : 1,3,5) : "
+            "Veuillez saisir le numéro des joueurs à ajouter au tournois (séparés par des espaces) : "
         )
         print("=" * 50 + "\n")
         return selected_player_input
 
-    def ask_player_registration(self):
+    def ask_player_registration_method(self):
         """
         Asks the user if they want to register players automatically or manually.
 
         Returns:
-            str: 'auto' if automatic registration, 'manual' if manual registration
+            str: 'manual' if manual registration, 'auto' if automatic registration
         """
-        while True:
-            print("\n" + "=" * 50)
-            registration_method = input(
-                "Importer les joueurs automatiquement ou manuellement ? (a/m) : "
-            )
-            print("=" * 50 + "\n")
-            if registration_method.lower() in ["a", "m"]:
-                return registration_method.lower()
-            else:
-                self.display_error("Entrée invalide. Répondez par 'a' ou 'm'.")
+        print("\n" + "=" * 50)
+        print("\n" + "=" * 50)
+        print("0. Revenir au menu principal")
+        print("1. Importer les joueurs automatiquement")
+        print("2. Enregistrer les joueurs manuellement")
+        print("=" * 50 + "\n")
+        method = input("Choisissez une option (1 ou 2) : ").strip()
+        return method
 
     def display_selected_players(self, selected_players):
         """

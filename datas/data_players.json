@@ -1,14 +1,14 @@
-{
-    "player1": {
-        "last_name": "Damien",
-        "first_name": "Gey",
+[
+    {
+        "last_name": "qsdsqd",
+        "first_name": "qsdsqd",
         "birthdate": "01/12/1994",
         "national_id": ""
     },
-    "player2": {
-        "last_name": "Damien",
-        "first_name": "Gey",
+    {
+        "last_name": "sdsqd",
+        "first_name": "qsdsq",
         "birthdate": "01/12/1994",
         "national_id": ""
     }
-}
+]

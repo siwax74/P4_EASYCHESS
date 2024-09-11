@@ -49,18 +49,19 @@ class Player:
                 print(f"Player ID {player_id} not found.")
         except Exception as e:
             print(f"An error occurred while deleting data: {e}")
-    
+            
     @classmethod
-    def save(cls, file_path: str, player_data: Dict[str, str]) -> None:
+    def save(cls, file_path, player_data):
         try:
             existing_data = cls.read(file_path)
-            player_key = f"player{len(existing_data) + 1}"
-            existing_data[player_key] = player_data
+            if not existing_data:
+                existing_data = []
+            existing_data.append(player_data)
             with open(file_path, "w") as json_file:
                 json.dump(existing_data, json_file, indent=4)
         except Exception as e:
             print(f"An error occurred while saving data to {file_path}: {e}")
-        
+            
     def as_dict(self) -> Dict[str, str]:
         return {
             "last_name": self.last_name,

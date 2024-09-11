@@ -53,14 +53,11 @@ class PlayerView:
         print("\n" + "=" * 50)
         print("      --- Liste des joueurs ---      ")
         print("=" * 50)
-        print(f"{len(players)} joueurs, présent dans la base de données : ")
-        for key, player in players.items():
-            print(
-                f"{key}: {player['first_name']} {player['last_name']} "
-                f"{player['birthdate']} {player['national_id']}"
-            )
+        print(f"({len(players)} joueurs), présent dans la base de données : ")
+        for player in players:
+            print(f"  - {player['first_name']} {player['last_name']}")
         print("=" * 50 + "\n")
-        time.sleep(2)
+        time.sleep(5)
 
     def ask_to_return_to_menu(self):
         """

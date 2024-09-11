@@ -1,158 +1,52 @@
 {
-    "1": {
-        "name": "Championnat r\u00e9gional",
-        "location": "Avignon",
-        "start_date": "24/03/2017 10:00",
-        "end_date": "24/03/2015",
+    "tournament1": {
+        "name": "qsdsqd",
+        "location": "sqdsqd",
+        "start_date": "01/12/1994 10:00",
+        "end_date": "01/12/1994",
         "number_of_rounds": 4,
-        "players": {
-            "player1": {
-                "last_name": "Raymond",
-                "first_name": "Debarbu",
-                "birthdate": "01/12/1992",
-                "national_id": "A123456789"
+        "players": [
+            [
+                {
+                    "last_name": "qsdsqd",
+                    "first_name": "qsdsqd",
+                    "birthdate": "01/12/1994",
+                    "national_id": ""
+                },
+                {
+                    "last_name": "sdsqd",
+                    "first_name": "qsdsq",
+                    "birthdate": "01/12/1994",
+                    "national_id": ""
+                }
+            ]
+        ],
+        "current_round": 1,
+        "list_rounds": [],
+        "description": "fghggf"
+    },
+    "tournament2": {
+        "name": "qsdsqd",
+        "location": "qsdqs",
+        "start_date": "01/12/1994 10:00",
+        "end_date": "25/08/2019",
+        "number_of_rounds": 4,
+        "players": [
+            {
+                "last_name": "qsdsqd",
+                "first_name": "qsdsqd",
+                "birthdate": "01/12/1994",
+                "national_id": ""
             },
-            "player2": {
-                "last_name": "Francois",
-                "first_name": "Delupi",
-                "birthdate": "25/03/1968",
-                "national_id": "B987654321"
-            },
-            "player3": {
-                "last_name": "Franck",
-                "first_name": "Aliso",
-                "birthdate": "07/08/1987",
-                "national_id": "C246813579"
-            },
-            "player4": {
-                "last_name": "Martin",
-                "first_name": "Thiago",
-                "birthdate": "15/10/1994",
-                "national_id": "D135792468"
-            },
-            "player5": {
-                "last_name": "Moreau",
-                "first_name": "Julien",
-                "birthdate": "28/02/1985",
-                "national_id": "E975318642"
-            },
-            "player6": {
-                "last_name": "Dupont",
-                "first_name": "Emilien",
-                "birthdate": "12/05/1990",
-                "national_id": "F864213579"
-            },
-            "player7": {
-                "last_name": "Leroux",
-                "first_name": "Fabrice",
-                "birthdate": "10/01/1995",
-                "national_id": "G753159264"
-            },
-            "player8": {
-                "last_name": "Petit",
-                "first_name": "Sophie",
-                "birthdate": "18/06/1982",
-                "national_id": "H321654987"
-            },
-            "player9": {
-                "last_name": "Durand",
-                "first_name": "Pierre",
-                "birthdate": "23/09/1978",
-                "national_id": "I159753486"
-            },
-            "player10": {
-                "last_name": "Bertrand",
-                "first_name": "Lucie",
-                "birthdate": "07/07/1989",
-                "national_id": "J246813579"
-            },
-            "player11": {
-                "last_name": "Girard",
-                "first_name": "Hugo",
-                "birthdate": "04/04/1991",
-                "national_id": "K987612345"
-            },
-            "player12": {
-                "last_name": "Benoit",
-                "first_name": "Amelie",
-                "birthdate": "22/11/1993",
-                "national_id": "L654987321"
-            },
-            "player13": {
-                "last_name": "Leclerc",
-                "first_name": "Jean",
-                "birthdate": "19/05/1983",
-                "national_id": "M321987654"
-            },
-            "player14": {
-                "last_name": "Simon",
-                "first_name": "Marc",
-                "birthdate": "29/08/1975",
-                "national_id": "N135468975"
-            },
-            "player15": {
-                "last_name": "Rousseau",
-                "first_name": "Claire",
-                "birthdate": "30/12/1988",
-                "national_id": "O987513246"
-            },
-            "player16": {
-                "last_name": "Perrault",
-                "first_name": "Louis",
-                "birthdate": "13/03/1992",
-                "national_id": "P132465798"
-            },
-            "player17": {
-                "last_name": "test",
-                "first_name": "test",
-                "birthdate": "25/08/2019",
+            {
+                "last_name": "sdsqd",
+                "first_name": "qsdsq",
+                "birthdate": "01/12/1994",
                 "national_id": ""
             }
-        },
+        ],
         "current_round": 1,
-        "rounds": [],
-        "description": ""
-    },
-    "2": {
-        "name": "gey",
-        "location": "avignon",
-        "start_date": "25/12/2024 10:00",
-        "end_date": "25/12/2024",
-        "number_of_rounds": 4,
-        "players": {
-            "player1": {
-                "last_name": "Raymond",
-                "first_name": "Debarbu",
-                "birthdate": "01/12/1992",
-                "national_id": "A123456789"
-            },
-            "player3": {
-                "last_name": "Franck",
-                "first_name": "Aliso",
-                "birthdate": "07/08/1987",
-                "national_id": "C246813579"
-            },
-            "player5": {
-                "last_name": "Moreau",
-                "first_name": "Julien",
-                "birthdate": "28/02/1985",
-                "national_id": "E975318642"
-            },
-            "player7": {
-                "last_name": "Leroux",
-                "first_name": "Fabrice",
-                "birthdate": "10/01/1995",
-                "national_id": "G753159264"
-            },
-            "player8": {
-                "last_name": "Petit",
-                "first_name": "Sophie",
-                "birthdate": "18/06/1982",
-                "national_id": "H321654987"
-            }
-        },
-        "current_round": 1,
-        "rounds": [],
-        "description": "Description "
+        "list_rounds": [],
+        "description": "fghfgh"
     }
 }
