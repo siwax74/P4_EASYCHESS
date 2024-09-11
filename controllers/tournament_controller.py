@@ -5,7 +5,8 @@ from models.tournament import Tournament
 from views.tournament_view import TournamentView
 from settings import TOURNAMENT_FILE, PLAYERS_FILE
 
-class TournamentController:
+
+class TournamentManagerController:
     """
     Controller class for managing tournaments.
     """
@@ -17,134 +18,160 @@ class TournamentController:
         self.view = TournamentView()
         self.file_tournament = TOURNAMENT_FILE
         self.file_player = PLAYERS_FILE
-        self.validator = TournamentValidator(self.view, self.file_player)
+        self.validator = TournamentInputValidator(self.view, self.file_player)
 
-    def display_menu(self):
+    def show_menu_options(self):
         """
         Displays the tournament menu and gets the user's choice.
         """
-        choice = self.view.display_tournament_menu()
-        valid_choice = self.validator.prompt_valid_choice(choice)
-        self.handle_user_choice(valid_choice)
+        menu_choice = self.view.display_tournament_menu()
+        valid_choice = self.validator.validate_user_menu_choice(menu_choice)
+        self.process_user_choice(valid_choice)
 
-    def handle_user_choice(self, choice):
+    def process_user_choice(self, menu_choice):
         """
-        Handles user choice after validation.
+        Processes user choice after validation.
         """
-        if choice == "1":
-            self.prompt_tournament_information()
-        elif choice == "2":
-            self.display_tournament_list()
-        elif choice == "3":
+        if menu_choice == "1":
+            self.gather_tournament_information()
+        elif menu_choice == "2":
+            self.display_all_tournaments()
+        elif menu_choice == "3":
             self.display_tournaments()
-        elif choice == "0":
+        elif menu_choice == "0":
             print("Retour au menu principal...")
         else:
             self.view.display_error("Choix invalide")
-            self.display_menu()
+            self.show_menu_options()
+    ############################################################################################################
+    #                                                CHOICE 1                                                  #
+    ############################################################################################################
+    def gather_tournament_information(self):
+        """
+        Gathers information for creating a new tournament.
+        """
+        name = self.validator.validate_tournament_name(self.view.ask_name)
+        location = self.validator.validate_tournament_location(self.view.ask_location)
+        start_date = self.validator.validate_tournament_start_date(
+            self.view.ask_start_date
+        )
+        end_date = self.validator.validate_tournament_end_date(self.view.ask_end_date)
+        description = self.validator.validate_tournament_description(
+            self.view.ask_description
+        )
+        return self.initialize_tournament(
+            name, location, start_date, end_date, description
+        )
 
-    def prompt_tournament_information(self):
+    def initialize_tournament(self, name, location, start_date, end_date, description):
         """
-        Handles the flow for prompting and creating a new tournament.
-        """
-        name = self.validator.prompt_valid_name(self.view.ask_name)
-        location = self.validator.prompt_valid_location(self.view.ask_location)
-        start_date = self.validator.prompt_valid_start_date(self.view.ask_start_date)
-        end_date = self.validator.prompt_valid_end_date(self.view.ask_end_date)
-        description = self.validator.prompt_valid_description(self.view.ask_description)
-        return self.create_tournament(name, location, start_date, end_date, description)
-    
-    def create_tournament(self, name, location, start_date, end_date, description):
-        """
-        Creates a tournament and saves its information.
+        Initializes a tournament.
         """
         tournament = Tournament.create(
-            name=name,
-            location=location,
-            start_date=start_date,
-            end_date=end_date,
-            description=description,
+            name, location, start_date, end_date, description
         )
-        return self.select_players(tournament.as_dict())
+        return self.choose_player_registration_method(tournament.as_dict())
 
-    def select_players(self, tournament_data):
+    def choose_player_registration_method(self, tournament_info):
         choice = self.view.ask_player_registration_method()
-        valid_method = self.validator.validate_player_registration_method(choice)
-        return self.handle_player_registration_method(valid_method, tournament_data)
+        valid_method = self.validator.validate_registration_method_choice(choice)
+        return self.execute_registration_method(valid_method, tournament_info)
 
-    def handle_player_registration_method(self, valid_method, tournament_data):
+    def execute_registration_method(self, valid_method, tournament_info):
         if valid_method == "1":
-            return self.add_player_auto(tournament_data)
+            return self.register_players_automatically(tournament_info)
         elif valid_method == "2":
-            return self.prompt_selected_player(tournament_data)
+            return self.gather_manual_player_selection(tournament_info)
 
-    def add_player_auto(self, tournament_data):
+    def register_players_automatically(self, tournament_info):
         """
-        Calls the model method to add players from the file.
+        Registers players automatically from the file.
         """
         try:
-            tournament_player = Tournament.add_player_auto(self.file_player, tournament_data)
-            return self.save_tournament(tournament_player)
+            tournament_player = Tournament.add_player_auto(
+                self.file_player, tournament_info
+            )
+            return self.persist_tournament_data(tournament_player)
         except Exception as e:
             self.view.display_error(f"Une erreur est survenue : {str(e)}")
 
-    def prompt_selected_player(self, tournament_data):
+    def gather_manual_player_selection(self, tournament_info):
         players = Player.read(self.file_player)
-        print(players)
-        selected_players = self.view.ask_player_selection(players)
-        return self.add_player_manual(selected_players, players, tournament_data)
-       
-    def add_player_manual(self, player_index, players, tournament_data):
-        tournament_player = Tournament.add_player_manual(player_index, players, tournament_data)
-        return self.save_tournament(tournament_player)
+        player_indices = self.validator.validate_selected_players_input(
+            self.view.ask_player_selection, players
+        )
+        return self.register_selected_players_manually(
+            player_indices, players, tournament_info
+        )
 
-    def save_tournament(self, tournament_data):
+    def register_selected_players_manually(
+        self, player_indices, players, tournament_info
+    ):
+        tournament_player = Tournament.add_player_manual(
+            player_indices, players, tournament_info
+        )
+        return self.store_tournament_to_file(tournament_player)
+
+    def store_tournament_to_file(self, tournament_info):
         """
-        Saves the tournament's information to the file.
+        Persists the tournament's information to the file.
         """
-        Tournament.save(self.file_tournament, tournament_data)
-        tournament_name = tournament_data.get("name")
-        return self.view.display_success(f"Tous les joueurs ont été ajouté au tournois, {tournament_name} ! ")   
+        Tournament.save(self.file_tournament, tournament_info)
+        tournament_name = tournament_info.get("name")
+        return self.view.display_success(
+            f"Tous les joueurs ont été ajoutés au tournoi, {tournament_name} !"
+        )
+    
+    ############################################################################################################
+    #                                                CHOICE 2                                                  #
+    ############################################################################################################
+    def display_all_tournaments(self):
+        """
+        Displays the list of ongoing tournaments.
+        """
+        tournaments = Tournament.read(self.file_tournament)
+        return self.view.display_tournament_list(tournaments)
 
 ############################################################################################################
 #  VALIDATOR                                                                                               #
 ############################################################################################################
-class TournamentValidator:
+class TournamentInputValidator:
     def __init__(self, view, file_player):
         self.view = view
         self.file_player = file_player
+
     ############################################################################################################
-    #                                                VALID CHOICE                                              #
+    #                                                VALID MENU CHOICE                                         #
     ############################################################################################################
-    def prompt_valid_choice(self, choice):
+    def validate_user_menu_choice(self, menu_choice):
         """
-        Prompt and validate the user's choice.
+        Validates the user's menu choice.
         """
         while True:
-            if self.is_valid_choice(choice):
-                return choice
+            if self.is_valid_menu_option(menu_choice):
+                return menu_choice
             else:
                 self.view.display_error(
                     "Veuillez choisir une option valide : 1, 2, 3 ou 0."
                 )
-                choice = self.view.display_tournament_menu()
+                menu_choice = self.view.display_tournament_menu()
 
-    def is_valid_choice(self, choice):
+    def is_valid_menu_option(self, menu_choice):
         """
-        Check if the choice is valid (i.e. one of '1', '2', '3' or '0').
+        Check if the menu choice is valid (i.e., one of '1', '2', '3', or '0').
         """
-        return choice in ["1", "2", "3", "0"]
+        return menu_choice in ["1", "2", "3", "0"]
 
     ############################################################################################################
     #                                                VALID NAME                                                #
     ############################################################################################################
-    def prompt_valid_name(self, input_function):
+    def validate_tournament_name(self, input_function):
         while True:
             name = input_function().strip()
-            if self.is_valid_name_format(name):
+            if self.is_valid_name(name):
                 return name
 
-    def is_valid_name_format(self, name):
+    def is_valid_name(self, name):
         if len(name) < 2 or len(name) > 50:
             self.view.display_error("Veuillez saisir un nom valide !")
             return False
@@ -156,15 +183,15 @@ class TournamentValidator:
         return True
 
     ############################################################################################################
-    #                                                LOCATION                                                  #
+    #                                                VALID LOCATION                                            #
     ############################################################################################################
-    def prompt_valid_location(self, input_function):
+    def validate_tournament_location(self, input_function):
         while True:
             location = input_function().strip()
-            if self.is_valid_location_format(location):
+            if self.is_valid_location(location):
                 return location
 
-    def is_valid_location_format(self, location):
+    def is_valid_location(self, location):
         if len(location) < 2 or len(location) > 50:
             self.view.display_error("Veuillez saisir un lieu valide !")
             return False
@@ -176,46 +203,49 @@ class TournamentValidator:
         return True
 
     ############################################################################################################
-    #                                                DESCRIPTION                                              #
+    #                                               VALID DESCRIPTION                                          #
     ############################################################################################################
-    def prompt_valid_description(self, input_function):
+    def validate_tournament_description(self, input_function):
         while True:
             description = input_function().strip()
-            if self.is_valid_description_format(description):
+            if self.is_valid_description(description):
                 return description
 
-    def is_valid_description_format(self, description):
+    def is_valid_description(self, description):
         if len(description) < 2 or len(description) > 200:
-            self.view.display_error("La description doit être entre 5 et 200 caractères !")
+            self.view.display_error(
+                "La description doit être entre 5 et 200 caractères !"
+            )
             return False
         return True
 
     ############################################################################################################
-    #                                                START DATE                                               #
+    #                                               VALID START DATE                                           #
     ############################################################################################################
-    def prompt_valid_start_date(self, input_function):
+    def validate_tournament_start_date(self, input_function):
         while True:
             start_date = input_function().strip()
-            if self.is_valid_start_date_format(start_date):
+            if self.is_valid_start_date(start_date):
                 return start_date
-    def is_valid_start_date_format(self, date_str):
+
+    def is_valid_start_date(self, date_str):
         try:
             datetime.strptime(date_str, "%d/%m/%Y %H:%M")
             return True
         except ValueError:
             self.view.display_error("Veuillez saisir une date au format 'dd/mm/YYYY' !")
-            return False        
+            return False
 
     ############################################################################################################
-    #                                                END DATE                                                 #
+    #                                                VALID END DATE                                            #
     ############################################################################################################
-    def prompt_valid_end_date(self, input_function):
+    def validate_tournament_end_date(self, input_function):
         while True:
             end_date = input_function().strip()
-            if end_date == "" or self.is_valid_end_date_format(end_date):
+            if end_date == "" or self.is_valid_end_date(end_date):
                 return end_date
 
-    def is_valid_end_date_format(self, date_str):
+    def is_valid_end_date(self, date_str):
         try:
             datetime.strptime(date_str, "%d/%m/%Y")
             return True
@@ -224,11 +254,11 @@ class TournamentValidator:
             return False
 
     ############################################################################################################
-    #                                                PLAYERS                                                   #
+    #                                           VALID REGISTRATION METHOD                                      #
     ############################################################################################################
-    def validate_player_registration_method(self, choice):
+    def validate_registration_method_choice(self, choice):
         while True:
-            if self.is_valid_player_registration_methode(choice):
+            if self.is_valid_registration_method(choice):
                 return choice
             else:
                 self.view.display_error(
@@ -236,8 +266,29 @@ class TournamentValidator:
                 )
                 choice = self.view.display_tournament_menu()
 
-    def is_valid_player_registration_methode(self, choice):
+    def is_valid_registration_method(self, choice):
         """
-        Check if the choice is valid (i.e. one of '1', '2' or '0').
+        Check if the registration method choice is valid (i.e., one of '1', '2', or '0').
         """
         return choice in ["1", "2", "0"]
+
+    ############################################################################################################
+    #                                             VALID PLAYER SELECTION                                       #
+    ############################################################################################################
+    def validate_selected_players_input(self, input_function, players):
+        while True:
+            selected_players = input_function(players).strip()
+            if self.is_valid_player_selection(selected_players, players):
+                return selected_players
+
+    def is_valid_player_selection(self, selected_players, players):
+        try:
+            selected_players = [int(i) - 1 for i in selected_players.split()]
+            for idx in selected_players:
+                if idx < 0 or idx >= len(players):
+                    self.view.display_error("Le joueur à cet index n'existe pas.")
+                    return False
+            return True
+        except ValueError:
+            self.view.display_error("Veuillez saisir des indices de joueurs valides.")
+            return False

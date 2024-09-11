@@ -7,7 +7,7 @@ from views.player_view import PlayerView
 from settings import PLAYERS_FILE
 
 
-class PlayerController:
+class PlayerManagerController:
     """
     Controller class for managing players.
     """
@@ -19,22 +19,22 @@ class PlayerController:
         self.main_view = MainView()
         self.view = PlayerView()
         self.filepath = PLAYERS_FILE
-        self.validator = PlayerValidator(self.view)
+        self.validator = PlayerInputValidator(self.view)
 
-    def display_menu(self):
+    def show_menu_options(self):
         """
         Displays the player menu, gets and handles the user's choice.
         """
         choice = self.view.display_player_menu()
         valid_choice = self.validator.prompt_valid_choice(choice)
-        self.handle_user_choice(valid_choice)
+        self.process_user_choice(valid_choice)
 
-    def handle_user_choice(self, choice):
+    def process_user_choice(self, choice):
         """
         Handles user choice after validation.
         """
         if choice == "1":
-            self.prompt_player_information()
+            self.gather_player_information()
         elif choice == "2":
             self.display_all_players()
         elif choice == "3":
@@ -45,7 +45,7 @@ class PlayerController:
     ############################################################################################################
     #  CHOICE 1       CREATE PLAYER                                                                            #
     ############################################################################################################
-    def prompt_player_information(self):
+    def gather_player_information(self):
         """
         Handles the flow for prompting and creating a new player.
         """
@@ -53,16 +53,16 @@ class PlayerController:
         last_name = self.validator.prompt_valid_last_name(self.view.ask_last_name)
         birthdate = self.validator.prompt_valid_birthdate(self.view.ask_birthdate)
         national_id = self.validator.prompt_valid_national_id(self.view.ask_national_id)
-        return self.create_player(first_name, last_name, birthdate, national_id)
+        return self.initialize_player(first_name, last_name, birthdate, national_id)
 
-    def create_player(self, first_name, last_name, birthdate, national_id):
+    def initialize_player(self, first_name, last_name, birthdate, national_id):
         """
         Creates a player and saves their information.
         """
         player = Player.create(first_name, last_name, birthdate, national_id)
-        return self.save_player(player.as_dict())
+        return self.store_player_to_file(player.as_dict())
 
-    def save_player(self, player_data):
+    def store_player_to_file(self, player_data):
         """
         Saves the player's information to the file.
         """
@@ -80,14 +80,15 @@ class PlayerController:
         """
         players = Player.read(self.filepath)
         return self.view.display_player_list(players)
-    
+
 
 ############################################################################################################
 #  VALIDATOR                                                                                               #
 ############################################################################################################
-class PlayerValidator:
+class PlayerInputValidator:
     def __init__(self, view):
         self.view = view
+
     ############################################################################################################
     #                                                VALID CHOICE                                              #
     ############################################################################################################

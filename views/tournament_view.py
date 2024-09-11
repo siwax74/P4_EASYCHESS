@@ -102,6 +102,13 @@ class TournamentView:
         print("=" * 50 + "\n")
         method = input("Choisissez une option (1 ou 2) : ").strip()
         return method
+    
+    def display_tournament_list(self, tournaments):
+        print("\n" + "=" * 50)
+        print("0. Revenir au menu principal")
+        print(tournaments)
+        
+
 
     def display_selected_players(self, selected_players):
         """

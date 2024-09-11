@@ -13,9 +13,11 @@ class Player:
         self.national_id = national_id
 
     @classmethod
-    def create(cls, last_name: str, first_name: str, birthdate: str, national_id: str) -> 'Player':
+    def create(
+        cls, last_name: str, first_name: str, birthdate: str, national_id: str
+    ) -> "Player":
         return cls(last_name, first_name, birthdate, national_id)
-    
+
     @classmethod
     def read(cls, file_path: str) -> Dict[str, Dict[str, str]]:
         try:
@@ -23,9 +25,11 @@ class Player:
                 return json.load(json_file)
         except FileNotFoundError:
             return {}
-    
+
     @classmethod
-    def update(cls, file_path: str, player_id: str, updated_data: Dict[str, str]) -> None:
+    def update(
+        cls, file_path: str, player_id: str, updated_data: Dict[str, str]
+    ) -> None:
         try:
             data = cls.read(file_path)
             if player_id in data:
@@ -36,7 +40,7 @@ class Player:
                 print(f"Player ID {player_id} not found.")
         except Exception as e:
             print(f"An error occurred while updating data: {e}")
-    
+
     @classmethod
     def delete(cls, file_path: str, player_id: str) -> None:
         try:
@@ -49,7 +53,7 @@ class Player:
                 print(f"Player ID {player_id} not found.")
         except Exception as e:
             print(f"An error occurred while deleting data: {e}")
-            
+
     @classmethod
     def save(cls, file_path, player_data):
         try:
@@ -61,7 +65,7 @@ class Player:
                 json.dump(existing_data, json_file, indent=4)
         except Exception as e:
             print(f"An error occurred while saving data to {file_path}: {e}")
-            
+
     def as_dict(self) -> Dict[str, str]:
         return {
             "last_name": self.last_name,

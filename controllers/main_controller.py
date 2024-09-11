@@ -1,7 +1,7 @@
 import sys
 import time
-from controllers.player_controller import PlayerController
-from controllers.tournament_controller import TournamentController
+from controllers.player_controller import PlayerManagerController
+from controllers.tournament_controller import TournamentManagerController
 from views.main_view import MainView
 
 
@@ -10,12 +10,12 @@ def run() -> None:
         main_menu_choice = MainView.display_menu()
 
         if main_menu_choice == "1":
-            player_controller = PlayerController()
-            player_controller.display_menu()
+            player_controller = PlayerManagerController()
+            player_controller.show_menu_options()
 
         elif main_menu_choice == "2":
-            tournament_controller = TournamentController()
-            tournament_controller.display_menu()
+            tournament_controller = TournamentManagerController()
+            tournament_controller.show_menu_options()
 
         elif main_menu_choice == "3":
             print("Vous quittez le programme. Merci pour votre soutien !")

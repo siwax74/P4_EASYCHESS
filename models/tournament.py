@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+import logging
 import pprint
 from typing import Dict, List
 from models.player import Player
@@ -27,8 +28,14 @@ class Tournament:
 
     @classmethod
     def create(cls, name, location, start_date, end_date, description):
-        return cls(name, location, start_date, end_date, description,)
-    
+        return cls(
+            name,
+            location,
+            start_date,
+            end_date,
+            description,
+        )
+
     @classmethod
     def read(cls, file_path):
         try:
@@ -36,7 +43,7 @@ class Tournament:
                 return json.load(json_file)
         except FileNotFoundError:
             return {}
-    
+
     @classmethod
     def save(cls, file_path, tournament_data):
         try:
@@ -46,16 +53,14 @@ class Tournament:
             with open(file_path, "w") as json_file:
                 json.dump(existing_data, json_file, indent=4)
         except Exception as e:
-            print(f"An error occurred while saving data to {file_path}: {e}")
+            logging.error(f"An error occurred while saving data to {file_path}: {e}")
 
     @staticmethod
     def add_player_auto(file_player, tournament_data):
-        """
-        Adds players to the tournament from the player file.
-        """
         try:
             existing_player = Player.read(file_player)
-            tournament_data['players'].append(existing_player)            
+            for player in existing_player:
+                tournament_data["players"].append(player)
             return tournament_data
         except FileNotFoundError:
             raise Exception("Le fichier des joueurs est introuvable.")
@@ -63,27 +68,27 @@ class Tournament:
             raise Exception("Erreur de décodage JSON dans le fichier des joueurs.")
         except Exception as e:
             raise Exception(f"Une erreur est survenue : {str(e)}")
-        
+
     @staticmethod
     def add_player_manual(selected_players, players, tournament_data):
         try:
             selected_players = [int(i) - 1 for i in selected_players.split()]
             for idx in selected_players:
-                player = players[idx]
-                tournament_data['players'].append(player)
+                if 0 <= idx < len(players):
+                    player = players[idx]
+                    tournament_data["players"].append(player)
+                else:
+                    raise IndexError("Le joueur à cet index n'existe pas.")
             return tournament_data
-        except IndexError:
-            raise Exception("Le joueur à cet index n'existe pas.")
         except Exception as e:
             raise Exception(f"Une erreur est survenue : {str(e)}")
-        
+
     def as_dict(self):
-        """Convertit l'objet Tournament en dictionnaire pour la persistance JSON."""
         return {
             "name": self.name,
             "location": self.location,
-            "start_date": self.start_date.strftime("%d/%m/%Y %H:%M"),
-            "end_date": (self.end_date.strftime("%d/%m/%Y") if self.end_date else None),
+            "start_date": self.start_date.isoformat(),
+            "end_date": self.end_date.isoformat() if self.end_date else None,
             "number_of_rounds": self.number_of_rounds,
             "players": self.players,
             "current_round": self.current_round,
