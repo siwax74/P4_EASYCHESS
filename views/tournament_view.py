@@ -71,6 +71,30 @@ class TournamentView:
         print("=" * 50 + "\n")
         return description
 
+    def ask_player_registration_method(self):
+        """
+        Asks the user if they want to register players automatically or manually.
+
+        Returns:
+            str: 'manual' if manual registration, 'auto' if automatic registration
+        """
+        print("\n" + "=" * 50)
+        print("0. Revenir au menu principal")
+        print("\n" + "=" * 50)
+        print("1. Importer les joueurs automatiquement")
+        print("2. Importer les joueurs manuellement")
+        print("3. Crée et importer un joueur")
+        print("=" * 50 + "\n")
+        method = input("Choisissez une option (1, 2 ou 3) : ").strip()
+        return method
+    
+    def ask_add_another_player(self):
+        print("\n" + "=" * 50)
+        print("0. Revenir au menu principal")
+        input_add_another_player = input("Souhaitez vous ajouter d'autre joueurs au tournoi ? (o/n): ")
+        print("=" * 50 + "\n")
+        return input_add_another_player.lower()
+    
     def ask_player_selection(self, players):
         """
         Prompts the user to select players by their index from the list.
@@ -89,22 +113,6 @@ class TournamentView:
         print("=" * 50 + "\n")
         return selected_player_input
 
-    def ask_player_registration_method(self):
-        """
-        Asks the user if they want to register players automatically or manually.
-
-        Returns:
-            str: 'manual' if manual registration, 'auto' if automatic registration
-        """
-        print("\n" + "=" * 50)
-        print("0. Revenir au menu principal")
-        print("\n" + "=" * 50)
-        print("1. Importer les joueurs automatiquement")
-        print("2. Importer les joueurs manuellement")
-        print("3. Crée et importer un joueur")
-        print("=" * 50 + "\n")
-        method = input("Choisissez une option (1, 2 ou 3) : ").strip()
-        return method
 
     def display_tournament_list(self, tournament_data):
         print("\n" + "=" * 50)

@@ -67,9 +67,10 @@ class PlayerManagerController:
         Saves the player's information to the file.
         """
         Player.save(self.filepath, player_data)
-        return self.view.display_success(
+        self.view.display_success(
             f"Joueur : {player_data['last_name']}, ajouté à la base de données"
         )
+        return player_data
 
     ############################################################################################################
     #  CHOICE 2    SHOW BDD LIST PLAYERS                                                                       #

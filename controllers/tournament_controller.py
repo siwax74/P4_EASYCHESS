@@ -89,15 +89,18 @@ class TournamentManagerController:
         elif valid_method == "2":
             return self.gather_manual_player_selection(tournament_info)
         elif valid_method == "3":
-            self.player_manager_controller = PlayerManagerController()
-            new_player = self.player_manager_controller.gather_player_information()
-            return self.add_player_to_tournament(new_player, tournament_info)
-        
+            while True:
+                self.player_manager_controller = PlayerManagerController()
+                new_player = self.player_manager_controller.gather_player_information()
+                self.add_player_to_tournament(new_player, tournament_info)
+                response = self.validator.validate_add_another_player(self.view.ask_add_another_player)
+                if response == "o":
+                    continue
+                else:
+                    return self.store_tournament_to_file(tournament_info)        
+                
     def add_player_to_tournament(self, new_player, tournament_info):
-        print(new_player)
-        print(tournament_info)
-        tournament_info["players"].append(new_player)  # Add the new player to the tournament info
-        self.update_tournament_file(tournament_info)  # Update the JSON file with the new tournament info
+        tournament_info["players"].append(new_player)
         print(tournament_info)
         return tournament_info
 
@@ -136,7 +139,7 @@ class TournamentManagerController:
         """
         Tournament.save(self.file_tournament, tournament_info)
         return self.view.display_success(
-            f"Tous les joueurs ont été ajoutés au tournoi, {tournament_info.get("name")} !"
+            f"Tournois crée avec succes !"
         )
 
     ############################################################################################################
@@ -144,51 +147,78 @@ class TournamentManagerController:
     ############################################################################################################
     def display_all_tournaments(self):
         """
-        Prépare les données pour afficher la liste des tournois à venir.
+        Prepares data to display the list of upcoming tournaments.
         """
-        existing_tournaments = Tournament.read(self.file_tournament)
-        
-        if not existing_tournaments:
+        tournaments = self.read_tournaments()
+        if not tournaments:
             self.view.display_error("Aucun tournois enregistré !")
             return
-        upcoming_tournaments = {
-            tournament_id: details
-            for tournament_id, details in existing_tournaments.items()
-            if details and details.get("a_venir", True)
-        } 
+        upcoming_tournaments = self.filter_upcoming_tournaments(tournaments)
         if not upcoming_tournaments:
             self.view.display_error("Aucun tournois a venir !")
             return
-        
+        tournament_data = self.prepare_tournament_data(upcoming_tournaments)
+        self.view.display_tournament_list(tournament_data)
+
+    def read_tournaments(self):
+        """
+        Reads existing tournaments from file.
+        """
+        return Tournament.read(self.file_tournament)
+
+    def filter_upcoming_tournaments(self, tournaments):
+        """
+        Filters tournaments to only include upcoming ones.
+        """
+        return {
+            tournament_id: details
+            for tournament_id, details in tournaments.items()
+            if details and details.get("a_venir", True)
+        }
+
+    def prepare_tournament_data(self, upcoming_tournaments):
+        """
+        Prepares tournament data for display.
+        """
         tournament_data = []
-        
         for tournament_id, details in upcoming_tournaments.items():
-            tournament_info = {
-                'id': tournament_id,
-                'name': details.get("name", "Nom non disponible"),
-                'location': details.get("location", "Emplacement non disponible"),
-                'start_date': details.get("start_date", "Date de début non disponible"),
-                'end_date': details.get("end_date", "Date de fin non disponible"),
-                'number_of_rounds': details.get("number_of_rounds", "Nombre de tours non disponible"),
-                'players': details.get("players", []),
-                'current_round': details.get("current_round", "Tour actuel non disponible"),
-                'list_rounds': details.get("list_rounds", []),
-                'description': details.get("description", "Description non disponible")
-            }
-            player_details = []
-            for player in tournament_info['players']:
-                player_info = {
-                    'last_name': player.get("last_name", "Nom de famille non disponible"),
-                    'first_name': player.get("first_name", "Prénom non disponible"),
-                    'birthdate': player.get("birthdate", "Date de naissance non disponible"),
-                    'national_id': player.get("national_id", "Identifiant national non disponible")
-                }
-                player_details.append(player_info)
-            
+            tournament_info = self.prepare_tournament_info(tournament_id, details)
+            player_details = self.prepare_player_details(tournament_info['players'])
             tournament_info['player_details'] = player_details
             tournament_data.append(tournament_info)
-    
-        self.view.display_tournament_list(tournament_data)
+        return tournament_data
+
+    def prepare_tournament_info(self, tournament_id, details):
+        """
+        Prepares tournament information for display.
+        """
+        return {
+            'id': tournament_id,
+            'name': details.get("name", "Nom non disponible"),
+            'location': details.get("location", "Emplacement non disponible"),
+            'start_date': details.get("start_date", "Date de début non disponible"),
+            'end_date': details.get("end_date", "Date de fin non disponible"),
+            'number_of_rounds': details.get("number_of_rounds", "Nombre de tours non disponible"),
+            'players': details.get("players", []),
+            'current_round': details.get("current_round", "Tour actuel non disponible"),
+            'list_rounds': details.get("list_rounds", []),
+            'description': details.get("description", "Description non disponible")
+        }
+
+    def prepare_player_details(self, players):
+        """
+        Prepares player details for display.
+        """
+        player_details = []
+        for player in players:
+            player_info = {
+                'last_name': player.get("last_name", "Nom de famille non disponible"),
+                'first_name': player.get("first_name", "Prénom non disponible"),
+                'birthdate': player.get("birthdate", "Date de naissance non disponible"),
+                'national_id': player.get("national_id", "Identifiant national non disponible")
+            }
+            player_details.append(player_info)
+        return player_details
 
 
 ############################################################################################################
@@ -351,3 +381,18 @@ class TournamentInputValidator:
         except ValueError:
             self.view.display_error("Veuillez saisir des indices de joueurs valides.")
             return False
+
+    ############################################################################################################
+    #                                             VALID ANOTHER PLAYER                                         #
+    ############################################################################################################
+
+    def validate_add_another_player(self, ask_add_another_player):
+        while True:
+            response = ask_add_another_player().strip()
+            if self.is_valid_add_another_player(response):
+                return response
+            else:
+                self.view.display_error("Veuillez répondre par o ou n ! ")
+
+    def is_valid_add_another_player(self, response):
+        return response in ["o", "n"]

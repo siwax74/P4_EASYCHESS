@@ -26,13 +26,6 @@ class Tournament:
         self.players = []
         self.description = description
 
-    def __repr__(self):
-        return (
-            f"Tournament(id={self.tournament_id!r}, name={self.name!r}, location={self.location!r}, "
-            f"start_date={self.start_date!r}, end_date={self.end_date!r}, number_of_rounds={self.number_of_rounds!r}, "
-            f"current_round={self.current_round!r}, description={self.description!r}, players={self.players!r})"
-        )
-
     @classmethod
     def create(cls, name, location, start_date, end_date, description):
         return cls(
@@ -100,8 +93,8 @@ class Tournament:
             "start_date": self.start_date.isoformat(),
             "end_date": self.end_date.isoformat() if self.end_date else None,
             "number_of_rounds": self.number_of_rounds,
-            "players": self.players,
             "current_round": self.current_round,
+            "players": self.players,
             "list_rounds": self.list_rounds,
             "description": self.description,
         }
