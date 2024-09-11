@@ -49,8 +49,8 @@ class Tournament:
         try:
             existing_data = cls.read(file_path)
             tournament_key = f"tournament{len(existing_data) + 1}"
-            tournament_data["a_venir"] = True
-            tournament_data["En_cour"] = False
+            tournament_data["upcoming"] = True
+            tournament_data["in_progress"] = False
             existing_data[tournament_key] = tournament_data
 
             with open(file_path, "w") as json_file:

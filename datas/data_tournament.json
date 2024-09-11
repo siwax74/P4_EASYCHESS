@@ -1,48 +1,22 @@
 {
     "tournament1": {
-        "name": "qsdsq",
-        "location": "qdqs",
-        "start_date": "2018-12-01T10:00:00",
-        "end_date": "1996-12-01T00:00:00",
+        "name": "sdfsdf",
+        "location": "sdfsdf",
+        "start_date": "1994-12-01T10:00:00",
+        "end_date": "1994-12-01T00:00:00",
         "number_of_rounds": 4,
         "current_round": 1,
         "players": [
             {
-                "last_name": "wxcwxc",
-                "first_name": "wxcwxc",
-                "birthdate": "01/12/1996",
+                "last_name": "dfgfdg",
+                "first_name": "dfgdfg",
+                "birthdate": "01/12/1994",
                 "national_id": ""
             }
         ],
         "list_rounds": [],
-        "description": "xwcwxc",
-        "a_venir": true,
-        "En_cour": false
-    },
-    "tournament2": {
-        "name": "Pluie diluvienne",
-        "location": "La CIOTAT",
-        "start_date": "2024-09-16T09:00:00",
-        "end_date": "2024-09-18T00:00:00",
-        "number_of_rounds": 4,
-        "current_round": 1,
-        "players": [
-            {
-                "last_name": "wxcwxc",
-                "first_name": "wxcwxc",
-                "birthdate": "01/12/1996",
-                "national_id": ""
-            },
-            {
-                "last_name": "Siwax",
-                "first_name": "Tartyempion",
-                "birthdate": "19/07/2020",
-                "national_id": "vc12345"
-            }
-        ],
-        "list_rounds": [],
-        "description": "Tr\u00e8s difficile",
-        "a_venir": true,
-        "En_cour": false
+        "description": "jk:",
+        "upcoming": false,
+        "in_progress": true
     }
 }

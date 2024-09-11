@@ -40,9 +40,9 @@ class TournamentManagerController:
         if menu_choice == "1":
             self.gather_tournament_information()
         elif menu_choice == "2":
-            self.display_all_tournaments()
+            self.display_all_tournaments_upcoming()
         elif menu_choice == "3":
-            self.display_tournaments()
+            self.display_all_tournaments_in_progress()
         elif menu_choice == "0":
             print("Retour au menu principal...")
         else:
@@ -50,7 +50,7 @@ class TournamentManagerController:
             self.show_menu_options()
 
     ############################################################################################################
-    #                                                IF CHOICE 1                                               #
+    #                                                 GET CHOICE MENU OPTION 1                                 #
     ############################################################################################################
     def gather_tournament_information(self):
         """
@@ -143,20 +143,20 @@ class TournamentManagerController:
         )
 
     ############################################################################################################
-    #                                               IF CHOICE 2                                                #
+    #                                               GET CHOICE MENU OPTION 2                                   #
     ############################################################################################################
-    def display_all_tournaments(self):
+    def display_all_tournaments_upcoming(self):
         """
         Prepares data to display the list of upcoming tournaments.
         """
         tournaments = self.read_tournaments()
         if not tournaments:
             self.view.display_error("Aucun tournois enregistré !")
-            return
+            return self.show_menu_options()
         upcoming_tournaments = self.filter_upcoming_tournaments(tournaments)
         if not upcoming_tournaments:
             self.view.display_error("Aucun tournois a venir !")
-            return
+            return self.show_menu_options()
         tournament_data = self.prepare_tournament_data(upcoming_tournaments)
         self.view.display_tournament_list(tournament_data)
 
@@ -173,7 +173,7 @@ class TournamentManagerController:
         return {
             tournament_id: details
             for tournament_id, details in tournaments.items()
-            if details and details.get("a_venir", True)
+            if details and details.get("upcoming", True)
         }
 
     def prepare_tournament_data(self, upcoming_tournaments):
@@ -220,6 +220,33 @@ class TournamentManagerController:
             player_details.append(player_info)
         return player_details
 
+    ############################################################################################################
+    #                                    GET CHOICE MENU OPTION 3                                              #
+    ############################################################################################################
+    def display_all_tournaments_in_progress(self):
+        """
+        Prepares data to display the list of in_progress tournaments.
+        """
+        tournaments = self.read_tournaments()
+        if not tournaments:
+            self.view.display_error("Aucun tournois enregistré !")
+            return
+        in_progress_tournaments = self.filter_in_progress_tournaments(tournaments)
+        if not in_progress_tournaments:
+            self.view.display_error("Aucun tournois a venir !")
+            return
+        tournament_data = self.prepare_tournament_data(in_progress_tournaments)
+        self.view.display_tournament_list(tournament_data)
+
+    def filter_in_progress_tournaments(self, tournaments):
+        """
+        Filters tournaments to only include in_progress ones.
+        """
+        return {
+            tournament_id: details
+            for tournament_id, details in tournaments.items()
+            if details and details.get("in_progress", True)
+        }    
 
 ############################################################################################################
 #  VALIDATOR                                                                                               #
