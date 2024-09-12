@@ -34,7 +34,7 @@ class PlayerManagerController:
         Handles user choice after validation.
         """
         if choice == "1":
-            self.gather_player_information()
+            self.create_player()
         elif choice == "2":
             self.display_all_players()
         elif choice == "3":
@@ -45,6 +45,12 @@ class PlayerManagerController:
     ############################################################################################################
     #  CHOICE 1       CREATE PLAYER                                                                            #
     ############################################################################################################
+    def create_player(self):
+        player_info = self.gather_player_information()
+        new_player = Player.create(player_info)
+        save_player = Player.save(self.filepath, new_player.as_dict())
+        return self.view.display_success(f"Joueurs {save_player}, ajouté avec succès ! ")
+
     def gather_player_information(self):
         """
         Handles the flow for prompting and creating a new player.
@@ -53,36 +59,22 @@ class PlayerManagerController:
         last_name = self.validator.prompt_valid_last_name(self.view.ask_last_name)
         birthdate = self.validator.prompt_valid_birthdate(self.view.ask_birthdate)
         national_id = self.validator.prompt_valid_national_id(self.view.ask_national_id)
-        return self.initialize_player(first_name, last_name, birthdate, national_id)
-
-    def initialize_player(self, first_name, last_name, birthdate, national_id):
-        """
-        Creates a player and saves their information.
-        """
-        player = Player.create(first_name, last_name, birthdate, national_id)
-        return self.store_player_to_file(player.as_dict())
-
-    def store_player_to_file(self, player_data):
-        """
-        Saves the player's information to the file.
-        """
-        Player.save(self.filepath, player_data)
-        self.view.display_success(
-            f"Joueur : {player_data['last_name']}, ajouté à la base de données"
-        )
-        return player_data
+        player_info = first_name, last_name, birthdate, national_id
+        return player_info
 
     ############################################################################################################
     #  CHOICE 2    SHOW BDD LIST PLAYERS                                                                       #
     ############################################################################################################
     def display_all_players(self):
         """
-        Placeholder for displaying all players.
+        Displays all players by reading from a file and passing formatted player information to the view.
         """
-        players = Player.read(self.filepath)
-        return self.view.display_player_list(players)
-
-
+        while True:
+            players_data = Player.read(self.filepath)
+            players = [Player.from_dict(player_data) for player_data in players_data]
+            formatted_players = [f"{i+1}. {str(player)}" for i, player in enumerate(players)]
+            self.view.display_player_list("\n".join(formatted_players))
+            
 ############################################################################################################
 #  VALIDATOR                                                                                               #
 ############################################################################################################
