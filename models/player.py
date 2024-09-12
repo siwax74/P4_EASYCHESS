@@ -44,19 +44,6 @@ class Player:
             print(f"An error occurred while updating data: {e}")
 
     @classmethod
-    def delete(cls, file_path: str, player_id: str) -> None:
-        try:
-            data = cls.read(file_path)
-            if player_id in data:
-                del data[player_id]
-                with open(file_path, "w") as json_file:
-                    json.dump(data, json_file, indent=4)
-            else:
-                print(f"Player ID {player_id} not found.")
-        except Exception as e:
-            print(f"An error occurred while deleting data: {e}")
-
-    @classmethod
     def save(cls, file_path, player_data):
         try:
             existing_data = cls.read(file_path)

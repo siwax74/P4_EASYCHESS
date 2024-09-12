@@ -19,16 +19,20 @@ class PlayerManagerController:
         self.main_view = MainView()
         self.view = PlayerView()
         self.filepath = PLAYERS_FILE
-        self.validator = PlayerInputValidator(self.view)
-
+        self.input_validator = PlayerInputValidator(self.view)
+    ############################################################################################################
+    #                                           PLAYER MENU                                                    #
+    ############################################################################################################
     def show_menu_options(self):
         """
         Displays the player menu, gets and handles the user's choice.
         """
         choice = self.view.display_player_menu()
-        valid_choice = self.validator.prompt_valid_choice(choice)
+        valid_choice = self.input_validator.validate_choice(choice)
         self.process_user_choice(valid_choice)
-
+        ############################################################################################################
+        #                                           PROCESS CHOICE                                                 #
+        ############################################################################################################
     def process_user_choice(self, choice):
         """
         Handles user choice after validation.
@@ -42,29 +46,31 @@ class PlayerManagerController:
         else:
             self.view.display_error(f"Veuillez choisir entre 1, 2 ou 3.")
 
-    ############################################################################################################
-    #  CHOICE 1       CREATE PLAYER                                                                            #
-    ############################################################################################################
+            ############################################################################################################
+            #                                       CHOICE 1       CREATE PLAYER                                       #
+            ############################################################################################################
     def create_player(self):
         player_info = self.gather_player_information()
         new_player = Player.create(player_info)
         save_player = Player.save(self.filepath, new_player.as_dict())
         return self.view.display_success(f"Joueurs {save_player}, ajouté avec succès ! ")
-
+                ############################################################################################################
+                #                                           GATHER PLAYER INFO                                             #
+                ############################################################################################################
     def gather_player_information(self):
         """
         Handles the flow for prompting and creating a new player.
         """
-        first_name = self.validator.prompt_valid_first_name(self.view.ask_first_name)
-        last_name = self.validator.prompt_valid_last_name(self.view.ask_last_name)
-        birthdate = self.validator.prompt_valid_birthdate(self.view.ask_birthdate)
-        national_id = self.validator.prompt_valid_national_id(self.view.ask_national_id)
+        first_name = self.input_validator.validate_first_name(self.view.ask_first_name)
+        last_name = self.input_validator.validate_last_name(self.view.ask_last_name)
+        birthdate = self.input_validator.validate_birthdate(self.view.ask_birthdate)
+        national_id = self.input_validator.validate_national_id(self.view.ask_national_id)
         player_info = first_name, last_name, birthdate, national_id
         return player_info
 
-    ############################################################################################################
-    #  CHOICE 2    SHOW BDD LIST PLAYERS                                                                       #
-    ############################################################################################################
+            ############################################################################################################
+            #  CHOICE 2    SHOW BDD LIST PLAYERS                                                                       #
+            ############################################################################################################
     def display_all_players(self):
         """
         Displays all players by reading from a file and passing formatted player information to the view.
@@ -74,7 +80,10 @@ class PlayerManagerController:
             players = [Player.from_dict(player_data) for player_data in players_data]
             formatted_players = [f"{i+1}. {str(player)}" for i, player in enumerate(players)]
             self.view.display_player_list("\n".join(formatted_players))
-            
+            go_menu = self.input_validator.validate_input(self.view.ask_return_menu)
+            if go_menu:
+                break
+    
 ############################################################################################################
 #  VALIDATOR                                                                                               #
 ############################################################################################################
@@ -83,9 +92,23 @@ class PlayerInputValidator:
         self.view = view
 
     ############################################################################################################
+    #                                                VALID INPUT                                               #
+    ############################################################################################################
+    def validate_input(self, input_function):
+        while True:
+            response = input_function().strip()
+            if self.is_valid_input(response):
+                return response
+            else:
+                self.view.display_error("Saisir 0 pour revenir au menu ! ")
+
+    def is_valid_input(self, response):
+        return response in ["0"]
+
+    ############################################################################################################
     #                                                VALID CHOICE                                              #
     ############################################################################################################
-    def prompt_valid_choice(self, choice):
+    def validate_choice(self, choice):
         """
         Prompt and validate the user's choice.
         """
@@ -107,7 +130,7 @@ class PlayerInputValidator:
     ############################################################################################################
     #                                                FIRST_NAME                                                #
     ############################################################################################################
-    def prompt_valid_first_name(self, input_function):
+    def validate_first_name(self, input_function):
         while True:
             first_name = input_function().strip()
             if self.is_valid_first_name_format(first_name):
@@ -127,7 +150,7 @@ class PlayerInputValidator:
     ############################################################################################################
     #                                                LAST_NAME                                                 #
     ############################################################################################################
-    def prompt_valid_last_name(self, input_function):
+    def validate_last_name(self, input_function):
         while True:
             last_name = input_function().strip()
             if self.is_valid_last_name_format(last_name):
@@ -147,7 +170,7 @@ class PlayerInputValidator:
     ############################################################################################################
     #                                                BIRTHDATE                                                 #
     ############################################################################################################
-    def prompt_valid_birthdate(self, input_function):
+    def validate_birthdate(self, input_function):
         while True:
             birthdate = input_function()
             if self.is_valid_birthdate_format(birthdate):
@@ -164,7 +187,7 @@ class PlayerInputValidator:
     ############################################################################################################
     #                                                NATIONAL_ID                                               #
     ############################################################################################################
-    def prompt_valid_national_id(self, input_function):
+    def validate_national_id(self, input_function):
         while True:
             national_id = input_function()
             if self.is_valid_national_id_format(national_id):

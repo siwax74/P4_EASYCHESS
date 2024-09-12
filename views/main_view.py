@@ -4,24 +4,24 @@ import os
 class MainView:
     @staticmethod
     def display_menu():
-        print("\n" + "=" * 47)
-        print("       ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ ")
-        print("               EASYCHESS ")
-        print("=" * 47 + "\n")
+        menu = "=" * 47 + "\n"
+        menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
+        menu += "                 EASYCHESS \n"
+        menu += "=" * 47 + "\n"
 
-        print(" ╔════════════════════════════════════════════╗")
-        print(" ║  -- Joueurs --                             ║")
-        print(" ║  1. Menu Joueur                            ║")
-        print(" ║                                            ║")
-        print(" ║                                            ║")
-        print(" ║  -- Tournois --                            ║")
-        print(" ║  2. Menu Tournois                          ║")
-        print(" ║                                            ║")
-        print(" ║                                            ║")
-        print(" ║  -- Quitter --                             ║")
-        print(" ║  3. Quitter l'application                  ║")
-        print(" ╚════════════════════════════════════════════╝")
+        menu += "╔════════════════════════════════════════════╗\n"
+        menu += "║  -- Joueurs --                             ║\n"
+        menu += "║  1. Menu Joueur                            ║\n"
+        menu += "║                                            ║\n"
+        menu += "║                                            ║\n"
+        menu += "║  -- Tournois --                            ║\n"
+        menu += "║  2. Menu Tournois                          ║\n"
+        menu += "║                                            ║\n"
+        menu += "║                                            ║\n"
+        menu += "║  -- Quitter --                             ║\n"
+        menu += "║  3. Quitter l'application                  ║\n"
+        menu += "╚════════════════════════════════════════════╝\n"
+        menu += "=" * 47 + "\n"
 
-        print("\n" + "=" * 47)
-
+        print(menu)
         return input(" Veuillez choisir une option : ")

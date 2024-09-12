@@ -1,78 +1,78 @@
 import time
-
-
 class PlayerView:
     def display_player_menu(self) -> str:
-        print("\n" + "=" * 50)
-        print("         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ ")
-        print("                 EASYCHESS ")
-        print("=" * 50 + "\n")
+        menu = "=" * 47 + "\n"
+        menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
+        menu += "                 EASYCHESS \n"
+        menu += "=" * 47 + "\n"
 
-        print(" ╔════════════════════════════════════════════╗")
-        print(" ║               MENU JOUEUR                  ║")
-        print(" ╚════════════════════════════════════════════╝")
+        menu += "╔════════════════════════════════════════════╗\n"
+        menu += "║               MENU JOUEUR                  ║\n"
+        menu += "╚════════════════════════════════════════════╝\n"
+        menu += "╔════════════════════════════════════════════╗\n"
+        menu += "║  -- Actions --                             ║\n"
+        menu += "║  1. Ajouter un nouveau joueur              ║\n"
+        menu += "║  2. Voir liste de joueurs                  ║\n"
+        menu += "╚════════════════════════════════════════════╝\n"
+        menu += "=" * 47 + "\n"
 
-        print(" ║  -- Actions --                             ║")
-        print(" ║  1. Ajouter un nouveau joueur              ║")
-        print(" ║  2. Voir liste de joueurs                  ║")
-        print(" ╚════════════════════════════════════════════╝")
-
-        print("\n" + "=" * 50)
+        print(menu)
 
         return input(" Veuillez choisir une option : ")
 
     def ask_first_name(self):
-        print("\n" + "=" * 50)
-        print("0. Revenir au menu principal")
+        menu = "=" * 47 + "\n"
+        menu += "0. Revenir au menu principal\n"
+        print(menu)
         first_name = input("Entrez le prénom du joueur : ")
-        print("=" * 50 + "\n")
         return first_name
 
     def ask_last_name(self):
-        print("\n" + "=" * 50)
-        print("0. Revenir au menu principal")
+        menu = "=" * 47 + "\n"
+        menu += "0. Revenir au menu principal\n"
+        print(menu)
         last_name = input("Entrez le nom du joueur : ")
-        print("=" * 50 + "\n")
         return last_name
 
     def ask_birthdate(self):
-        print("\n" + "=" * 50)
-        print("0. Revenir au menu principal")
+        menu = "=" * 47 + "\n"
+        menu += "0. Revenir au menu principal\n"
+        print(menu)
         birthdate = input("Date de naissance du joueur (jj/mm/aaaa) : ")
-        print("=" * 50 + "\n")
         return birthdate
 
     def ask_national_id(self):
-        print("\n" + "=" * 50)
-        print("0. Revenir au menu principal")
+        menu = "=" * 47 + "\n"
+        menu += "0. Revenir au menu principal\n"
+        print(menu)
         national_id = input("Entrez le N° d'identité nationale du joueur : ")
-        print("=" * 50 + "\n")
         return national_id
+    
+    def ask_return_menu(self):
+        menu = "=" * 47 + "\n"
+        menu += "0. Revenir au menu principal\n"
+        print(menu)
+        go_menu = input("Voulez vous revenir au menu ? '0' ")
+        return go_menu
 
     def display_player_list(self, formatted_players):
-        print("\n" + "=" * 50)
-        print("      --- Liste des joueurs ---      ")
-        print("=" * 50)
-        print(f"({len(formatted_players)} joueurs), présent dans la base de données : ")
-        print(formatted_players)
-        print("=" * 50 + "\n")
-        time.sleep(5)
-
-    def ask_to_return_to_menu(self):
-        """
-        Asks the user if they want to return to the menu.
-        """
-        choice = input("Voulez-vous revenir au menu ? (o/n) ? ")
-        return choice == "o"
+        menu = "=" * 47 + "\n"
+        menu += "      --- Liste des joueurs ---      \n"
+        menu += "=" * 47 + "\n"
+        menu += f"({len(formatted_players)} joueurs), présent dans la base de données : \n"
+        menu += formatted_players
+        print(menu)
 
     def display_error(self, message):
-        print("\n" + "=" * 50)
-        print(f"⚠️  ERREUR: {message}")
-        print("=" * 50 + "\n")
+        menu = "=" * 47 + "\n"
+        menu += f"⚠️  ERREUR: {message}\n"
+        menu += "=" * 47 + "\n"
+        print(menu)
         time.sleep(2)
 
     def display_success(self, message):
-        print("\n" + "=" * 50)
-        print(f"✔️  SUCCÈS: {message}")
-        print("=" * 50 + "\n")
+        menu = "=" * 47 + "\n"
+        menu += f"✔️  SUCCÈS: {message}\n"
+        menu += "=" * 47 + "\n"
+        print(menu)
         time.sleep(2)
