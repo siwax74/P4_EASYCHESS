@@ -14,7 +14,7 @@ class Player:
 
     def __repr__(self) -> str:
         return f"Player(last_name={self.last_name}, first_name={self.first_name}, birthdate={self.birthdate.strftime('%d/%m/%Y')}, national_id={self.national_id})"
-    
+
     @classmethod
     def create(
         cls, last_name: str, first_name: str, birthdate: str, national_id: str

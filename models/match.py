@@ -1,5 +1,6 @@
 from typing import Dict
 
+
 class Match:
     def __init__(self, player1, score1, player2, score2):
         self.players = [player1, player2]

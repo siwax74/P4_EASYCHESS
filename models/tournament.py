@@ -52,7 +52,6 @@ class Tournament:
             tournament_data["upcoming"] = True
             tournament_data["in_progress"] = False
             existing_data[tournament_key] = tournament_data
-
             with open(file_path, "w") as json_file:
                 json.dump(existing_data, json_file, indent=4)
         except Exception as e:
@@ -60,37 +59,25 @@ class Tournament:
 
     @classmethod
     def start(cls, tournament_info):
-        
-        print(f"Démarrage du tournoi avec les informations suivantes : {tournament_info}")
         players = tournament_info.get("players", [])
         print("Joueurs :", players)
-        
 
     @staticmethod
-    def add_player_auto(file_player, tournament_data):
-        try:
-            existing_player = Player.read(file_player)
-            for player in existing_player:
-                tournament_data["players"].append(player)
-            return tournament_data
-        except FileNotFoundError:
-            raise Exception("Le fichier des joueurs est introuvable.")
-        except json.JSONDecodeError:
-            raise Exception("Erreur de décodage JSON dans le fichier des joueurs.")
-        except Exception as e:
-            raise Exception(f"Une erreur est survenue : {str(e)}")
+    def add_players_auto(players, tournament):
+        tournament["players"].extend(players)
+        return tournament    
 
     @staticmethod
-    def add_player_manual(selected_players, players, tournament_data):
+    def add_players_manually(selected_players, players, tournament):
         try:
             selected_players = [int(i) - 1 for i in selected_players.split()]
             for idx in selected_players:
                 if 0 <= idx < len(players):
                     player = players[idx]
-                    tournament_data["players"].append(player)
+                    tournament["players"].append(player)
                 else:
                     raise IndexError("Le joueur à cet index n'existe pas.")
-            return tournament_data
+            return tournament
         except Exception as e:
             raise Exception(f"Une erreur est survenue : {str(e)}")
 

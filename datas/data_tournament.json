@@ -1,28 +1,8 @@
 {
     "tournament1": {
-        "name": "sdfsdf",
-        "location": "sdfsdf",
+        "name": "fghgfh",
+        "location": "fghfgh",
         "start_date": "1994-12-01T10:00:00",
-        "end_date": "1994-12-01T00:00:00",
-        "number_of_rounds": 4,
-        "current_round": 1,
-        "players": [
-            {
-                "last_name": "dfgfdg",
-                "first_name": "dfgdfg",
-                "birthdate": "01/12/1994",
-                "national_id": ""
-            }
-        ],
-        "list_rounds": [],
-        "description": "jk:",
-        "upcoming": false,
-        "in_progress": true
-    },
-    "tournament2": {
-        "name": "dsf",
-        "location": "sdfdsf",
-        "start_date": "2015-08-25T10:00:00",
         "end_date": "1995-12-01T00:00:00",
         "number_of_rounds": 4,
         "current_round": 1,
@@ -44,11 +24,335 @@
                 "first_name": "dfgdfg",
                 "birthdate": "01/12/1994",
                 "national_id": ""
+            },
+            {
+                "last_name": "fghfgh",
+                "first_name": "fghg",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "fhfgh",
+                "first_name": "fghfgh",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "gffgh",
+                "first_name": "fgh",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "fghfg",
+                "first_name": "hfghfgh",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "fghfgh",
+                "first_name": "fghfg",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "dfgdf",
+                "first_name": "dfgdf",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "dfgdfg",
+                "first_name": "dfdfgdfg",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "fghfg",
+                "first_name": "fhfgh",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "xcvx",
+                "first_name": "xcvxc",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "fghgf",
+                "first_name": "fghfgh",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "gdfg",
+                "first_name": "dfgdf",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "cfgdf",
+                "first_name": "dfgdf",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "hhgj",
+                "first_name": "ghjgh",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "fghgdfg",
+                "first_name": "dfgdfg",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "fghfgh",
+                "first_name": "gfhfh",
+                "birthdate": "01/12/1994",
+                "national_id": ""
+            },
+            {
+                "last_name": "ghjgh",
+                "first_name": "ghjghj",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "dfgdf",
+                "first_name": "dfgdfg",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "sdfds",
+                "first_name": "sdfsdf",
+                "birthdate": "01/11/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "dfsdf",
+                "first_name": "sdfsdf",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "dfgdf",
+                "first_name": "dfgdf",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "dfgdf",
+                "first_name": "dfgdf",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "sdf",
+                "first_name": "sdfsd",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "dsfgffdg",
+                "first_name": "dfgdfg",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "dfg",
+                "first_name": "dfg",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "ghj",
+                "first_name": "ghj",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "ghjgh",
+                "first_name": "ghjghj",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "dfgdf",
+                "first_name": "dfgdf",
+                "birthdate": "01/12/1994",
+                "national_id": ""
+            },
+            {
+                "last_name": "dfgdf",
+                "first_name": "dfgdf",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "dgdf",
+                "first_name": "dgdf",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "sdfsd",
+                "first_name": "sdfsd",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "fghf",
+                "first_name": "fhfgh",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "fghfgh",
+                "first_name": "fghfgh",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "fghfg",
+                "first_name": "fghfgh",
+                "birthdate": "01/12/1997",
+                "national_id": ""
+            },
+            {
+                "last_name": "dgdfg",
+                "first_name": "gfhfgh",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "ghfgh",
+                "first_name": "fghfgh",
+                "birthdate": "01/12/1888",
+                "national_id": ""
+            },
+            {
+                "last_name": "sdfds",
+                "first_name": "sdfsdf",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "sdfdsf",
+                "first_name": "sdfdsf",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "fgdg",
+                "first_name": "dfgdfg",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "dfgdfg",
+                "first_name": "dfgdf",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "qsdqs",
+                "first_name": "sqdqs",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "fdgfdg",
+                "first_name": "dfgdfg",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "dfgdf",
+                "first_name": "dgdf",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "fdgdf",
+                "first_name": "dfgdfg",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "rtyrt",
+                "first_name": "rtytry",
+                "birthdate": "01/12/1994",
+                "national_id": ""
+            },
+            {
+                "last_name": "dfgfd",
+                "first_name": "dfgdfg",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "dfgfdg",
+                "first_name": "fdgdf",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "dfgdf",
+                "first_name": "dfgdfg",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "qsdqs",
+                "first_name": "qsdqsd",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "dfg",
+                "first_name": "fdgdf",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "fgh",
+                "first_name": "fgh",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "hjkhj",
+                "first_name": "hjkhj",
+                "birthdate": "01/12/1994",
+                "national_id": ""
+            },
+            {
+                "last_name": "ghj",
+                "first_name": "ghj",
+                "birthdate": "01/12/1995",
+                "national_id": ""
+            },
+            {
+                "last_name": "ghjhgj",
+                "first_name": "ghj",
+                "birthdate": "01/12/1996",
+                "national_id": ""
+            },
+            {
+                "last_name": "fghfg",
+                "first_name": "fgh",
+                "birthdate": "01/12/1995",
+                "national_id": ""
             }
         ],
         "list_rounds": [],
-        "description": "hjjhk",
-        "upcoming": true,
-        "in_progress": false
+        "description": "jghjgh",
+        "upcoming": false,
+        "in_progress": true
     }
 }
