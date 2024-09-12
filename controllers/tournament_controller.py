@@ -259,13 +259,12 @@ class TournamentManagerController:
         self.start_tournament(ask_start_tournament, tournament_info)
 
     def start_tournament(self, ask_start_tournament, tournament_info):
-        if self.tournament is None:
-            print("Aucun tournoi créé. Veuillez d'abord créer un tournoi.")
-            return
-
         if ask_start_tournament.lower() == "o":  # Supposons que 'o' signifie oui
-            # Appel à la méthode de classe start
-            Tournament.start(tournament_info)
+            for key, values in tournament_info.items():
+                print(f"Clé: {key}, Valeur: {values}")
+            model = Tournament.start(tournament_info)
+            print("ok")
+            return model
         else:
             print("Tournoi non démarré. Sortie.")
 ############################################################################################################
