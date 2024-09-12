@@ -252,7 +252,6 @@ class TournamentManagerController:
         """
         Prepares player details for display.
         """
-        print(players)
         player_details = []
         for player in players:
             player_info = {
