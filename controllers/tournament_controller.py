@@ -1,7 +1,5 @@
 from datetime import datetime
 import re
-import time
-import unicodedata
 from controllers.player_controller import PlayerManagerController
 from models.player import Player
 from models.tournament import Tournament
@@ -21,8 +19,10 @@ class TournamentManagerController:
         self.view = TournamentView()
         self.file_tournament = TOURNAMENT_FILE
         self.file_player = PLAYERS_FILE
-        self.value_validator = TournamentValueValidator(self.view)
-        self.input_validator = TournamentInputValidator(self.view, self.file_player, self.value_validator)
+        self.value_validator = TournamentValidator(self.view)
+        self.input_validator = InputValidator(
+            self.view, self.file_player, self.value_validator
+        )
 
     def show_menu_options(self):
         """
@@ -30,7 +30,7 @@ class TournamentManagerController:
         """
         while True:
             menu_choice = self.view.display_tournament_menu()
-            valid_choice = self.input_validator.validate_choice_menu(menu_choice)
+            valid_choice = self.input_validator.validate_menu_choice(menu_choice)
             if valid_choice == "1":
                 self.create_tournament(valid_choice)
             elif valid_choice == "2":
@@ -39,6 +39,7 @@ class TournamentManagerController:
                 self.display_all_tournaments_in_progress()
             elif valid_choice == "0":
                 break
+
     ############################################################################################################
     #                                                 GET CHOICE MENU OPTION 1                                 #
     ############################################################################################################
@@ -48,36 +49,37 @@ class TournamentManagerController:
             if not tournament_infos:
                 return False
             new_tournament = Tournament.create(tournament_infos)
-            players_registration_method  = self.choose_players_registration_method(new_tournament)
+            players_registration_method = self.choose_players_registration_method(
+                new_tournament
+            )
             if not players_registration_method:
                 return False
             Tournament.save(self.file_tournament, new_tournament.as_dict())
             self.view.display_success("Tournois crée avec succès ! ")
+            start_tournament = self.start_tournament(new_tournament)
+
+            return new_tournament.as_dict()
 
     def gather_tournament_information(self):
         """
         Gathers information for creating a new tournament.
         """
         while True:
-            name = self.input_validator.validate_tournament_name(self.view.ask_name)
+            name = self.input_validator.validate_name(self.view.ask_name)
             if name is False:
                 break
-            location = self.input_validator.validate_tournament_location(
-                self.view.ask_location
-            )
+            location = self.input_validator.validate_location(self.view.ask_location)
             if location is False:
                 break
-            start_date = self.input_validator.validate_tournament_start_date(
+            start_date = self.input_validator.validate_start_date(
                 self.view.ask_start_date
             )
             if start_date is False:
-                break            
-            end_date = self.input_validator.validate_tournament_end_date(
-                self.view.ask_end_date
-            )
+                break
+            end_date = self.input_validator.validate_end_date(self.view.ask_end_date)
             if end_date is False:
                 break
-            description = self.input_validator.validate_tournament_description(
+            description = self.input_validator.validate_description(
                 self.view.ask_description
             )
             if description is False:
@@ -87,8 +89,12 @@ class TournamentManagerController:
 
     def choose_players_registration_method(self, new_tournament):
         while True:
-            choice_players_registration_method = self.view.ask_player_registration_method()
-            valid_method = self.input_validator.validate_registration_method_choice(choice_players_registration_method)
+            choice_players_registration_method = (
+                self.view.ask_player_registration_method()
+            )
+            valid_method = self.input_validator.validate_registration_method(
+                choice_players_registration_method
+            )
             if valid_method == "0":
                 break
             elif valid_method == "1":
@@ -100,20 +106,7 @@ class TournamentManagerController:
             elif valid_method == "3":
                 new_player = self.add_new_player(new_tournament)
                 return new_player
-            
-    def add_new_player(self, new_tournament):
-        while True:
-            self.player_manager_controller = PlayerManagerController()
-            new_player = self.player_manager_controller.create_player()
-            new_tournament.players.append(new_player)
-            print(new_tournament)
-            add_another = self.input_validator.validate_input(
-                        self.view.ask_add_another_player
-                    )
-            if add_another == "o":
-                continue
-            else:
-                return new_player
+
         ############################################################################################################
         #                                                 ADD PLAYERS AUTO                                         #
         ############################################################################################################
@@ -125,28 +118,40 @@ class TournamentManagerController:
         players = Player.read(self.file_player)
         players_add = Tournament.add_players_auto(players, new_tournament)
         return players_add
-    
+
         ############################################################################################################
         #                                                 ADD PLAYERS MANUALLY                                     #
         ############################################################################################################
 
     def register_players_manually(self, new_tournament):
         players = Player.read(self.file_player)
-        selected_player_indices = self.input_validator.validate_selected_players_input(
+        selected_player_indices = self.input_validator.validate_selected_players(
             self.view.ask_player_selection, players
         )
         tournament_players = Tournament.add_players_manually(
-            selected_player_indices, players, new_tournament)
+            selected_player_indices, players, new_tournament
+        )
         return tournament_players
 
-    ############################################################################################################
-    #                                                 READ TOURNAMENT/PLAYERS                                  #
-    ############################################################################################################
-    def read_tournaments(self):
-        """
-        Reads existing tournaments from file.
-        """
-        return Tournament.read(self.file_tournament)
+        ############################################################################################################
+        #                                    CREATE AND ADD PLAYERS IN TOURNAMENT                                  #
+        ############################################################################################################
+
+    def add_new_player(self, new_tournament):
+        while True:
+            self.player_manager_controller = PlayerManagerController()
+            new_player = self.player_manager_controller.create_player()
+            new_tournament.players.append(new_player)
+            add_another = self.input_validator.validate_input(
+                self.view.ask_add_another_player
+            )
+            if add_another == "o":
+                continue
+            else:
+                return new_player
+
+    def start_tournament(self, new_tournament):
+        pairs = Match.genera
 
     ############################################################################################################
     #                                          GET CHOICE MENU OPTION 2                                        #
@@ -158,7 +163,7 @@ class TournamentManagerController:
         """
         Prepares data to display the list of upcoming tournaments.
         """
-        tournaments = self.read_tournaments()
+        tournaments = Tournament.read(self.file_tournament)
         if not tournaments:
             self.view.display_error("Aucun tournois enregistré !")
             return self.show_menu_options()
@@ -177,11 +182,13 @@ class TournamentManagerController:
         Prepares data to display the list of in_progress tournaments.
         """
         while True:
-            tournaments = self.read_tournaments()
+            tournaments = Player.read(self.file_tournament)
             if not tournaments:
                 self.view.display_error("Aucun tournois enregistré !")
                 return
-            in_progress_tournaments = self.filter_tournaments(tournaments, "in_progress")
+            in_progress_tournaments = self.filter_tournaments(
+                tournaments, "in_progress"
+            )
             if not in_progress_tournaments:
                 self.view.display_error("Aucun tournois a venir !")
                 return
@@ -257,10 +264,11 @@ class TournamentManagerController:
             player_details.append(player_info)
         return player_details
 
+
 ############################################################################################################
 #  VALUE VALIDATOR                                                                                         #
 ############################################################################################################
-class TournamentValueValidator:
+class TournamentValidator:
     def __init__(self, view):
         self.view = view
 
@@ -274,24 +282,38 @@ class TournamentValueValidator:
     def validate_count_players(self, players):
         count_players = len(players)
         return count_players
-    
+
     def sanitize_text(self, text):
         """
         Replace accented characters with their non-accented counterparts.
         """
         accents = {
-            'é': 'e', 'è': 'e', 'à': 'a', 'ù': 'u', 'ç': 'c', 'â': 'a', 'ê': 'e',
-            'î': 'i', 'ô': 'o', 'û': 'u', 'ä': 'a', 'ë': 'e', 'ï': 'i', 'ö': 'o',
-            'ü': 'u', 'ÿ': 'y'
+            "é": "e",
+            "è": "e",
+            "à": "a",
+            "ù": "u",
+            "ç": "c",
+            "â": "a",
+            "ê": "e",
+            "î": "i",
+            "ô": "o",
+            "û": "u",
+            "ä": "a",
+            "ë": "e",
+            "ï": "i",
+            "ö": "o",
+            "ü": "u",
+            "ÿ": "y",
         }
         for accented, non_accented in accents.items():
             text = text.replace(accented, non_accented)
         return text
 
+
 ############################################################################################################
 #  INPUT VALIDATOR                                                                                         #
 ############################################################################################################
-class TournamentInputValidator:
+class InputValidator:
     def __init__(self, view, file_player, value_validator):
         self.view = view
         self.file_player = file_player
@@ -300,51 +322,60 @@ class TournamentInputValidator:
     ############################################################################################################
     #                                                VALID MENU CHOICE                                         #
     ############################################################################################################
-    def validate_choice_menu(self, choice):
+    def validate_menu_choice(self, choice):
         """
         Prompt and validate the user's choice.
         """
         if choice in ["0", "1", "2", "3", "4", "5"]:
             return choice
         else:
-            self.view.display_error("Veuillez saisir un choix entre 0, 1, 2, 3, 4 ou 5 !")
+            self.view.display_error(
+                "Veuillez saisir un choix entre 0, 1, 2, 3, 4 ou 5 !"
+            )
             return False
+
     ############################################################################################################
     #                                                VALID NAME                                                #
     ############################################################################################################
-    def validate_tournament_name(self, input_function):
+    def validate_name(self, input_function):
         pattern = "^[0A-Za-zÀ-ÖØ-öø-ÿ' -]+$"
         while True:
             name = input_function().strip()
             if len(name) < 1 or len(name) > 50:
                 self.view.display_error("Veuillez saisir un nom valide !")
             elif not re.match(pattern, name):
-                self.view.display_error("Le nom ne peut pas contenir de caractères spéciaux !")
+                self.view.display_error(
+                    "Le nom ne peut pas contenir de caractères spéciaux !"
+                )
             elif name == "0":
-                return False    
+                return False
             else:
                 name_sanitized = self.value_validator.sanitize_text(name)
                 return name_sanitized
+
     ############################################################################################################
     #                                                VALID LOCATION                                            #
     ############################################################################################################
-    def validate_tournament_location(self, input_function):
+    def validate_location(self, input_function):
         pattern = "^[,0-9A-Za-zÀ-ÖØ-öø-ÿ' -]+$"
         while True:
             location = input_function().strip()
             if len(location) < 1 or len(location) > 50:
                 self.view.display_error("Veuillez saisir un lieu valide !")
             elif not re.match(pattern, location):
-                self.view.display_error("Le lieu ne peut pas contenir de caractères spéciaux !")
+                self.view.display_error(
+                    "Le lieu ne peut pas contenir de caractères spéciaux !"
+                )
             elif location == "0":
                 return False
             else:
                 location_sanitized = self.value_validator.sanitize_text(location)
                 return location_sanitized
+
     ############################################################################################################
     #                                               VALID START DATE                                           #
     ############################################################################################################
-    def validate_tournament_start_date(self, input_function):
+    def validate_start_date(self, input_function):
         while True:
             start_date = input_function().strip()
             try:
@@ -353,12 +384,14 @@ class TournamentInputValidator:
             except ValueError:
                 if start_date == "0":
                     return False
-                self.view.display_error("Veuillez saisir une date au format 'dd/mm/YYYY' !")
+                self.view.display_error(
+                    "Veuillez saisir une date au format 'dd/mm/YYYY' !"
+                )
 
     ############################################################################################################
     #                                                VALID END DATE                                            #
     ############################################################################################################
-    def validate_tournament_end_date(self, input_function):
+    def validate_end_date(self, input_function):
         while True:
             end_date = input_function().strip()
             if end_date == "":
@@ -369,16 +402,20 @@ class TournamentInputValidator:
             except ValueError:
                 if end_date == "0":
                     return False
-                self.view.display_error("Veuillez saisir une date au format 'dd/mm/YYYY' !")
-        
+                self.view.display_error(
+                    "Veuillez saisir une date au format 'dd/mm/YYYY' !"
+                )
+
     ############################################################################################################
     #                                               VALID DESCRIPTION                                          #
     ############################################################################################################
-    def validate_tournament_description(self, input_function):
+    def validate_description(self, input_function):
         while True:
             description = input_function().strip()
             if len(description) < 5 or len(description) > 200:
-                self.view.display_error("La description doit être entre 5 et 200 caractères !")
+                self.view.display_error(
+                    "La description doit être entre 5 et 200 caractères !"
+                )
             elif description == "0":
                 return False
             else:
@@ -388,7 +425,7 @@ class TournamentInputValidator:
     ############################################################################################################
     #                                           VALID REGISTRATION METHOD                                      #
     ############################################################################################################
-    def validate_registration_method_choice(self, choice):
+    def validate_registration_method(self, choice):
         while True:
             if choice in ["1", "2", "3", "0"]:
                 return choice
@@ -401,7 +438,7 @@ class TournamentInputValidator:
     ############################################################################################################
     #                                             VALID PLAYER SELECTION                                       #
     ############################################################################################################
-    def validate_selected_players_input(self, input_function, players):
+    def validate_selected_players(self, input_function, players):
         while True:
             selected_players = input_function(players).strip()
             if self.is_valid_player_selection(selected_players, players):
@@ -433,7 +470,7 @@ class TournamentInputValidator:
 
     def is_valid_input(self, response):
         return response in ["o", "n"]
-    
+
     ############################################################################################################
     #                                                VALID INPUT                                               #
     ############################################################################################################

@@ -103,14 +103,12 @@ class TournamentView:
         print(menu)
         start_tournament_input = input("Souhaitez-vous commencer le tournoi ? : ")
         return start_tournament_input.lower()
-    
+
     def display_tournament(self, formatted_tournaments):
         menu = "=" * 47 + "\n"
         menu += "      --- Liste des tournois ---      \n"
         menu += "=" * 47 + "\n"
-        menu += (
-            f"({len(formatted_tournaments)} joueurs), présent dans la base de données : \n"
-        )
+        menu += f"({len(formatted_tournaments)} joueurs), présent dans la base de données : \n"
         menu += formatted_tournaments
         print(menu)
 
@@ -119,8 +117,8 @@ class TournamentView:
         menu += "0. Revenir au menu tournois\n"
         print(menu)
         go_menu = input("Voulez vous revenir au menu tournoi ? '0' ")
-        return go_menu  
-      
+        return go_menu
+
     def display_tournament_list(self, tournament_data):
         menu = "\n" + "=" * 47 + "\n"
         for tournament in tournament_data:
