@@ -11,7 +11,6 @@ class PlayerManagerController:
     """
     Controller class for managing players.
     """
-
     def __init__(self):
         """
         Initializes the controller with a view and a filepath.
@@ -20,7 +19,6 @@ class PlayerManagerController:
         self.view = PlayerView()
         self.filepath = PLAYERS_FILE
         self.input_validator = PlayerInputValidator(self.view)
-
     ############################################################################################################
     #                                           PLAYER MENU                                                    #
     ############################################################################################################
@@ -36,47 +34,35 @@ class PlayerManagerController:
                 self.main_view.display_menu()
             elif valid_choice == "0":
                 break
-
             ############################################################################################################
             #                                       CHOICE 1       CREATE PLAYER                                       #
             ############################################################################################################
-
-    def create_player(self, choice):
-        if choice:
-            while True:
-                player_info = self.gather_player_information()
-                if player_info:
-                    new_player = Player.create(player_info)
-                    save_player = Player.save(self.filepath, new_player.as_dict())
-                    self.view.display_success(
-                        f"Joueurs {save_player}, ajouté avec succès ! "
-                    )
-                    break
-                else:
-                    break
+    def create_player(self):
+        player_info = self.gather_player_information()
+        if not player_info:
+            return False
+        new_player = Player.create(player_info)
+        Player.save(self.filepath, new_player.as_dict())
+        self.view.display_success(f"Joueurs {new_player.first_name}, ajouté avec succès ! ")
+        return new_player
                 ############################################################################################################
                 #                                           GATHER PLAYER INFO                                             #
                 ############################################################################################################
-
     def gather_player_information(self):
         """
         Handles the flow for prompting and creating a new player.
         """
         while True:
-            first_name = self.input_validator.validate_first_name(
-                self.view.ask_first_name
-            )
+            first_name = self.input_validator.validate_info(self.view.ask_first_name)
             if first_name is False:
                 break
-            last_name = self.input_validator.validate_last_name(self.view.ask_last_name)
+            last_name = self.input_validator.validate_info(self.view.ask_last_name)
             if last_name is False:
                 break
             birthdate = self.input_validator.validate_birthdate(self.view.ask_birthdate)
             if birthdate is False:
                 break
-            national_id = self.input_validator.validate_national_id(
-                self.view.ask_national_id
-            )
+            national_id = self.input_validator.validate_national_id(self.view.ask_national_id)
             if national_id is False:
                 break
             player_info = first_name, last_name, birthdate, national_id
@@ -85,7 +71,6 @@ class PlayerManagerController:
             ############################################################################################################
             #  CHOICE 2    SHOW BDD LIST PLAYERS                                                                       #
             ############################################################################################################
-
     def display_all_players(self):
         """
         Displays all players by reading from a file and passing formatted player information to the view.
@@ -97,10 +82,9 @@ class PlayerManagerController:
                 f"{i+1}. {str(player)}" for i, player in enumerate(players)
             ]
             self.view.display_player_list("\n".join(formatted_players))
-            go_menu = self.input_validator.validate_input(self.view.ask_return_menu)
+            go_menu = self.input_validator.validate_return_to_menu(self.view.ask_return_menu)
             if go_menu:
                 break
-
 
 ############################################################################################################
 #  VALIDATOR                                                                                               #
@@ -108,72 +92,45 @@ class PlayerManagerController:
 class PlayerInputValidator:
     def __init__(self, view):
         self.view = view
-
     ############################################################################################################
     #                                                VALID INPUT                                               #
     ############################################################################################################
-    def validate_input(self, input_function):
+    def validate_return_to_menu(self, input_function):
         while True:
             response = input_function().strip()
-            if self.is_valid_input(response):
+            if response == "0":
                 return response
             else:
-                self.view.display_error("Saisir 0 pour revenir au menu ! ")
+                self.view.display_error("Saisir 0 pour revenir au menu !")
                 return False
 
-    def is_valid_input(self, response):
-        return response in ["0"]
-
     ############################################################################################################
-    #                                                VALID CHOICE                                              #
+    #                                                VALID CHOICE MENU                                         #
     ############################################################################################################
     def validate_choice(self, choice):
         """
         Prompt and validate the user's choice.
         """
-        while True:
-            valid_choice = choice
-            if self.is_valid_choice(valid_choice):
-                return valid_choice
-            else:
-                print("Choix invalide, 0, 1, 2, ou 3 !")
-
-    def is_valid_choice(self, valid_choice):
-        """
-        Check if the choice is valid (i.e. one of '1', '2', or '3').
-        """
-        return valid_choice in ["0", "1", "2", "3"]
-
+        if choice in ["0", "1", "2", "3"]:
+            return choice
+        else:
+            self.view.display_error("Veuillez saisir un choix entre 0, 1, 2 ou 3 !")
+            return False
     ############################################################################################################
-    #                                                FIRST_NAME                                                #
+    #                                                INFO_NAME/SURNAME                                         #
     ############################################################################################################
-    def validate_first_name(self, input_function):
+    def validate_info(self, input_function):
         while True:
-            first_name = input_function().strip()
-            if re.match("^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$", first_name):
-                return first_name
-            elif first_name == "0":
+            info = input_function().strip()
+            if re.match("^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$", info):
+                sanitize_info = self.sanitize_text(info)
+                return sanitize_info
+            elif info == "0":
                 return False
-            elif not re.match("^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$", first_name):
+            elif not re.match("^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$", info):
                 self.view.display_error(
-                    "Le Prénom ne peut pas contenir de caractères spéciaux !"
+                    "Le Prénom/Nom ne peut pas contenir de caractères spéciaux !"
                 )
-
-    ############################################################################################################
-    #                                                LAST_NAME                                                 #
-    ############################################################################################################
-    def validate_last_name(self, input_function):
-        while True:
-            last_name = input_function().strip()
-            if re.match("^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$", last_name):
-                return last_name
-            elif last_name == "0":
-                return False
-            elif not re.match("^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$", last_name):
-                self.view.display_error(
-                    "Le Nom ne peut pas contenir de caractères spéciaux !"
-                )
-
     ############################################################################################################
     #                                                BIRTHDATE                                                 #
     ############################################################################################################
@@ -190,7 +147,6 @@ class PlayerInputValidator:
                     self.view.display_error(
                         "Veuillez saisir une date au format 'dd/mm/YYYY' !"
                     )
-
     ############################################################################################################
     #                                                NATIONAL_ID                                               #
     ############################################################################################################
@@ -209,3 +165,19 @@ class PlayerInputValidator:
                 )
             else:
                 return national_id
+
+    ############################################################################################################
+    #                                                SANITIZE_TEXT                                             #
+    ############################################################################################################
+    def sanitize_text(self, text):
+        """
+        Replace accented characters with their non-accented counterparts.
+        """
+        accents = {
+            'é': 'e', 'è': 'e', 'à': 'a', 'ù': 'u', 'ç': 'c', 'â': 'a', 'ê': 'e',
+            'î': 'i', 'ô': 'o', 'û': 'u', 'ä': 'a', 'ë': 'e', 'ï': 'i', 'ö': 'o',
+            'ü': 'u', 'ÿ': 'y'
+        }
+        for accented, non_accented in accents.items():
+            text = text.replace(accented, non_accented)
+        return text

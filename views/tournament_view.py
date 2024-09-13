@@ -12,20 +12,20 @@ class TournamentView:
         menu += "╚════════════════════════════════════════════╝\n"
         menu += "╔════════════════════════════════════════════╗\n"
         menu += "║  -- Actions --                             ║\n"
+        menu += "║  0. Revenir au menu principal              ║\n"
         menu += "║  1. Ajouter un nouveau tournoi             ║\n"
         menu += "║  2. Liste des tournois à venir             ║\n"
         menu += "║  3. Liste des tournois en cours            ║\n"
         menu += "║  4. Démarrer tournoi                       ║\n"
-        menu += "║  5. Quitter le programme                   ║\n"
         menu += "╚════════════════════════════════════════════╝\n"
         menu += "=" * 47 + "\n"
         print(menu)
-        choice = input(" Entrez votre choix : ")
+        choice = input("Entrez votre choix : ")
         return choice
 
     def ask_name(self):
         menu = "=" * 47 + "\n"
-        menu += "0. Revenir au menu principal\n"
+        menu += "0. Revenir au menu tournois\n"
         print(menu)
         name = input("Entrez le nom du tournoi : ")
         return name
@@ -39,7 +39,7 @@ class TournamentView:
 
     def ask_start_date(self):
         menu = "=" * 47 + "\n"
-        menu += "0. Revenir au menu principal\n"
+        menu += "0. Revenir au menu tournois\n"
         print(menu)
         start_date = input(
             "Date et heure de début du tournoi (ex: 25/02/2024 09:00) : "
@@ -48,38 +48,38 @@ class TournamentView:
 
     def ask_end_date(self):
         menu = "=" * 47 + "\n"
-        menu += "0. Revenir au menu principal\n"
+        menu += "0. Revenir au menu tournois\n"
         print(menu)
         end_date = input("Entrez la date de fin du tournoi (JJ/MM/AAAA) : ")
         return end_date
 
     def ask_rounds(self):
         menu = "=" * 47 + "\n"
-        menu += "0. Revenir au menu principal\n"
+        menu += "0. Revenir au menu tournois\n"
         print(menu)
         rounds = input("Nombre de rounds (par défaut: 4) : ")
         return rounds if rounds.strip() else None
 
     def ask_description(self):
         menu = "=" * 47 + "\n"
-        menu += "0. Revenir au menu principal\n"
+        menu += "0. Revenir au menu tournois\n"
         print(menu)
         description = input("Entrez une description du tournoi : ")
         return description
 
     def ask_player_registration_method(self):
         menu = "=" * 47 + "\n"
-        menu += "0. Revenir au menu principal\n"
-        menu += "1. Importer les joueurs automatiquement\n"
-        menu += "2. Importer les joueurs manuellement\n"
-        menu += "3. Crée et importer un joueur\n"
+        menu += "0. Revenir au menu tournois\n"
+        menu += "1. Importer les joueurs existant automatiquement\n"
+        menu += "2. Importer les joueurs existant manuellement\n"
+        menu += "3. Crée et importer un nouveau joueur\n"
         print(menu)
-        method = input("Choisissez une option (1, 2 ou 3) : ").strip()
+        method = input("Choisissez une option (0, 1, 2 ou 3) : ").strip()
         return method
 
     def ask_add_another_player(self):
         menu = "=" * 47 + "\n"
-        menu += "0. Revenir au menu principal\n"
+        menu += "0. Revenir au menu tournois\n"
         print(menu)
         input_add_another_player = input(
             "Souhaitez-vous ajouter d'autres joueurs au tournoi ? (o/n): "
@@ -88,7 +88,7 @@ class TournamentView:
 
     def ask_player_selection(self, players):
         menu = "=" * 47 + "\n"
-        menu += "0. Revenir au menu principal\n"
+        menu += "0. Revenir au menu tournois\n"
         for i, player in enumerate(players, start=1):
             menu += f"{i}. {player['last_name']} {player['first_name']}\n"
         print(menu)
@@ -99,11 +99,28 @@ class TournamentView:
 
     def ask_start_tournament(self):
         menu = "=" * 47 + "\n"
-        menu += "0. Revenir au menu principal\n"
+        menu += "0. Revenir au menu tournois\n"
         print(menu)
         start_tournament_input = input("Souhaitez-vous commencer le tournoi ? : ")
         return start_tournament_input.lower()
+    
+    def display_tournament(self, formatted_tournaments):
+        menu = "=" * 47 + "\n"
+        menu += "      --- Liste des tournois ---      \n"
+        menu += "=" * 47 + "\n"
+        menu += (
+            f"({len(formatted_tournaments)} joueurs), présent dans la base de données : \n"
+        )
+        menu += formatted_tournaments
+        print(menu)
 
+    def ask_return_menu(self):
+        menu = "=" * 47 + "\n"
+        menu += "0. Revenir au menu tournois\n"
+        print(menu)
+        go_menu = input("Voulez vous revenir au menu tournoi ? '0' ")
+        return go_menu  
+      
     def display_tournament_list(self, tournament_data):
         menu = "\n" + "=" * 47 + "\n"
         for tournament in tournament_data:

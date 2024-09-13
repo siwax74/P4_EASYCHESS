@@ -13,7 +13,7 @@ class PlayerView:
         menu += "╚════════════════════════════════════════════╝\n"
         menu += "╔════════════════════════════════════════════╗\n"
         menu += "║  -- Actions --                             ║\n"
-        menu += "║  0. Revenir au menu                        ║\n"
+        menu += "║  0. Revenir au menu principale             ║\n"
         menu += "║  1. Ajouter un nouveau joueur              ║\n"
         menu += "║  2. Voir liste de joueurs                  ║\n"
         menu += "╚════════════════════════════════════════════╝\n"
@@ -54,7 +54,7 @@ class PlayerView:
         menu = "=" * 47 + "\n"
         menu += "0. Revenir au menu principal\n"
         print(menu)
-        go_menu = input("Voulez vous revenir au menu ? '0' ")
+        go_menu = input("Voulez vous revenir au menu joueur ? '0' ")
         return go_menu
 
     def display_player_list(self, formatted_players):
