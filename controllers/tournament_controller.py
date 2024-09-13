@@ -101,20 +101,19 @@ class TournamentManagerController:
                 new_player = self.add_new_player(new_tournament)
                 return new_player
             
-
     def add_new_player(self, new_tournament):
         while True:
             self.player_manager_controller = PlayerManagerController()
             new_player = self.player_manager_controller.create_player()
             new_tournament.players.append(new_player)
+            print(new_tournament)
             add_another = self.input_validator.validate_input(
-                            self.view.ask_add_another_player
-                        )
+                        self.view.ask_add_another_player
+                    )
             if add_another == "o":
                 continue
             else:
-                return new_tournament
-
+                return new_player
         ############################################################################################################
         #                                                 ADD PLAYERS AUTO                                         #
         ############################################################################################################

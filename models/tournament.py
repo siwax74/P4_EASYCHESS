@@ -21,13 +21,13 @@ class Tournament:
         self.players = []
         self.description = description
 
-    """def __str__(self):
+    def __str__(self):
         return f"{self.name} - {self.location} - {self.start_date} à {self.end_date}\n" \
             f"Description: {self.description}\n" \
             f"Number of rounds: {self.number_of_rounds}\n" \
             f"Current round: {self.current_round}\n" \
             f"List of rounds: {self.list_rounds}\n" \
-            f"Players: {self.players}"""
+            f"Players: {[str(player) for player in self.players]}"
     
     @classmethod
     def create(cls, player_info):

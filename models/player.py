@@ -69,5 +69,5 @@ class Player:
             "last_name": self.last_name,
             "first_name": self.first_name,
             "birthdate": self.birthdate.strftime("%d/%m/%Y"),
-            "national_id": self.national_id,
+            "national_id": self.national_id if self.national_id else None,
         }

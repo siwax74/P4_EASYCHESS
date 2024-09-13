@@ -1,98 +1,22 @@
 {
     "tournament1": {
-        "name": "sdfsd",
-        "location": "sdfsd",
-        "start_date": "01/12/1994 10:00",
-        "end_date": "01/12/1995",
-        "number_of_rounds": 4,
-        "current_round": 1,
-        "players": [
-            {
-                "last_name": "ghjghj",
-                "first_name": "gjgh",
-                "birthdate": "01/12/1996",
-                "national_id": ""
-            },
-            {
-                "last_name": "dfgdfg",
-                "first_name": "dfgdfg",
-                "birthdate": "01/12/1996",
-                "national_id": ""
-            },
-            {
-                "last_name": "dfgdfg",
-                "first_name": "dfgdfg",
-                "birthdate": "01/12/1996",
-                "national_id": ""
-            },
-            {
-                "last_name": "gjhgj",
-                "first_name": "ghjghj",
-                "birthdate": "01/12/1996",
-                "national_id": ""
-            },
-            {
-                "last_name": "dfgdfg",
-                "first_name": "dfgdfg",
-                "birthdate": "01/12/1994",
-                "national_id": ""
-            },
-            {
-                "last_name": "fdgfd",
-                "first_name": "dfgfdg",
-                "birthdate": "01/12/1994",
-                "national_id": ""
-            },
-            {
-                "last_name": "dfgdfg",
-                "first_name": "fdgfdg",
-                "birthdate": "01/12/1996",
-                "national_id": ""
-            },
-            {
-                "last_name": "fghfg",
-                "first_name": "fghgfh",
-                "birthdate": "01/12/1996",
-                "national_id": ""
-            }
-        ],
-        "list_rounds": [],
-        "description": "dfgdfgdfg",
-        "upcoming": true,
-        "in_progress": false
-    },
-    "tournament2": {
-        "name": "dfgdfg",
-        "location": "dfgfd",
+        "name": "qsdqs",
+        "location": "qsdqsd",
         "start_date": "01/12/1994 10:00",
         "end_date": "01/12/1994",
         "number_of_rounds": 4,
         "current_round": 1,
         "players": [
             {
-                "last_name": "ghjghj",
-                "first_name": "gjgh",
-                "birthdate": "01/12/1996",
-                "national_id": ""
-            },
-            {
-                "last_name": "dfgdfg",
-                "first_name": "dfgdfg",
-                "birthdate": "01/12/1996",
-                "national_id": ""
+                "last_name": "sdfdsf",
+                "first_name": "sdfsdf",
+                "birthdate": "01/12/1995",
+                "national_id": null
             }
         ],
         "list_rounds": [],
-        "description": "hjkhjkhjk",
+        "description": "sdfsd",
         "upcoming": true,
         "in_progress": false
-    },
-    "tournament3": {
-        "name": "sdf",
-        "location": "sdfsdf",
-        "start_date": "01/12/1994 10:00",
-        "end_date": "01/12/1996",
-        "number_of_rounds": 4,
-        "current_round": 1,
-        "players": [
-            
+    }
+}

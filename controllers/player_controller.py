@@ -44,7 +44,7 @@ class PlayerManagerController:
         new_player = Player.create(player_info)
         Player.save(self.filepath, new_player.as_dict())
         self.view.display_success(f"Joueurs {new_player.first_name}, ajouté avec succès ! ")
-        return new_player
+        return new_player.as_dict()
                 ############################################################################################################
                 #                                           GATHER PLAYER INFO                                             #
                 ############################################################################################################
