@@ -58,11 +58,15 @@ class TournamentManagerController:
         Gathers information for creating a new tournament.
         """
         name = self.validator_input.validate_tournament_name(self.view.ask_name)
-        location = self.validator_input.validate_tournament_location(self.view.ask_location)
+        location = self.validator_input.validate_tournament_location(
+            self.view.ask_location
+        )
         start_date = self.validator_input.validate_tournament_start_date(
             self.view.ask_start_date
         )
-        end_date = self.validator_input.validate_tournament_end_date(self.view.ask_end_date)
+        end_date = self.validator_input.validate_tournament_end_date(
+            self.view.ask_end_date
+        )
         description = self.validator_input.validate_tournament_description(
             self.view.ask_description
         )
@@ -94,21 +98,25 @@ class TournamentManagerController:
                 self.player_manager_controller = PlayerManagerController()
                 new_player = self.player_manager_controller.gather_player_information()
                 self.add_player_to_tournament(new_player, tournament_info)
-                response = self.validator_input.validate_input(self.view.ask_add_another_player)
+                response = self.validator_input.validate_input(
+                    self.view.ask_add_another_player
+                )
                 if response == "o":
                     continue
                 else:
                     return self.ask_start_tournament(tournament_info)
-                       
+
         ############################################################################################################
         #                                                 ADD PLAYERS                                              #
         ############################################################################################################
+
     def add_player_to_tournament(self, new_player, tournament_info):
         tournament_info["players"].append(new_player)
         return tournament_info
-            ############################################################################################################
-            #                                                 ADD PLAYERS AUTO                                         #
-            ############################################################################################################
+        ############################################################################################################
+        #                                                 ADD PLAYERS AUTO                                         #
+        ############################################################################################################
+
     def register_players_automatically(self, tournament_info):
         """
         Registers players automatically from the file.
@@ -119,9 +127,10 @@ class TournamentManagerController:
 
     def add_players_auto(self, players, tournament_info):
         return Tournament.add_players_auto(players, tournament_info)
-            ############################################################################################################
-            #                                                 ADD PLAYERS MANUALLY                                     #
-            ############################################################################################################
+        ############################################################################################################
+        #                                                 ADD PLAYERS MANUALLY                                     #
+        ############################################################################################################
+
     def register_players_manually(self, tournament_info):
         players = self.read_players()
         selected_player_indices = self.get_selected_player_indices(players)
@@ -145,7 +154,7 @@ class TournamentManagerController:
         return Tournament.add_players_manually(
             selected_player_indices, players, tournament_info
         )
-    
+
     ############################################################################################################
     #                                                 SAVE TOURNAMENT                                          #
     ############################################################################################################
@@ -154,7 +163,8 @@ class TournamentManagerController:
         Persists the tournament's information to the file.
         """
         Tournament.save(self.file_tournament, tournament_info)
-        self.view.display_success("Tournament successfully created!")    
+        self.view.display_success("Tournament successfully created!")
+
     ############################################################################################################
     #                                                 READ TOURNAMENT/PLAYERS                                  #
     ############################################################################################################
@@ -163,18 +173,19 @@ class TournamentManagerController:
         Reads existing tournaments from file.
         """
         return Tournament.read(self.file_tournament)
-    
+
     def read_players(self):
         """
         Loads player data from file.
         """
         return Player.read(self.file_player)
+
     ############################################################################################################
     #                                          GET CHOICE MENU OPTION 2                                        #
     ############################################################################################################
-        ############################################################################################################
-        #                                           DISPLAY UPCOMING                                              #
-        ############################################################################################################
+    ############################################################################################################
+    #                                           DISPLAY UPCOMING                                              #
+    ############################################################################################################
     def display_all_tournaments_upcoming(self):
         """
         Prepares data to display the list of upcoming tournaments.
@@ -192,6 +203,7 @@ class TournamentManagerController:
         ############################################################################################################
         #                                          DISPLAY IN_PROGRESS                                             #
         ############################################################################################################
+
     def display_all_tournaments_in_progress(self):
         """
         Prepares data to display the list of in_progress tournaments.
@@ -210,6 +222,7 @@ class TournamentManagerController:
         ############################################################################################################
         #                                          PREPARE DATA FOR DISPLAY VIEW                                   #
         ############################################################################################################
+
     def filter_tournaments(self, tournaments, status):
         """
         Filters tournaments based on their status.
@@ -219,6 +232,7 @@ class TournamentManagerController:
             for tournament_id, details in tournaments.items()
             if details and details.get(status, True)
         }
+
     def prepare_tournament_data(self, upcoming_tournaments):
         """
         Prepares tournament data for display.
@@ -226,8 +240,8 @@ class TournamentManagerController:
         tournament_data = []
         for tournament_id, details in upcoming_tournaments.items():
             tournament_info = self.prepare_tournament_info(tournament_id, details)
-            player_details = self.prepare_player_details(tournament_info['players'])
-            tournament_info['player_details'] = player_details
+            player_details = self.prepare_player_details(tournament_info["players"])
+            tournament_info["player_details"] = player_details
             tournament_data.append(tournament_info)
         return tournament_data
 
@@ -236,16 +250,18 @@ class TournamentManagerController:
         Prepares tournament information for display.
         """
         return {
-            'id': tournament_id,
-            'name': details.get("name", "Nom non disponible"),
-            'location': details.get("location", "Emplacement non disponible"),
-            'start_date': details.get("start_date", "Date de début non disponible"),
-            'end_date': details.get("end_date", "Date de fin non disponible"),
-            'number_of_rounds': details.get("number_of_rounds", "Nombre de tours non disponible"),
-            'players': details.get("players", []),
-            'current_round': details.get("current_round", "Tour actuel non disponible"),
-            'list_rounds': details.get("list_rounds", []),
-            'description': details.get("description", "Description non disponible")
+            "id": tournament_id,
+            "name": details.get("name", "Nom non disponible"),
+            "location": details.get("location", "Emplacement non disponible"),
+            "start_date": details.get("start_date", "Date de début non disponible"),
+            "end_date": details.get("end_date", "Date de fin non disponible"),
+            "number_of_rounds": details.get(
+                "number_of_rounds", "Nombre de tours non disponible"
+            ),
+            "players": details.get("players", []),
+            "current_round": details.get("current_round", "Tour actuel non disponible"),
+            "list_rounds": details.get("list_rounds", []),
+            "description": details.get("description", "Description non disponible"),
         }
 
     def prepare_player_details(self, players):
@@ -255,27 +271,34 @@ class TournamentManagerController:
         player_details = []
         for player in players:
             player_info = {
-                'last_name': player.get("last_name", "Nom de famille non disponible"),
-                'first_name': player.get("first_name", "Prénom non disponible"),
-                'birthdate': player.get("birthdate", "Date de naissance non disponible"),
-                'national_id': player.get("national_id", "Identifiant national non disponible")
+                "last_name": player.get("last_name", "Nom de famille non disponible"),
+                "first_name": player.get("first_name", "Prénom non disponible"),
+                "birthdate": player.get(
+                    "birthdate", "Date de naissance non disponible"
+                ),
+                "national_id": player.get(
+                    "national_id", "Identifiant national non disponible"
+                ),
             }
             player_details.append(player_info)
-        return player_details    
+        return player_details
 
     ############################################################################################################
     #                                                 START TOURNAMENT                                         #
-    ############################################################################################################               
+    ############################################################################################################
     def ask_start_tournament(self, tournament_info):
-        ask_start_tournament = self.validator_input.validate_input(self.view.ask_start_tournament)
+        ask_start_tournament = self.validator_input.validate_input(
+            self.view.ask_start_tournament
+        )
         # Appel correct à start_tournament avec self
         return self.generate_pairs(ask_start_tournament, tournament_info)
         return self.start_tournament(ask_start_tournament, tournament_info)
-        
+
     def generate_pairs(self, ask_start_tournament, tournament_info):
         if ask_start_tournament.lower() == "o":
             players = self.validator_value.validate_players(tournament_info)
         pass
+
     """def start_tournament(self, ask_start_tournament, tournament_info):
         if ask_start_tournament.lower() == "o":  # Supposons que 'o' signifie oui
             for key, values in tournament_info.items():
@@ -285,7 +308,8 @@ class TournamentManagerController:
             return model
         else:
             print("Tournoi non démarré. Sortie.")"""
-    
+
+
 ############################################################################################################
 #  VALUE VALIDATOR                                                                                         #
 ############################################################################################################
@@ -299,15 +323,15 @@ class TournamentValueValidator:
             return players
         else:
             self.view.display_error("No players found")
-           
+
     def validate_count_players(self, players):
         count_players = len(players)
         return count_players
-    
-    
+
+
 ############################################################################################################
 #  INPUT VALIDATOR                                                                                         #
-############################################################################################################   
+############################################################################################################
 class TournamentInputValidator:
     def __init__(self, view, file_player):
         self.view = view
@@ -480,4 +504,3 @@ class TournamentInputValidator:
 
     def is_valid_input(self, response):
         return response in ["o", "n"]
-    

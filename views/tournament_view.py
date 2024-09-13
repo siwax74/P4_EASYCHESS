@@ -1,5 +1,6 @@
 import time
 
+
 class TournamentView:
     def display_tournament_menu(self) -> str:
         menu = "=" * 47 + "\n"
@@ -40,7 +41,9 @@ class TournamentView:
         menu = "=" * 47 + "\n"
         menu += "0. Revenir au menu principal\n"
         print(menu)
-        start_date = input("Date et heure de début du tournoi (ex: 25/02/2024 09:00) : ")
+        start_date = input(
+            "Date et heure de début du tournoi (ex: 25/02/2024 09:00) : "
+        )
         return start_date
 
     def ask_end_date(self):
@@ -78,7 +81,9 @@ class TournamentView:
         menu = "=" * 47 + "\n"
         menu += "0. Revenir au menu principal\n"
         print(menu)
-        input_add_another_player = input("Souhaitez-vous ajouter d'autres joueurs au tournoi ? (o/n): ")
+        input_add_another_player = input(
+            "Souhaitez-vous ajouter d'autres joueurs au tournoi ? (o/n): "
+        )
         return input_add_another_player.lower()
 
     def ask_player_selection(self, players):
@@ -112,10 +117,10 @@ class TournamentView:
             menu += f"Tour actuel: {tournament['current_round']}\n"
             menu += f"Listes des tours: {tournament['list_rounds']}\n"
             menu += f"Description: {tournament['description']}\n"
-            
-            if tournament['player_details']:
+
+            if tournament["player_details"]:
                 menu += "Liste des joueurs inscrits :\n"
-                for player in tournament['player_details']:
+                for player in tournament["player_details"]:
                     menu += f"  - {player['first_name']} {player['last_name']}, Date de naissance: {player['birthdate']}, ID National: {player['national_id']}\n"
             else:
                 menu += "Pas de joueurs inscrits.\n"

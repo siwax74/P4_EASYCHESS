@@ -20,6 +20,7 @@ class PlayerManagerController:
         self.view = PlayerView()
         self.filepath = PLAYERS_FILE
         self.input_validator = PlayerInputValidator(self.view)
+
     ############################################################################################################
     #                                           PLAYER MENU                                                    #
     ############################################################################################################
@@ -39,6 +40,7 @@ class PlayerManagerController:
             ############################################################################################################
             #                                       CHOICE 1       CREATE PLAYER                                       #
             ############################################################################################################
+
     def create_player(self, choice):
         if choice:
             while True:
@@ -46,19 +48,24 @@ class PlayerManagerController:
                 if player_info:
                     new_player = Player.create(player_info)
                     save_player = Player.save(self.filepath, new_player.as_dict())
-                    self.view.display_success(f"Joueurs {save_player}, ajouté avec succès ! ")
+                    self.view.display_success(
+                        f"Joueurs {save_player}, ajouté avec succès ! "
+                    )
                     break
                 else:
                     break
                 ############################################################################################################
                 #                                           GATHER PLAYER INFO                                             #
                 ############################################################################################################
+
     def gather_player_information(self):
         """
         Handles the flow for prompting and creating a new player.
         """
         while True:
-            first_name = self.input_validator.validate_first_name(self.view.ask_first_name)
+            first_name = self.input_validator.validate_first_name(
+                self.view.ask_first_name
+            )
             if first_name is False:
                 break
             last_name = self.input_validator.validate_last_name(self.view.ask_last_name)
@@ -67,7 +74,9 @@ class PlayerManagerController:
             birthdate = self.input_validator.validate_birthdate(self.view.ask_birthdate)
             if birthdate is False:
                 break
-            national_id = self.input_validator.validate_national_id(self.view.ask_national_id)
+            national_id = self.input_validator.validate_national_id(
+                self.view.ask_national_id
+            )
             if national_id is False:
                 break
             player_info = first_name, last_name, birthdate, national_id
@@ -76,6 +85,7 @@ class PlayerManagerController:
             ############################################################################################################
             #  CHOICE 2    SHOW BDD LIST PLAYERS                                                                       #
             ############################################################################################################
+
     def display_all_players(self):
         """
         Displays all players by reading from a file and passing formatted player information to the view.
@@ -83,12 +93,15 @@ class PlayerManagerController:
         while True:
             players_data = Player.read(self.filepath)
             players = [Player.from_dict(player_data) for player_data in players_data]
-            formatted_players = [f"{i+1}. {str(player)}" for i, player in enumerate(players)]
+            formatted_players = [
+                f"{i+1}. {str(player)}" for i, player in enumerate(players)
+            ]
             self.view.display_player_list("\n".join(formatted_players))
             go_menu = self.input_validator.validate_input(self.view.ask_return_menu)
             if go_menu:
                 break
-    
+
+
 ############################################################################################################
 #  VALIDATOR                                                                                               #
 ############################################################################################################
@@ -143,7 +156,7 @@ class PlayerInputValidator:
                 return False
             elif not re.match("^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$", first_name):
                 self.view.display_error(
-                "Le Prénom ne peut pas contenir de caractères spéciaux !"
+                    "Le Prénom ne peut pas contenir de caractères spéciaux !"
                 )
 
     ############################################################################################################
@@ -158,8 +171,8 @@ class PlayerInputValidator:
                 return False
             elif not re.match("^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$", last_name):
                 self.view.display_error(
-                "Le Nom ne peut pas contenir de caractères spéciaux !"
-                )           
+                    "Le Nom ne peut pas contenir de caractères spéciaux !"
+                )
 
     ############################################################################################################
     #                                                BIRTHDATE                                                 #
@@ -174,7 +187,9 @@ class PlayerInputValidator:
                 if birthdate == "0":
                     return False
                 else:
-                    self.view.display_error("Veuillez saisir une date au format 'dd/mm/YYYY' !")
+                    self.view.display_error(
+                        "Veuillez saisir une date au format 'dd/mm/YYYY' !"
+                    )
 
     ############################################################################################################
     #                                                NATIONAL_ID                                               #
@@ -186,7 +201,11 @@ class PlayerInputValidator:
                 return False
             if not national_id:
                 return national_id
-            elif len(national_id) > 7 or not re.match("^[A-Za-z0-9]{2}[0-9]{5}$", national_id):
-                self.view.display_error("Veuillez saisir un national_id valide au format 'AB12345' !")
+            elif len(national_id) > 7 or not re.match(
+                "^[A-Za-z0-9]{2}[0-9]{5}$", national_id
+            ):
+                self.view.display_error(
+                    "Veuillez saisir un national_id valide au format 'AB12345' !"
+                )
             else:
                 return national_id

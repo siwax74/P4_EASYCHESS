@@ -65,7 +65,7 @@ class Tournament:
     @staticmethod
     def add_players_auto(players, tournament):
         tournament["players"].extend(players)
-        return tournament    
+        return tournament
 
     @staticmethod
     def add_players_manually(selected_players, players, tournament):

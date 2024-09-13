@@ -14,7 +14,7 @@ class Player:
 
     def __str__(self):
         return f"Nom: {self.last_name}, Prénom: {self.first_name}, Date de naissance : {self.birthdate.strftime('%d/%m/%Y')} National_id: {self.national_id}"
-    
+
     @classmethod
     def create(cls, player_info):
         first_name, last_name, birthdate, national_id = player_info
@@ -54,16 +54,16 @@ class Player:
                 json.dump(existing_data, json_file, indent=4)
         except Exception as e:
             print(f"An error occurred while saving data to {file_path}: {e}")
-    
+
     @classmethod
     def from_dict(cls, data: dict):
         return cls(
-            last_name=data['last_name'],
-            first_name=data['first_name'],
-            birthdate=data['birthdate'],
-            national_id=data['national_id']
+            last_name=data["last_name"],
+            first_name=data["first_name"],
+            birthdate=data["birthdate"],
+            national_id=data["national_id"],
         )
-    
+
     def as_dict(self) -> Dict[str, str]:
         return {
             "last_name": self.last_name,
@@ -71,4 +71,3 @@ class Player:
             "birthdate": self.birthdate.strftime("%d/%m/%Y"),
             "national_id": self.national_id,
         }
-    

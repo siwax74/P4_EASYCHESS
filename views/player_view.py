@@ -1,4 +1,6 @@
 import time
+
+
 class PlayerView:
     def display_player_menu(self) -> str:
         menu = "=" * 47 + "\n"
@@ -26,7 +28,6 @@ class PlayerView:
         menu += "0. Revenir au menu principal\n"
         print(menu)
         return input("Entrez le prénom du joueur : ")
-        
 
     def ask_last_name(self):
         menu = "=" * 47 + "\n"
@@ -48,7 +49,7 @@ class PlayerView:
         print(menu)
         national_id = input("Entrez le N° d'identité nationale du joueur : ")
         return national_id
-    
+
     def ask_return_menu(self):
         menu = "=" * 47 + "\n"
         menu += "0. Revenir au menu principal\n"
@@ -60,7 +61,9 @@ class PlayerView:
         menu = "=" * 47 + "\n"
         menu += "      --- Liste des joueurs ---      \n"
         menu += "=" * 47 + "\n"
-        menu += f"({len(formatted_players)} joueurs), présent dans la base de données : \n"
+        menu += (
+            f"({len(formatted_players)} joueurs), présent dans la base de données : \n"
+        )
         menu += formatted_players
         print(menu)
 
