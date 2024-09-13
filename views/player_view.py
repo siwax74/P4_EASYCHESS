@@ -11,6 +11,7 @@ class PlayerView:
         menu += "╚════════════════════════════════════════════╝\n"
         menu += "╔════════════════════════════════════════════╗\n"
         menu += "║  -- Actions --                             ║\n"
+        menu += "║  0. Revenir au menu                        ║\n"
         menu += "║  1. Ajouter un nouveau joueur              ║\n"
         menu += "║  2. Voir liste de joueurs                  ║\n"
         menu += "╚════════════════════════════════════════════╝\n"
@@ -24,8 +25,8 @@ class PlayerView:
         menu = "=" * 47 + "\n"
         menu += "0. Revenir au menu principal\n"
         print(menu)
-        first_name = input("Entrez le prénom du joueur : ")
-        return first_name
+        return input("Entrez le prénom du joueur : ")
+        
 
     def ask_last_name(self):
         menu = "=" * 47 + "\n"
