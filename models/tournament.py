@@ -2,7 +2,6 @@ from datetime import datetime
 import json
 import logging
 
-
 class Tournament:
     def __init__(
         self,
@@ -23,15 +22,13 @@ class Tournament:
         self.description = description
 
     def __str__(self):
-        return (
-            f"{self.name} - {self.location} - {self.start_date} à {self.end_date}\n"
-            f"Description: {self.description}\n"
-            f"Number of rounds: {self.number_of_rounds}\n"
-            f"Current round: {self.current_round}\n"
-            f"List of rounds: {self.list_rounds}\n"
+        return f"{self.name} - {self.location} - {self.start_date} à {self.end_date}\n" \
+            f"Description: {self.description}\n" \
+            f"Number of rounds: {self.number_of_rounds}\n" \
+            f"Current round: {self.current_round}\n" \
+            f"List of rounds: {self.list_rounds}\n" \
             f"Players: {[str(player) for player in self.players]}"
-        )
-
+    
     @classmethod
     def create(cls, player_info):
         name, location, start_date, end_date, description = player_info
@@ -66,7 +63,7 @@ class Tournament:
     @staticmethod
     def add_players_auto(players, new_tournament):
         new_tournament.players.extend(players)
-        return new_tournament()
+        return new_tournament
 
     @staticmethod
     def add_players_manually(selected_players, players, new_tournament):
@@ -81,14 +78,7 @@ class Tournament:
             return new_tournament
         except Exception as e:
             raise Exception(f"Une erreur est survenue : {str(e)}")
-        
-    @staticmethod
-    def generate_pairs(self):
-        pairs = []
-        for i in range(0, len(self.players) - 1, 2):
-            pairs.append((self.players[i], self.players[i + 1]))
-        return pairs
-    
+
     @classmethod
     def from_dict(cls, data: dict):
         return cls(
@@ -104,7 +94,7 @@ class Tournament:
             upcoming=data["upcoming"],
             in_progress=data["in_progress"],
         )
-
+    
     def as_dict(self):
         return {
             "name": self.name,

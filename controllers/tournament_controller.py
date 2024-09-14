@@ -56,8 +56,6 @@ class TournamentManagerController:
                 return False
             Tournament.save(self.file_tournament, new_tournament.as_dict())
             self.view.display_success("Tournois crée avec succès ! ")
-            start_tournament = self.start_tournament(new_tournament)
-
             return new_tournament.as_dict()
 
     def gather_tournament_information(self):
@@ -149,9 +147,6 @@ class TournamentManagerController:
                 continue
             else:
                 return new_player
-
-    def start_tournament(self, new_tournament):
-        pairs = Match.genera
 
     ############################################################################################################
     #                                          GET CHOICE MENU OPTION 2                                        #
