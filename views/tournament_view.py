@@ -41,9 +41,7 @@ class TournamentView:
         menu = "=" * 47 + "\n"
         menu += "0. Revenir au menu tournois\n"
         print(menu)
-        start_date = input(
-            "Date et heure de début du tournoi (ex: 25/02/2024 09:00) : "
-        )
+        start_date = input("Date et heure de début du tournoi (ex: 25/02/2024 09:00) : ")
         return start_date
 
     def ask_end_date(self):
@@ -81,9 +79,7 @@ class TournamentView:
         menu = "=" * 47 + "\n"
         menu += "0. Revenir au menu tournois\n"
         print(menu)
-        input_add_another_player = input(
-            "Souhaitez-vous ajouter d'autres joueurs au tournoi ? (o/n): "
-        )
+        input_add_another_player = input("Souhaitez-vous ajouter d'autres joueurs au tournoi ? (o/n): ")
         return input_add_another_player.lower()
 
     def ask_player_selection(self, players):

@@ -5,12 +5,18 @@ from typing import Dict
 
 class Player:
     def __init__(
-        self, last_name: str, first_name: str, birthdate: str, national_id: str
+        self,
+        last_name: str,
+        first_name: str,
+        birthdate: str,
+        national_id: str,
+        score: float = 0,
     ) -> None:
         self.last_name = last_name
         self.first_name = first_name
         self.birthdate = datetime.strptime(birthdate, "%d/%m/%Y")
         self.national_id = national_id
+        self.score = score
 
     def __str__(self):
         return f"Nom: {self.last_name}, Prénom: {self.first_name}, Date de naissance : {self.birthdate.strftime('%d/%m/%Y')} National_id: {self.national_id}"
@@ -29,9 +35,7 @@ class Player:
             return {}
 
     @classmethod
-    def update(
-        cls, file_path: str, player_id: str, updated_data: Dict[str, str]
-    ) -> None:
+    def update(cls, file_path: str, player_id: str, updated_data: Dict[str, str]) -> None:
         try:
             data = cls.read(file_path)
             if player_id in data:
@@ -62,6 +66,7 @@ class Player:
             first_name=data["first_name"],
             birthdate=data["birthdate"],
             national_id=data["national_id"],
+            score=data["score"],
         )
 
     def as_dict(self) -> Dict[str, str]:
@@ -70,4 +75,5 @@ class Player:
             "first_name": self.first_name,
             "birthdate": self.birthdate.strftime("%d/%m/%Y"),
             "national_id": self.national_id if self.national_id else None,
+            "score": self.score,
         }

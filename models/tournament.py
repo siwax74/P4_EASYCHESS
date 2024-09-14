@@ -2,6 +2,7 @@ from datetime import datetime
 import json
 import logging
 
+
 class Tournament:
     def __init__(
         self,
@@ -22,16 +23,18 @@ class Tournament:
         self.description = description
 
     def __str__(self):
-        return f"{self.name} - {self.location} - {self.start_date} à {self.end_date}\n" \
-            f"Description: {self.description}\n" \
-            f"Number of rounds: {self.number_of_rounds}\n" \
-            f"Current round: {self.current_round}\n" \
-            f"List of rounds: {self.list_rounds}\n" \
+        return (
+            f"{self.name} - {self.location} - {self.start_date} à {self.end_date}\n"
+            f"Description: {self.description}\n"
+            f"Number of rounds: {self.number_of_rounds}\n"
+            f"Current round: {self.current_round}\n"
+            f"List of rounds: {self.list_rounds}\n"
             f"Players: {[str(player) for player in self.players]}"
-    
+        )
+
     @classmethod
-    def create(cls, player_info):
-        name, location, start_date, end_date, description = player_info
+    def create(cls, new_tournament):
+        name, location, start_date, end_date, description = new_tournament
         return cls(name, location, start_date, end_date, description)
 
     @classmethod
@@ -55,15 +58,14 @@ class Tournament:
         except Exception as e:
             logging.error(f"An error occurred while saving data to {file_path}: {e}")
 
-    @classmethod
-    def start(cls, tournament_info):
-        players = tournament_info.get("players", [])
-        print("Joueurs :", players)
-
     @staticmethod
     def add_players_auto(players, new_tournament):
         new_tournament.players.extend(players)
         return new_tournament
+
+    @staticmethod
+    def generate_pair(num_players):
+        return
 
     @staticmethod
     def add_players_manually(selected_players, players, new_tournament):
@@ -94,7 +96,7 @@ class Tournament:
             upcoming=data["upcoming"],
             in_progress=data["in_progress"],
         )
-    
+
     def as_dict(self):
         return {
             "name": self.name,

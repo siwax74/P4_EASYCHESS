@@ -61,9 +61,7 @@ class PlayerView:
         menu = "=" * 47 + "\n"
         menu += "      --- Liste des joueurs ---      \n"
         menu += "=" * 47 + "\n"
-        menu += (
-            f"({len(formatted_players)} joueurs), présent dans la base de données : \n"
-        )
+        menu += f"({len(formatted_players)} joueurs), présent dans la base de données : \n"
         menu += formatted_players
         print(menu)
 

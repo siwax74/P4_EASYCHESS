@@ -1,7 +1,11 @@
 from datetime import datetime
+import pprint
+import random
 import re
 from controllers.player_controller import PlayerManagerController
 from models.player import Player
+from models.round import Round
+from models.match import Match
 from models.tournament import Tournament
 from views.tournament_view import TournamentView
 from settings import TOURNAMENT_FILE, PLAYERS_FILE
@@ -54,10 +58,57 @@ class TournamentManagerController:
             )
             if not players_registration_method:
                 return False
+            initiate_tournament = self.start_tournament(new_tournament)
+            if initiate_tournament == "0":
+                return False
             Tournament.save(self.file_tournament, new_tournament.as_dict())
             self.view.display_success("Tournois crée avec succès ! ")
             return new_tournament.as_dict()
+        
+    def start_tournament(self, new_tournament):
+        choice = self.input_validator.validate_input(self.view.ask_start_tournament)
+        if choice == "o":
+            round = self.generate_round(new_tournament)
+            print(f"Round created: {round.name}")
+            print(f"Matches in round: {round.matches}")
+        elif choice == "n":
+            return
+        elif choice == "0":
+            return choice
+        
+    def generate_round(self, new_tournament):
+        print("Generating round...")
+        round_name = f"Round {new_tournament.current_round}"
+        start_date_time = datetime.now()
+        end_date_time = None
+        round = Round(round_name, start_date_time, end_date_time)
+        matches = self.generate_matches(new_tournament)
+        for match in matches:
+            round.add_match(match)
+        return round
 
+    def generate_pairs(self, players):
+        print("Generating pairs...")
+        random.shuffle(players)
+        players.sort(key=lambda x: x.get("score"), reverse=True)
+        pairs = []
+        while len(players) >= 2:
+            player1 = players.pop(0)
+            player2 = players.pop(0)
+            score1 = player1.get("score")
+            score2 = player2.get("score")
+            match = Match.create(player1, score1, player2, score2)
+            pairs.append(((match.player1, match.score1), (match.player2, match.score2)))
+            print(f"Match created: {match}")
+        return pairs
+
+    def generate_matches(self, new_tournament):
+        print("Generating matches...")
+        players = new_tournament.players
+        if len(players) < 2:
+            raise ValueError("Pas assez de joueurs pour créer des matchs.")
+        matches = self.generate_pairs(players)
+        return matches
     def gather_tournament_information(self):
         """
         Gathers information for creating a new tournament.
@@ -267,17 +318,6 @@ class TournamentValidator:
     def __init__(self, view):
         self.view = view
 
-    def validate_players(self, tournament_info):
-        players = tournament_info["players"]
-        if players:
-            return players
-        else:
-            self.view.display_error("No players found")
-
-    def validate_count_players(self, players):
-        count_players = len(players)
-        return count_players
-
     def sanitize_text(self, text):
         """
         Replace accented characters with their non-accented counterparts.
@@ -303,7 +343,6 @@ class TournamentValidator:
         for accented, non_accented in accents.items():
             text = text.replace(accented, non_accented)
         return text
-
 
 ############################################################################################################
 #  INPUT VALIDATOR                                                                                         #
@@ -454,17 +493,13 @@ class InputValidator:
     ############################################################################################################
     #                                             VALID INPUT   o/n                                            #
     ############################################################################################################
-
     def validate_input(self, input_function):
         while True:
             response = input_function().strip()
-            if self.is_valid_input(response):
+            if response in ["o", "n", "0"]:
                 return response
             else:
-                self.view.display_error("Veuillez répondre par o ou n ! ")
-
-    def is_valid_input(self, response):
-        return response in ["o", "n"]
+                self.view.display_error("Veuillez répondre par o, n ou 0 ! ")
 
     ############################################################################################################
     #                                                VALID INPUT                                               #

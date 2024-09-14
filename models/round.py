@@ -1,15 +1,18 @@
 from datetime import datetime
 
-
 class Round:
-    def __init__(self, name, start_date=None, end_date=None):
+    def __init__(self, name, start_date_time, end_date_time):
         self.name = name
+        self.start_date_time = start_date_time
+        self.end_date_time = end_date_time
         self.matches = []
-        self.start_date = start_date or datetime.datetime.now()
-        self.end_date = end_date
 
     def add_match(self, match):
         self.matches.append(match)
 
+    @classmethod
+    def create(cls):
+        return cls("Round 1", datetime.now(), None)
+
     def __repr__(self):
-        return f"Round({self.name}, {self.start_date}, {self.end_date}, {self.matches})"
+        return f"{self.name} (début : {self.start_date_time}, fin : {self.end_date_time})\nMatches:\n{', '.join(str(match) for match in self.matches)}"
