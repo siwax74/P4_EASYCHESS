@@ -11,7 +11,6 @@ class PlayerManagerController:
     """
     Controller class for managing players.
     """
-
     def __init__(self):
         """
         Initializes the controller with a view and a filepath.
@@ -39,7 +38,6 @@ class PlayerManagerController:
             ############################################################################################################
             #                                       CHOICE 1       CREATE PLAYER                                       #
             ############################################################################################################
-
     def create_player(self):
         player_info = self.gather_player_information()
         if not player_info:

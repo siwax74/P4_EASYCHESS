@@ -1,22 +1,25 @@
+import os
+import platform
 import time
 
 
-class PlayerView:
+class PlayerView:    
     def display_player_menu(self) -> str:
+        self.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
         menu += "=" * 47 + "\n"
 
-        menu += "╔════════════════════════════════════════════╗\n"
-        menu += "║               MENU JOUEUR                  ║\n"
-        menu += "╚════════════════════════════════════════════╝\n"
-        menu += "╔════════════════════════════════════════════╗\n"
-        menu += "║  -- Actions --                             ║\n"
-        menu += "║  0. Revenir au menu principale             ║\n"
-        menu += "║  1. Ajouter un nouveau joueur              ║\n"
-        menu += "║  2. Voir liste de joueurs                  ║\n"
-        menu += "╚════════════════════════════════════════════╝\n"
+        menu += "╔═════════════════════════════════════════════╗\n"
+        menu += "║               MENU JOUEUR                   ║\n"
+        menu += "╚═════════════════════════════════════════════╝\n"
+        menu += "╔═════════════════════════════════════════════╗\n"
+        menu += "║  -- Actions --                              ║\n"
+        menu += "║  0. Revenir au menu principale              ║\n"
+        menu += "║  1. Ajouter un nouveau joueur               ║\n"
+        menu += "║  2. Voir liste de joueurs                   ║\n"
+        menu += "╚═════════════════════════════════════════════╝\n"
         menu += "=" * 47 + "\n"
 
         print(menu)
@@ -24,27 +27,59 @@ class PlayerView:
         return input(" Veuillez choisir une option : ")
 
     def ask_first_name(self):
+        self.clear_terminal()
         menu = "=" * 47 + "\n"
+        menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
+        menu += "                 EASYCHESS \n"
+        menu += "=" * 47 + "\n"
+
+        menu += "╔═════════════════════════════════════════════╗\n"
+        menu += "║               MENU JOUEUR                   ║\n"
+        menu += "╚═════════════════════════════════════════════╝\n"
         menu += "0. Revenir au menu principal\n"
         print(menu)
         return input("Entrez le prénom du joueur : ")
 
     def ask_last_name(self):
+        self.clear_terminal()
         menu = "=" * 47 + "\n"
+        menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
+        menu += "                 EASYCHESS \n"
+        menu += "=" * 47 + "\n"
+
+        menu += "╔═════════════════════════════════════════════╗\n"
+        menu += "║               MENU JOUEUR                   ║\n"
+        menu += "╚═════════════════════════════════════════════╝\n"
         menu += "0. Revenir au menu principal\n"
         print(menu)
         last_name = input("Entrez le nom du joueur : ")
         return last_name
 
     def ask_birthdate(self):
+        self.clear_terminal()
         menu = "=" * 47 + "\n"
+        menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
+        menu += "                 EASYCHESS \n"
+        menu += "=" * 47 + "\n"
+
+        menu += "╔═════════════════════════════════════════════╗\n"
+        menu += "║               MENU JOUEUR                   ║\n"
+        menu += "╚═════════════════════════════════════════════╝\n"
         menu += "0. Revenir au menu principal\n"
         print(menu)
         birthdate = input("Date de naissance du joueur (jj/mm/aaaa) : ")
         return birthdate
 
     def ask_national_id(self):
+        self.clear_terminal()
         menu = "=" * 47 + "\n"
+        menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
+        menu += "                 EASYCHESS \n"
+        menu += "=" * 47 + "\n"
+
+        menu += "╔═════════════════════════════════════════════╗\n"
+        menu += "║               MENU JOUEUR                   ║\n"
+        menu += "╚═════════════════════════════════════════════╝\n"
         menu += "0. Revenir au menu principal\n"
         print(menu)
         national_id = input("Entrez le N° d'identité nationale du joueur : ")
@@ -58,9 +93,16 @@ class PlayerView:
         return go_menu
 
     def display_player_list(self, formatted_players):
+        self.clear_terminal()
         menu = "=" * 47 + "\n"
-        menu += "      --- Liste des joueurs ---      \n"
+        menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
+        menu += "                 EASYCHESS \n"
         menu += "=" * 47 + "\n"
+
+        menu += "╔═════════════════════════════════════════════╗\n"
+        menu += "║               MENU JOUEUR                   ║\n"
+        menu += "╚═════════════════════════════════════════════╝\n"
+        menu += "0. Revenir au menu principal\n"
         menu += f"({len(formatted_players)} joueurs), présent dans la base de données : \n"
         menu += formatted_players
         print(menu)
@@ -70,11 +112,20 @@ class PlayerView:
         menu += f"⚠️  ERREUR: {message}\n"
         menu += "=" * 47 + "\n"
         print(menu)
-        time.sleep(2)
+        time.sleep(1)
+  
 
     def display_success(self, message):
         menu = "=" * 47 + "\n"
         menu += f"✔️  SUCCÈS: {message}\n"
         menu += "=" * 47 + "\n"
         print(menu)
-        time.sleep(2)
+        time.sleep(1)
+
+    def clear_terminal(self):
+        if platform.system() == "Windows":
+            time.sleep(0.50)
+            os.system('cls')
+        else:
+            time.sleep(0.50)
+            os.system('clear')

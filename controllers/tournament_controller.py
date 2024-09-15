@@ -71,6 +71,8 @@ class TournamentManagerController:
             round = self.generate_round(new_tournament)
             print(f"Round created: {round.name}")
             print(f"Matches in round: {round.matches}")
+            new_tournament.list_rounds.append(round.as_dict())
+            pprint.pprint(new_tournament)
         elif choice == "n":
             return
         elif choice == "0":
@@ -91,16 +93,16 @@ class TournamentManagerController:
         print("Generating pairs...")
         random.shuffle(players)
         players.sort(key=lambda x: x.get("score"), reverse=True)
-        pairs = []
+        matches = []
         while len(players) >= 2:
             player1 = players.pop(0)
             player2 = players.pop(0)
             score1 = player1.get("score")
             score2 = player2.get("score")
             match = Match.create(player1, score1, player2, score2)
-            pairs.append(((match.player1, match.score1), (match.player2, match.score2)))
+            matches.append(((match.player1, match.score1), (match.player2, match.score2)))
             print(f"Match created: {match}")
-        return pairs
+        return matches
 
     def generate_matches(self, new_tournament):
         print("Generating matches...")
@@ -109,6 +111,7 @@ class TournamentManagerController:
             raise ValueError("Pas assez de joueurs pour créer des matchs.")
         matches = self.generate_pairs(players)
         return matches
+    
     def gather_tournament_information(self):
         """
         Gathers information for creating a new tournament.

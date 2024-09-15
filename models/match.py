@@ -9,6 +9,6 @@ class Match:
     def create(cls, player1, score1, player2, score2):
         return cls(player1, score1, player2, score2)
 
-    def __repr__(self):
+    def __str__(self):
         """Représentation en chaîne de caractères de l'objet Match."""
         return f"{self.player1['first_name']} {self.player1['last_name']}, {self.score1} VS {self.player2['first_name']} {self.player2['last_name']}, {self.score2}"

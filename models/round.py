@@ -16,3 +16,11 @@ class Round:
 
     def __repr__(self):
         return f"{self.name} (début : {self.start_date_time}, fin : {self.end_date_time})\nMatches:\n{', '.join(str(match) for match in self.matches)}"
+    
+    def as_dict(self):
+        return {
+            'name': self.name,
+            'start_date_time': self.start_date_time.isoformat(),
+            'end_date_time': self.end_date_time.isoformat() if self.end_date_time else None,
+            'matches': self.matches
+        }
