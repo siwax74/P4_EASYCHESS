@@ -96,24 +96,6 @@ class TournamentView:
         self.clear_terminal()
         return description
 
-    def ask_player_registration_method(self):
-        menu = "=" * 47 + "\n"
-        menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
-        menu += "                 EASYCHESS \n"
-        menu += "=" * 47 + "\n"
-        menu += "╔═════════════════════════════════════════════╗\n"
-        menu += "║               MENU TOURNOIS                 ║\n"
-        menu += "╚═════════════════════════════════════════════╝\n"
-        menu = "=" * 47 + "\n"
-        menu += "0. Revenir au menu tournois\n"
-        menu += "1. Importer les joueurs existant automatiquement\n"
-        menu += "2. Importer les joueurs existant manuellement\n"
-        menu += "3. Crée et importer un nouveau joueur\n"
-        print(menu)
-        method = input("Choisissez une option (0, 1, 2 ou 3) : ")
-        self.clear_terminal()
-        return method
-
     def ask_add_another_player(self):
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -144,7 +126,6 @@ class TournamentView:
         method = input("Choisissez une option (0, 1, 2 ou 3) : ")
         self.clear_terminal()
         return method
-
 
     def ask_start_tournament(self):
         menu = "=" * 47 + "\n"
@@ -210,14 +191,12 @@ class TournamentView:
         menu += "=" * 47 + "\n"
         print(menu)
         time.sleep(1)
-        
+
     def clear_terminal(self):
         if platform.system() == "Windows":
             time.sleep(0.50)
-            os.system('cls')
-            
+            os.system("cls")
+
         else:
             time.sleep(0.50)
-            os.system('clear')
-            
-    
+            os.system("clear")

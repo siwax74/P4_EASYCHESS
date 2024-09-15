@@ -1,5 +1,5 @@
 from datetime import datetime
-import pprint
+import math
 import random
 import re
 from controllers.player_controller import PlayerManagerController
@@ -24,9 +24,7 @@ class TournamentManagerController:
         self.file_tournament = TOURNAMENT_FILE
         self.file_player = PLAYERS_FILE
         self.value_validator = TournamentValidator(self.view)
-        self.input_validator = InputValidator(
-            self.view, self.file_player, self.value_validator
-        )
+        self.input_validator = InputValidator(self.view, self.file_player, self.value_validator)
 
     def show_menu_options(self):
         """
@@ -53,9 +51,7 @@ class TournamentManagerController:
             if not tournament_infos:
                 return False
             new_tournament = Tournament.create(tournament_infos)
-            players_registration_method = self.choose_players_registration_method(
-                new_tournament
-            )
+            players_registration_method = self.choose_players_registration_method(new_tournament)
             if not players_registration_method:
                 return False
             initiate_tournament = self.start_tournament(new_tournament)
@@ -64,54 +60,54 @@ class TournamentManagerController:
             Tournament.save(self.file_tournament, new_tournament.as_dict())
             self.view.display_success("Tournois crée avec succès ! ")
             return new_tournament.as_dict()
-        
+
     def start_tournament(self, new_tournament):
         choice = self.input_validator.validate_input(self.view.ask_start_tournament)
         if choice == "o":
-            round = self.generate_round(new_tournament)
-            print(f"Round created: {round.name}")
-            print(f"Matches in round: {round.matches}")
-            new_tournament.list_rounds.append(round.as_dict())
-            pprint.pprint(new_tournament)
+            rounds = self.generate_rounds(new_tournament)
+            matches = self.generate_matches(new_tournament, rounds)
         elif choice == "n":
             return
         elif choice == "0":
             return choice
         
-    def generate_round(self, new_tournament):
-        print("Generating round...")
-        round_name = f"Round {new_tournament.current_round}"
-        start_date_time = datetime.now()
-        end_date_time = None
-        round = Round(round_name, start_date_time, end_date_time)
-        matches = self.generate_matches(new_tournament)
-        for match in matches:
-            round.add_match(match)
-        return round
-
-    def generate_pairs(self, players):
-        print("Generating pairs...")
-        random.shuffle(players)
-        players.sort(key=lambda x: x.get("score"), reverse=True)
-        matches = []
-        while len(players) >= 2:
-            player1 = players.pop(0)
-            player2 = players.pop(0)
-            score1 = player1.get("score")
-            score2 = player2.get("score")
-            match = Match.create(player1, score1, player2, score2)
-            matches.append(((match.player1, match.score1), (match.player2, match.score2)))
-            print(f"Match created: {match}")
-        return matches
-
-    def generate_matches(self, new_tournament):
-        print("Generating matches...")
+    def generate_rounds(self, new_tournament):
+        print("Generating rounds...")
+        num_players = len(new_tournament.players)
+        num_rounds = max(4, math.ceil(math.log2(num_players)))
+        print(f"Number of players: {num_players}, Number of rounds: {num_rounds}")
+        new_tournament.number_of_rounds = num_rounds
+        for i in range(1, num_rounds + 1):
+            round_name = f"Round{i}"
+            round_obj = Round.create(round_name)
+            new_tournament.list_rounds.append(round_obj)
+            print(f"Round {i} created and added to tournament.")
+        
+        print(f"All rounds generated: {new_tournament.list_rounds}")
+        return new_tournament.list_rounds[-1]
+    
+    def generate_matches(self, new_tournament, rounds):
         players = new_tournament.players
         if len(players) < 2:
             raise ValueError("Pas assez de joueurs pour créer des matchs.")
-        matches = self.generate_pairs(players)
+        
+        print("Generating pairs...")
+        random.shuffle(players)
+        
+        liste_players = players[:]
+        liste_players.sort(key=lambda x: x.get("score"), reverse=True)
+        
+        matches = rounds.matches
+        while len(liste_players) >= 2:
+            player1 = liste_players.pop(0)
+            player2 = liste_players.pop(0)
+            match = Match.create(player1, player2)
+            rounds.add_match(match)
+            print(f"Match created: {player1['last_name']} vs {player2['last_name']}")
+
+        print(f"All matches for the round: {matches}")
         return matches
-    
+
     def gather_tournament_information(self):
         """
         Gathers information for creating a new tournament.
@@ -123,17 +119,13 @@ class TournamentManagerController:
             location = self.input_validator.validate_location(self.view.ask_location)
             if location is False:
                 break
-            start_date = self.input_validator.validate_start_date(
-                self.view.ask_start_date
-            )
+            start_date = self.input_validator.validate_start_date(self.view.ask_start_date)
             if start_date is False:
                 break
             end_date = self.input_validator.validate_end_date(self.view.ask_end_date)
             if end_date is False:
                 break
-            description = self.input_validator.validate_description(
-                self.view.ask_description
-            )
+            description = self.input_validator.validate_description(self.view.ask_description)
             if description is False:
                 break
             tournament_info = name, location, start_date, end_date, description
@@ -141,12 +133,8 @@ class TournamentManagerController:
 
     def choose_players_registration_method(self, new_tournament):
         while True:
-            choice_players_registration_method = (
-                self.view.ask_player_registration_method()
-            )
-            valid_method = self.input_validator.validate_registration_method(
-                choice_players_registration_method
-            )
+            choice_players_registration_method = self.view.ask_player_registration_method()
+            valid_method = self.input_validator.validate_registration_method(choice_players_registration_method)
             if valid_method == "0":
                 break
             elif valid_method == "1":
@@ -180,9 +168,7 @@ class TournamentManagerController:
         selected_player_indices = self.input_validator.validate_selected_players(
             self.view.ask_player_selection, players
         )
-        tournament_players = Tournament.add_players_manually(
-            selected_player_indices, players, new_tournament
-        )
+        tournament_players = Tournament.add_players_manually(selected_player_indices, players, new_tournament)
         return tournament_players
 
         ############################################################################################################
@@ -194,9 +180,7 @@ class TournamentManagerController:
             self.player_manager_controller = PlayerManagerController()
             new_player = self.player_manager_controller.create_player()
             new_tournament.players.append(new_player)
-            add_another = self.input_validator.validate_input(
-                self.view.ask_add_another_player
-            )
+            add_another = self.input_validator.validate_input(self.view.ask_add_another_player)
             if add_another == "o":
                 continue
             else:
@@ -235,17 +219,13 @@ class TournamentManagerController:
             if not tournaments:
                 self.view.display_error("Aucun tournois enregistré !")
                 return
-            in_progress_tournaments = self.filter_tournaments(
-                tournaments, "in_progress"
-            )
+            in_progress_tournaments = self.filter_tournaments(tournaments, "in_progress")
             if not in_progress_tournaments:
                 self.view.display_error("Aucun tournois a venir !")
                 return
             tournament_data = self.prepare_tournament_data(in_progress_tournaments)
             self.view.display_tournament_list(tournament_data)
-            go_menu = self.input_validator.validate_return_to_menu(
-                self.view.ask_return_menu
-            )
+            go_menu = self.input_validator.validate_return_to_menu(self.view.ask_return_menu)
             if go_menu:
                 break
 
@@ -285,9 +265,7 @@ class TournamentManagerController:
             "location": details.get("location", "Emplacement non disponible"),
             "start_date": details.get("start_date", "Date de début non disponible"),
             "end_date": details.get("end_date", "Date de fin non disponible"),
-            "number_of_rounds": details.get(
-                "number_of_rounds", "Nombre de tours non disponible"
-            ),
+            "number_of_rounds": details.get("number_of_rounds", "Nombre de tours non disponible"),
             "players": details.get("players", []),
             "current_round": details.get("current_round", "Tour actuel non disponible"),
             "list_rounds": details.get("list_rounds", []),
@@ -303,12 +281,8 @@ class TournamentManagerController:
             player_info = {
                 "last_name": player.get("last_name", "Nom de famille non disponible"),
                 "first_name": player.get("first_name", "Prénom non disponible"),
-                "birthdate": player.get(
-                    "birthdate", "Date de naissance non disponible"
-                ),
-                "national_id": player.get(
-                    "national_id", "Identifiant national non disponible"
-                ),
+                "birthdate": player.get("birthdate", "Date de naissance non disponible"),
+                "national_id": player.get("national_id", "Identifiant national non disponible"),
             }
             player_details.append(player_info)
         return player_details
@@ -347,6 +321,7 @@ class TournamentValidator:
             text = text.replace(accented, non_accented)
         return text
 
+
 ############################################################################################################
 #  INPUT VALIDATOR                                                                                         #
 ############################################################################################################
@@ -366,9 +341,7 @@ class InputValidator:
         if choice in ["0", "1", "2", "3", "4", "5"]:
             return choice
         else:
-            self.view.display_error(
-                "Veuillez saisir un choix entre 0, 1, 2, 3, 4 ou 5 !"
-            )
+            self.view.display_error("Veuillez saisir un choix entre 0, 1, 2, 3, 4 ou 5 !")
             return False
 
     ############################################################################################################
@@ -381,9 +354,7 @@ class InputValidator:
             if len(name) < 1 or len(name) > 50:
                 self.view.display_error("Veuillez saisir un nom valide !")
             elif not re.match(pattern, name):
-                self.view.display_error(
-                    "Le nom ne peut pas contenir de caractères spéciaux !"
-                )
+                self.view.display_error("Le nom ne peut pas contenir de caractères spéciaux !")
             elif name == "0":
                 return False
             else:
@@ -400,9 +371,7 @@ class InputValidator:
             if len(location) < 1 or len(location) > 50:
                 self.view.display_error("Veuillez saisir un lieu valide !")
             elif not re.match(pattern, location):
-                self.view.display_error(
-                    "Le lieu ne peut pas contenir de caractères spéciaux !"
-                )
+                self.view.display_error("Le lieu ne peut pas contenir de caractères spéciaux !")
             elif location == "0":
                 return False
             else:
@@ -421,9 +390,7 @@ class InputValidator:
             except ValueError:
                 if start_date == "0":
                     return False
-                self.view.display_error(
-                    "Veuillez saisir une date au format 'dd/mm/YYYY' !"
-                )
+                self.view.display_error("Veuillez saisir une date au format 'dd/mm/YYYY' !")
 
     ############################################################################################################
     #                                                VALID END DATE                                            #
@@ -439,9 +406,7 @@ class InputValidator:
             except ValueError:
                 if end_date == "0":
                     return False
-                self.view.display_error(
-                    "Veuillez saisir une date au format 'dd/mm/YYYY' !"
-                )
+                self.view.display_error("Veuillez saisir une date au format 'dd/mm/YYYY' !")
 
     ############################################################################################################
     #                                               VALID DESCRIPTION                                          #
@@ -450,9 +415,7 @@ class InputValidator:
         while True:
             description = input_function().strip()
             if len(description) < 5 or len(description) > 200:
-                self.view.display_error(
-                    "La description doit être entre 5 et 200 caractères !"
-                )
+                self.view.display_error("La description doit être entre 5 et 200 caractères !")
             elif description == "0":
                 return False
             else:
@@ -467,9 +430,7 @@ class InputValidator:
             if choice in ["1", "2", "3", "0"]:
                 return choice
             else:
-                self.view.display_error(
-                    "Veuillez choisir une option valide : 1, 2, 3 ou 0."
-                )
+                self.view.display_error("Veuillez choisir une option valide : 1, 2, 3 ou 0.")
                 return False
 
     ############################################################################################################

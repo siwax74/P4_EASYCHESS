@@ -1,6 +1,5 @@
 from datetime import datetime
 import re
-import time
 from models.player import Player
 from views.main_view import MainView
 from views.player_view import PlayerView
@@ -11,6 +10,7 @@ class PlayerManagerController:
     """
     Controller class for managing players.
     """
+
     def __init__(self):
         """
         Initializes the controller with a view and a filepath.
@@ -35,9 +35,10 @@ class PlayerManagerController:
                 self.main_view.display_menu()
             elif valid_choice == "0":
                 break
-            ############################################################################################################
-            #                                       CHOICE 1       CREATE PLAYER                                       #
-            ############################################################################################################
+            ###########################################################################################################
+            #                                       CHOICE 1       CREATE PLAYER                                      #
+            ###########################################################################################################
+
     def create_player(self):
         player_info = self.gather_player_information()
         if not player_info:
@@ -70,9 +71,9 @@ class PlayerManagerController:
             player_info = first_name, last_name, birthdate, national_id
             return player_info
 
-            ############################################################################################################
-            #  CHOICE 2    SHOW BDD LIST PLAYERS                                                                       #
-            ############################################################################################################
+            ###########################################################################################################
+            #  CHOICE 2    SHOW BDD LIST PLAYERS                                                                      #
+            ###########################################################################################################
 
     def display_all_players(self):
         """

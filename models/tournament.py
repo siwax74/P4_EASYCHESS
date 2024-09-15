@@ -16,7 +16,7 @@ class Tournament:
         self.location = location
         self.start_date = datetime.strptime(start_date, "%d/%m/%Y %H:%M")
         self.end_date = datetime.strptime(end_date, "%d/%m/%Y") if end_date else None
-        self.number_of_rounds = 4
+        self.number_of_rounds = None
         self.current_round = 1
         self.list_rounds = []
         self.players = []
@@ -106,6 +106,6 @@ class Tournament:
             "number_of_rounds": self.number_of_rounds,
             "current_round": self.current_round,
             "players": self.players,
-            "list_rounds": self.list_rounds,
+            "list_rounds": [round_.as_dict() for round_ in self.list_rounds] if self.list_rounds else [],
             "description": self.description,
         }

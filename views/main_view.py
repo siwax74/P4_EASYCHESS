@@ -34,7 +34,7 @@ class MainView:
         """Efface le terminal en fonction du système d'exploitation."""
         if platform.system() == "Windows":
             time.sleep(0.50)
-            os.system('cls')
+            os.system("cls")
         else:
             time.sleep(0.50)
-            os.system('clear')
+            os.system("clear")

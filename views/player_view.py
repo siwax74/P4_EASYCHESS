@@ -3,7 +3,7 @@ import platform
 import time
 
 
-class PlayerView:    
+class PlayerView:
     def display_player_menu(self) -> str:
         self.clear_terminal()
         menu = "=" * 47 + "\n"
@@ -113,7 +113,6 @@ class PlayerView:
         menu += "=" * 47 + "\n"
         print(menu)
         time.sleep(1)
-  
 
     def display_success(self, message):
         menu = "=" * 47 + "\n"
@@ -125,7 +124,7 @@ class PlayerView:
     def clear_terminal(self):
         if platform.system() == "Windows":
             time.sleep(0.50)
-            os.system('cls')
+            os.system("cls")
         else:
             time.sleep(0.50)
-            os.system('clear')
+            os.system("clear")
