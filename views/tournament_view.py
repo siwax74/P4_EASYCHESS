@@ -96,6 +96,24 @@ class TournamentView:
         self.clear_terminal()
         return description
 
+    def ask_player_registration_method(self):
+        menu = "=" * 47 + "\n"
+        menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
+        menu += "                 EASYCHESS \n"
+        menu += "=" * 47 + "\n"
+        menu += "╔═════════════════════════════════════════════╗\n"
+        menu += "║               MENU TOURNOIS                 ║\n"
+        menu += "╚═════════════════════════════════════════════╝\n"
+        menu = "=" * 47 + "\n"
+        menu += "0. Revenir au menu tournois\n"
+        menu += "1. Importer les joueurs existant automatiquement\n"
+        menu += "2. Importer les joueurs existant manuellement\n"
+        menu += "3. Crée et importer un nouveau joueur\n"
+        print(menu)
+        method = input("Choisissez une option (0, 1, 2 ou 3) : ")
+        self.clear_terminal()
+        return method
+
     def ask_add_another_player(self):
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -108,6 +126,17 @@ class TournamentView:
         print(menu)
         input_add_another_player = input("Souhaitez-vous ajouter d'autres joueurs au tournoi ? (o/n): ")
         return input_add_another_player.lower()
+    
+    def ask_player_selection(self, players):
+        menu = "=" * 47 + "\n"
+        menu += "0. Revenir au menu principal\n"
+        for i, player in enumerate(players, start=1):
+            menu += f"{i}. {player['last_name']} {player['first_name']}\n"
+        print(menu)
+        selected_player_input = input(
+            "Veuillez saisir le numéro des joueurs à ajouter au tournoi (séparés par des espaces) : "
+        )
+        return selected_player_input
 
     def ask_player_registration_method(self):
         menu = "=" * 47 + "\n"
