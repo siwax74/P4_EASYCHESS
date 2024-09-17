@@ -1,5 +1,5 @@
 import sys
-from controllers.main_controller import run
+from easychess.controllers.main_controller import run
 
 if __name__ == "__main__":
     try:
