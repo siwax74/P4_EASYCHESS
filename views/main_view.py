@@ -25,7 +25,6 @@ class MainView:
         menu += "║  3. Quitter l'application                   ║\n"
         menu += "╚═════════════════════════════════════════════╝\n"
         menu += "=" * 47 + "\n"
-
         print(menu)
         return input(" Veuillez choisir une option : ")
 

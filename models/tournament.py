@@ -8,14 +8,12 @@ class Tournament:
         self,
         name,
         location,
-        start_date,
-        end_date,
         description,
     ):
         self.name = name
         self.location = location
-        self.start_date = datetime.strptime(start_date, "%d/%m/%Y %H:%M")
-        self.end_date = datetime.strptime(end_date, "%d/%m/%Y") if end_date else None
+        self.start_date = None
+        self.end_date = None
         self.number_of_rounds = None
         self.current_round = 1
         self.list_rounds = []
@@ -34,8 +32,8 @@ class Tournament:
 
     @classmethod
     def create(cls, new_tournament):
-        name, location, start_date, end_date, description = new_tournament
-        return cls(name, location, start_date, end_date, description)
+        name, location, description = new_tournament
+        return cls(name, location, description)
 
     @classmethod
     def read(cls, file_path):
@@ -50,59 +48,18 @@ class Tournament:
         try:
             existing_data = cls.read(file_path)
             tournament_key = f"tournament{len(existing_data) + 1}"
-            tournament_data["upcoming"] = True
-            tournament_data["in_progress"] = False
             existing_data[tournament_key] = tournament_data
             with open(file_path, "w") as json_file:
-                json.dump(existing_data, json_file, indent=4)
+                json.dump(existing_data, json_file)
         except Exception as e:
             logging.error(f"An error occurred while saving data to {file_path}: {e}")
-
-    @staticmethod
-    def add_players_auto(players, new_tournament):
-        new_tournament.players.extend(players)
-        return new_tournament
-
-    @staticmethod
-    def generate_pair(num_players):
-        return
-
-    @staticmethod
-    def add_players_manually(selected_players, players, new_tournament):
-        try:
-            selected_players = [int(i) - 1 for i in selected_players.split()]
-            for idx in selected_players:
-                if 0 <= idx < len(players):
-                    player = players[idx]
-                    new_tournament.players.append(player)
-                else:
-                    raise IndexError("Le joueur à cet index n'existe pas.")
-            return new_tournament
-        except Exception as e:
-            raise Exception(f"Une erreur est survenue : {str(e)}")
-
-    @classmethod
-    def from_dict(cls, data: dict):
-        return cls(
-            name=data["name"],
-            location=data["location"],
-            start_date=data["start_date"],
-            end_date=data["end_date"],
-            number_of_rounds=data["number_of_rounds"],
-            current_round=data["current_round"],
-            players=data["players"],
-            list_rounds=data["list_rounds"],
-            description=data["description"],
-            upcoming=data["upcoming"],
-            in_progress=data["in_progress"],
-        )
 
     def as_dict(self):
         return {
             "name": self.name,
             "location": self.location,
             "start_date": self.start_date.strftime("%d/%m/%Y %H:%M"),
-            "end_date": self.end_date.strftime("%d/%m/%Y") if self.end_date else None,
+            "end_date": self.end_date.strftime("%d/%m/%Y %H:%M"),
             "number_of_rounds": self.number_of_rounds,
             "current_round": self.current_round,
             "players": self.players,

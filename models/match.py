@@ -6,26 +6,24 @@ class Match:
         self.score2 = 0
 
     @classmethod
-    def create(
-        cls,
-        player1,
-        player2,
-    ):
+    def create(cls, player1, player2):
         return cls(player1, player2)
 
     def __str__(self):
         """Représentation en chaîne de caractères de l'objet Match."""
-        return f"{self.player1['first_name']} {self.player1['last_name']}, {self.score1} VS {self.player2['first_name']} {self.player2['last_name']}, {self.score2}"
+        return f"{self.player1['first_name']} {self.player1['last_name']} {self.score1:>2} - {self.score2:<2} {self.player2['first_name']} {self.player2['last_name']}"
 
-    def as_dict(self):
-        return {
-            'player1': self.player1,
-            'score1': self.score1,
-            'player2': self.player2,
-            'score2': self.score2,
+    def set_score(self, score1, score2):
+        """
+        Set the scores for the match.
+        :param score1: The score for player 1.
+        :param score2: The score for player 2.
+        """
+        self.score1 = score1
+        self.score2 = score2
 
-        }
-    
-    def __repr__(self):
-        return (f"Match(player1={self.player1!r}, score1={self.score1!r}, "
-                f"player2={self.player2!r}, score2={self.score2!r})")
+    def as_tuple(self):
+        return (
+            [f"{self.player1['last_name']} {self.player1['first_name']}", self.score1],
+            [f"{self.player2['last_name']} {self.player2['first_name']}", self.score2],
+        )

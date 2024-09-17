@@ -1,4 +1,5 @@
 from datetime import datetime
+import time
 
 
 class Round:
@@ -20,11 +21,13 @@ class Round:
             "name": self.name,
             "start_date_time": self.start_date_time.isoformat(),
             "end_date_time": self.end_date_time.isoformat() if self.end_date_time else None,
-            "matches": [match.as_dict() for match in self.matches]
+            "matches": [match.as_tuple() for match in self.matches] if self.matches else [],
         }
 
     def __repr__(self):
-        return (f"Round(name={self.name!r}, "
-                f"start_date_time={self.start_date_time.isoformat()!r}, "
-                f"end_date_time={self.end_date_time.isoformat() if self.end_date_time else None!r}, "
-                f"matches=[{', '.join(repr(match) for match in self.matches)}])")
+        return (
+            f"Round(name={self.name!r}, "
+            f"start_date_time={self.start_date_time.isoformat()!r}, "
+            f"end_date_time={self.end_date_time.isoformat() if self.end_date_time else None!r}, "
+            f"matches=[{', '.join(repr(match) for match in self.matches)}])"
+        )

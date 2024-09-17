@@ -51,38 +51,10 @@ class TournamentView:
         menu += "0. Revenir au menu principal\n"
         print(menu)
         location = input("Entrez la localisation du tournoi : ")
-        self.clear_terminal()
         return location
 
-    def ask_start_date(self):
-        menu = "=" * 47 + "\n"
-        menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
-        menu += "                 EASYCHESS \n"
-        menu += "=" * 47 + "\n"
-        menu += "╔═════════════════════════════════════════════╗\n"
-        menu += "║               MENU TOURNOIS                 ║\n"
-        menu += "╚═════════════════════════════════════════════╝\n"
-        menu += "0. Revenir au menu tournois\n"
-        print(menu)
-        start_date = input("Date et heure de début du tournoi (ex: 25/02/2024 09:00) : ")
-        self.clear_terminal()
-        return start_date
-
-    def ask_end_date(self):
-        menu = "=" * 47 + "\n"
-        menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
-        menu += "                 EASYCHESS \n"
-        menu += "=" * 47 + "\n"
-        menu += "╔═════════════════════════════════════════════╗\n"
-        menu += "║               MENU TOURNOIS                 ║\n"
-        menu += "╚═════════════════════════════════════════════╝\n"
-        menu += "0. Revenir au menu tournois\n"
-        print(menu)
-        end_date = input("Entrez la date de fin du tournoi (JJ/MM/AAAA) : ")
-        self.clear_terminal()
-        return end_date
-
     def ask_description(self):
+        self.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -93,28 +65,10 @@ class TournamentView:
         menu += "0. Revenir au menu tournois\n"
         print(menu)
         description = input("Entrez une description du tournoi : ")
-        self.clear_terminal()
         return description
 
-    def ask_player_registration_method(self):
-        menu = "=" * 47 + "\n"
-        menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
-        menu += "                 EASYCHESS \n"
-        menu += "=" * 47 + "\n"
-        menu += "╔═════════════════════════════════════════════╗\n"
-        menu += "║               MENU TOURNOIS                 ║\n"
-        menu += "╚═════════════════════════════════════════════╝\n"
-        menu = "=" * 47 + "\n"
-        menu += "0. Revenir au menu tournois\n"
-        menu += "1. Importer les joueurs existant automatiquement\n"
-        menu += "2. Importer les joueurs existant manuellement\n"
-        menu += "3. Crée et importer un nouveau joueur\n"
-        print(menu)
-        method = input("Choisissez une option (0, 1, 2 ou 3) : ")
-        self.clear_terminal()
-        return method
-
     def ask_add_another_player(self):
+        self.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -126,7 +80,7 @@ class TournamentView:
         print(menu)
         input_add_another_player = input("Souhaitez-vous ajouter d'autres joueurs au tournoi ? (o/n): ")
         return input_add_another_player.lower()
-    
+
     def ask_player_selection(self, players):
         menu = "=" * 47 + "\n"
         menu += "0. Revenir au menu principal\n"
@@ -139,6 +93,7 @@ class TournamentView:
         return selected_player_input
 
     def ask_player_registration_method(self):
+        self.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -153,10 +108,10 @@ class TournamentView:
         menu += "3. Crée et importer un nouveau joueur\n"
         print(menu)
         method = input("Choisissez une option (0, 1, 2 ou 3) : ")
-        self.clear_terminal()
         return method
 
     def ask_start_tournament(self):
+        self.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -205,6 +160,38 @@ class TournamentView:
             else:
                 menu += "Pas de joueurs inscrits.\n"
         menu += "=" * 47 + "\n"
+        print(menu)
+
+    def ask_validate_match(self, match, match_index):
+        """
+        Demande à l'utilisateur de valider le gagnant du match.
+        Retourne 1 pour le joueur 1, 2 pour le joueur 2, 0 pour un match nul.
+        :param match: Le match pour lequel valider le gagnant.
+        :return: Le choix de l'utilisateur (1, 2, ou 0)
+        """
+        menu = "=" * 47 + "\n"
+        menu += f"Match{match_index+1}. {match}\n"
+        menu += "=" * 47 + "\n"
+        menu += f"1. {match.player1['first_name']} {match.player1['last_name']} (Joueur 1)\n"
+        menu += f"2. {match.player2['first_name']} {match.player2['last_name']} (Joueur 2)\n"
+        menu += "0. Match nul\n"
+        menu += "=" * 47 + "\n"
+        print(menu)
+        user_input = input("Entrez le numéro du gagnant (1, 2 ou 0) : ")
+        return user_input
+
+    def display(self, round, round_index):
+        menu = "=" * 47 + "\n"
+        menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
+        menu += "                 EASYCHESS \n"
+        menu += "=" * 47 + "\n"
+        menu += "╔═════════════════════════════════════════════╗\n"
+        menu += "║               MENU TOURNOIS                 ║\n"
+        menu += "╚═════════════════════════════════════════════╝\n"
+        menu += f"Round {round_index + 1}\n"
+        menu += f"Date/heure de départ: {round.start_date_time}\n"
+        menu += f"Date/heure de fin: {round.end_date_time}\n"
+        menu += f"Nombre de match: {len(round.matches)}\n"
         print(menu)
 
     def display_error(self, message):
