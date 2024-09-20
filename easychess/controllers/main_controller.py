@@ -1,5 +1,7 @@
 import sys
 import time
+
+from easychess.controllers.report_controller import ReportManagerController
 from ..views.main_view import MainView
 from .player_controller import PlayerManagerController
 from .tournament_controller import TournamentManagerController
@@ -15,8 +17,10 @@ def run() -> None:
         elif main_menu_choice == "2":
             tournament_controller = TournamentManagerController()
             tournament_controller.show_menu_options()
-
         elif main_menu_choice == "3":
+            raport_controller = ReportManagerController()
+            raport_controller.show_menu_options()
+        elif main_menu_choice == "4":
             print("Vous quittez le programme. Merci pour votre soutien !")
             time.sleep(2)
             sys.exit(0)

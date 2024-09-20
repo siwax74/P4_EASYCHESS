@@ -101,15 +101,15 @@ class TournamentManagerController:
         if len(players) < 2:
             raise ValueError("Pas assez de joueurs pour créer des matchs.")
         return players
-    
+
     def shuffle_players(self, players):
         random.shuffle(players)
         return players
-    
+
     def sort_players_by_score(self, players_shuffle):
         players_sorted = sorted(players_shuffle, key=lambda x: x["score"], reverse=True)
         return players_sorted
-    
+
     def generate_matches(self, new_tournament, round):
         """
         Génère des paires de joueurs pour un round.
@@ -125,36 +125,36 @@ class TournamentManagerController:
         """
         round.matches = []
         matched_players = set()
-        
+
         for i in range(0, len(players_sorted)):
             if i + 1 >= len(players_sorted):
                 break
-            
+
             player1 = players_sorted[i]
-            
+
             # Chercher un adversaire que player1 n'a pas encore rencontré
             for j in range(i + 1, len(players_sorted)):
                 player2 = players_sorted[j]
                 if not self.have_players_met(player1, player2, tournament):
                     match = Match.create(player1, player2)
                     round.add_match(match)
-                    matched_players.add(player1['last_name'])
-                    matched_players.add(player2['last_name'])
+                    matched_players.add(player1["last_name"])
+                    matched_players.add(player2["last_name"])
                     players_sorted.pop(j)
                     break
-            
+
             # Si aucun adversaire non rencontré n'est trouvé, prendre le suivant disponible
-            if player1['last_name'] not in matched_players:
+            if player1["last_name"] not in matched_players:
                 player2 = players_sorted[i + 1]
                 match = Match.create(player1, player2)
                 round.add_match(match)
-                matched_players.add(player1['last_name'])
-                matched_players.add(player2['last_name'])
-        
+                matched_players.add(player1["last_name"])
+                matched_players.add(player2["last_name"])
+
         # Gérer le cas d'un nombre impair de joueurs
         if len(players_sorted) % 2 != 0:
             last_player = players_sorted[-1]
-            if last_player['last_name'] not in matched_players:
+            if last_player["last_name"] not in matched_players:
                 self.handle_odd_player(last_player, round)
 
     def have_players_met(self, player1, player2, tournament):
@@ -163,8 +163,13 @@ class TournamentManagerController:
         """
         for round in tournament.list_rounds:
             for match in round.matches:
-                if (match.player1['last_name'] == player1['last_name'] and match.player2['last_name'] == player2['last_name']) or \
-                   (match.player1['last_name'] == player2['last_name'] and match.player2['last_name'] == player1['last_name']):
+                if (
+                    match.player1["last_name"] == player1["last_name"]
+                    and match.player2["last_name"] == player2["last_name"]
+                ) or (
+                    match.player1["last_name"] == player2["last_name"]
+                    and match.player2["last_name"] == player1["last_name"]
+                ):
                     return True
         return False
 
@@ -219,8 +224,8 @@ class TournamentManagerController:
             match.player1["score"] += 0.5
             match.player2["score"] += 0.5
 
-        match.player1.setdefault("opponents", set()).add(match.player2['last_name'])
-        match.player2.setdefault("opponents", set()).add(match.player1['last_name'])
+        match.player1.setdefault("opponents", set()).add(match.player2["last_name"])
+        match.player2.setdefault("opponents", set()).add(match.player1["last_name"])
         print(f"Player 1 ({match.player1['last_name']}): Opponents = {match.player1.get('opponents', set())}")
         print(f"Player 2 ({match.player2['last_name']}): Opponents = {match.player2.get('opponents', set())}")
 
@@ -231,11 +236,14 @@ class TournamentManagerController:
         self.view.display_success("Tour suivant...")
         self.generate_matches(new_tournament, new_tournament.list_rounds[round_index + 1])
 
-    def end_tournament(self, new_tournament):
+    def end_tournament(self):
         """
         Termine le tournoi.
         """
-        new_tournament.end_date = datetime.now()
+        self.tournament.end_date = datetime.now()
+        for player in self.tournament.players:
+            if "opponents" in player:
+                del player["opponents"]
         self.view.display_success("Fin du tournoi !")
 
     def gather_tournament_information(self):
