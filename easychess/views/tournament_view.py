@@ -121,43 +121,12 @@ class TournamentView:
         start_tournament_input = input("Souhaitez-vous commencer le tournoi (o/n) ? : ")
         return start_tournament_input.lower()
 
-    def display_tournament(self, formatted_tournaments):
-        menu = "=" * 47 + "\n"
-        menu += "      --- Liste des tournois ---      \n"
-        menu += "=" * 47 + "\n"
-        menu += f"({len(formatted_tournaments)} joueurs), présent dans la base de données : \n"
-        menu += formatted_tournaments
-        print(menu)
-
     def ask_return_menu(self):
         menu = "=" * 47 + "\n"
         menu += "0. Revenir au menu tournois\n"
         print(menu)
         go_menu = input("Voulez vous revenir au menu tournoi ? '0' ")
         return go_menu
-
-    def display_tournament_list(self, tournament_data):
-        menu = "\n" + "=" * 47 + "\n"
-        for tournament in tournament_data:
-            menu += "\n" + "=" * 47 + "\n"
-            menu += f"ID: {tournament['id']}\n"
-            menu += f"Nom: {tournament['name']}\n"
-            menu += f"Emplacement: {tournament['location']}\n"
-            menu += f"Date de début: {tournament['start_date']}\n"
-            menu += f"Date de fin: {tournament['end_date']}\n"
-            menu += f"Nombre de tours: {tournament['number_of_rounds']}\n"
-            menu += f"Tour actuel: {tournament['current_round']}\n"
-            menu += f"Listes des tours: {tournament['list_rounds']}\n"
-            menu += f"Description: {tournament['description']}\n"
-
-            if tournament["player_details"]:
-                menu += "Liste des joueurs inscrits :\n"
-                for player in tournament["player_details"]:
-                    menu += f"  - {player['first_name']} {player['last_name']}, Date de naissance: {player['birthdate']}, ID National: {player['national_id']}\n"
-            else:
-                menu += "Pas de joueurs inscrits.\n"
-        menu += "=" * 47 + "\n"
-        print(menu)
 
     def ask_validate_match(self, match, match_index):
         """

@@ -44,10 +44,6 @@ class TournamentManagerController:
             if valid_choice == "1":
                 new_tournament = self.create_tournament(valid_choice)
                 self.start_tournament(new_tournament)
-            elif valid_choice == "2":
-                self.display_all_tournaments_upcoming()
-            elif valid_choice == "3":
-                self.display_all_tournaments_in_progress()
             elif valid_choice == "0":
                 break
 
@@ -236,12 +232,12 @@ class TournamentManagerController:
         self.view.display_success("Tour suivant...")
         self.generate_matches(new_tournament, new_tournament.list_rounds[round_index + 1])
 
-    def end_tournament(self):
+    def end_tournament(self, new_tournament):
         """
         Termine le tournoi.
         """
-        self.tournament.end_date = datetime.now()
-        for player in self.tournament.players:
+        new_tournament.end_date = datetime.now()
+        for player in new_tournament.players:
             if "opponents" in player:
                 del player["opponents"]
         self.view.display_success("Fin du tournoi !")

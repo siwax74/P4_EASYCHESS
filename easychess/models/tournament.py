@@ -27,7 +27,7 @@ class Tournament:
             f"Number of rounds: {self.number_of_rounds}\n"
             f"Current round: {self.current_round}\n"
             f"List of rounds: {self.list_rounds}\n"
-            f"Players: {[str(player) for player in self.players]}"
+            f"Players: {self.players}"
         )
 
     @classmethod
