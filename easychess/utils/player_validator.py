@@ -6,8 +6,8 @@ import re
 
 
 class PlayerInputValidator:
-    def __init__(self, view, sanitize):
-        self.view = view
+    def __init__(self, utils, sanitize):
+        self.utils = utils
         self.sanitize = sanitize
 
     ############################################################################################################
@@ -19,7 +19,7 @@ class PlayerInputValidator:
             if response == "0":
                 return response
             else:
-                self.view.display_error("Saisir 0 pour revenir au menu !")
+                self.utils.display_error("Saisir 0 pour revenir au menu !")
                 return False
 
     ############################################################################################################
@@ -32,7 +32,7 @@ class PlayerInputValidator:
         if choice in ["0", "1", "2", "3"]:
             return choice
         else:
-            self.view.display_error("Veuillez saisir un choix entre 0, 1, 2 ou 3 !")
+            self.utils.display_error("Veuillez saisir un choix entre 0, 1, 2 ou 3 !")
             return False
 
     ############################################################################################################
@@ -47,7 +47,7 @@ class PlayerInputValidator:
             elif info == "0":
                 return False
             elif not re.match("^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$", info):
-                self.view.display_error("Le Prénom/Nom ne peut pas contenir de caractères spéciaux !")
+                self.utils.display_error("Le Prénom/Nom ne peut pas contenir de caractères spéciaux !")
 
     ############################################################################################################
     #                                                BIRTHDATE                                                 #
@@ -62,7 +62,7 @@ class PlayerInputValidator:
                 if birthdate == "0":
                     return False
                 else:
-                    self.view.display_error("Veuillez saisir une date au format 'dd/mm/YYYY' !")
+                    self.utils.display_error("Veuillez saisir une date au format 'dd/mm/YYYY' !")
 
     ############################################################################################################
     #                                                NATIONAL_ID                                               #
@@ -75,6 +75,6 @@ class PlayerInputValidator:
             if not national_id:
                 return national_id
             elif len(national_id) > 7 or not re.match("^[A-Za-z0-9]{2}[0-9]{5}$", national_id):
-                self.view.display_error("Veuillez saisir un national_id valide au format 'AB12345' !")
+                self.utils.display_error("Veuillez saisir un national_id valide au format 'AB12345' !")
             else:
                 return national_id

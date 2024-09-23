@@ -1,3 +1,4 @@
+from easychess.utils.utils import Utils
 from ..utils.player_validator import PlayerInputValidator
 from ..utils.sanitize import Sanitize
 from ..views.main_view import MainView
@@ -19,7 +20,8 @@ class PlayerManagerController:
         self.view = PlayerView()
         self.filepath = PLAYERS_FILE
         self.sanitize = Sanitize(self.view)
-        self.input_validator = PlayerInputValidator(self.view, self.sanitize)
+        self.utils = Utils()
+        self.input_validator = PlayerInputValidator(self.utils, self.sanitize)
 
     ############################################################################################################
     #                                           PLAYER MENU                                                    #
@@ -46,7 +48,7 @@ class PlayerManagerController:
             return False
         new_player = Player.create(player_info)
         Player.save(self.filepath, new_player.as_dict())
-        self.view.display_success(f"Joueurs {new_player.first_name}, ajouté avec succès ! ")
+        self.utils.display_success(f"Joueurs {new_player.first_name}, ajouté avec succès ! ")
         return new_player
         ############################################################################################################
         #                                           GATHER PLAYER INFO                                             #

@@ -1,17 +1,14 @@
-import os
-import platform
-import time
+from ..utils.utils import Utils
 
 
 class MainView:
     @staticmethod
     def display_menu():
-        MainView.clear_terminal()
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
         menu += "=" * 47 + "\n"
-
         menu += "╔═════════════════════════════════════════════╗\n"
         menu += "║  -- Joueurs --                              ║\n"
         menu += "║  1. Menu Joueur                             ║\n"
@@ -29,12 +26,4 @@ class MainView:
         print(menu)
         return input(" Veuillez choisir une option : ")
 
-    @staticmethod
-    def clear_terminal():
-        """Efface le terminal en fonction du système d'exploitation."""
-        if platform.system() == "Windows":
-            time.sleep(0.50)
-            os.system("cls")
-        else:
-            time.sleep(0.50)
-            os.system("clear")
+

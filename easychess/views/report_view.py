@@ -1,8 +1,10 @@
 import time
+from easychess.utils.utils import Utils
 
 
 class ReportView:
     def display_reports_menu(self) -> str:
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -23,7 +25,7 @@ class ReportView:
         return choice
 
     def display_alphabetical_players(self, formatted_players):
-        # Construction du menu
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -33,13 +35,14 @@ class ReportView:
         menu += "╚═════════════════════════════════════════════╝\n"
         menu += "=" * 47 + "\n"
         for player in formatted_players:
-            menu += (player + "\n")  # Ajout de chaque joueur formaté avec un saut de ligne
+            menu += (player + "\n")
         print(menu)
-        # Demander à l'utilisateur d'entrer une commande
+        
         choice = input("Veuillez saisir 0 + entrée pour revenir au menu : ")
         return choice
     
     def display_all_tournaments(self, tournaments):
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -61,6 +64,7 @@ class ReportView:
         return choice
     
     def display_tournaments_name(self, tournaments):
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -79,6 +83,7 @@ class ReportView:
         return tournament_name
     
     def display_tournament_details(self, tournament):
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -104,18 +109,3 @@ class ReportView:
         print(menu)
         choice = input("Veuillez saisir 0 + entrée pour revenir au menu : ")
         return choice
-
-    
-    def display_error(self, message):
-        menu = "=" * 47 + "\n"
-        menu += f"⚠️  ERREUR: {message}\n"
-        menu += "=" * 47 + "\n"
-        print(menu)
-        time.sleep(1)
-
-    def display_success(self, message):
-        menu = "=" * 47 + "\n"
-        menu += f"✔️  SUCCÈS: {message}\n"
-        menu += "=" * 47 + "\n"
-        print(menu)
-        time.sleep(1)

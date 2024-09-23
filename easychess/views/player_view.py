@@ -1,11 +1,10 @@
-import os
-import platform
 import time
+from easychess.utils.utils import Utils
 
 
 class PlayerView:
     def display_player_menu(self) -> str:
-        self.clear_terminal()
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -27,7 +26,7 @@ class PlayerView:
         return input(" Veuillez choisir une option : ")
 
     def ask_first_name(self):
-        self.clear_terminal()
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -41,7 +40,7 @@ class PlayerView:
         return input("Entrez le prénom du joueur : ")
 
     def ask_last_name(self):
-        self.clear_terminal()
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -56,7 +55,7 @@ class PlayerView:
         return last_name
 
     def ask_birthdate(self):
-        self.clear_terminal()
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -71,7 +70,7 @@ class PlayerView:
         return birthdate
 
     def ask_national_id(self):
-        self.clear_terminal()
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -93,7 +92,7 @@ class PlayerView:
         return go_menu
 
     def display_player_list(self, formatted_players):
-        self.clear_terminal()
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -106,25 +105,3 @@ class PlayerView:
         menu += f"({len(formatted_players)} joueurs), présent dans la base de données : \n"
         menu += formatted_players
         print(menu)
-
-    def display_error(self, message):
-        menu = "=" * 47 + "\n"
-        menu += f"⚠️  ERREUR: {message}\n"
-        menu += "=" * 47 + "\n"
-        print(menu)
-        time.sleep(1)
-
-    def display_success(self, message):
-        menu = "=" * 47 + "\n"
-        menu += f"✔️  SUCCÈS: {message}\n"
-        menu += "=" * 47 + "\n"
-        print(menu)
-        time.sleep(1)
-
-    def clear_terminal(self):
-        if platform.system() == "Windows":
-            time.sleep(0.50)
-            os.system("cls")
-        else:
-            time.sleep(0.50)
-            os.system("clear")

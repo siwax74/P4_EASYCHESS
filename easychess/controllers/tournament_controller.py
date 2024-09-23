@@ -1,6 +1,7 @@
 from datetime import datetime
 import math
 import random
+from easychess.utils.utils import Utils
 from settings import TOURNAMENTS_FILE, PLAYERS_FILE
 from .player_controller import PlayerManagerController
 from ..models.player import Player
@@ -31,8 +32,9 @@ class TournamentManagerController:
         self.view = TournamentView()
         self.file_tournament = TOURNAMENTS_FILE
         self.file_player = PLAYERS_FILE
+        self.utils = Utils()
         self.sanitize = Sanitize(self.view)
-        self.input_validator = TournamentInputValidator(self.view, self.file_player, self.sanitize)
+        self.input_validator = TournamentInputValidator(self.utils, self.file_player, self.sanitize)
 
     def show_menu_options(self):
         """
@@ -63,7 +65,7 @@ class TournamentManagerController:
         initiate_tournament = self.generate_tournament(new_tournament)
         if initiate_tournament == "0":
             return False
-        self.view.display_success("Génération du tournoi réussie !")
+        self.utils.display_success("Génération du tournoi réussie !")
         return new_tournament
 
     def generate_tournament(self, new_tournament):
@@ -240,7 +242,7 @@ class TournamentManagerController:
         for player in new_tournament.players:
             if "opponents" in player:
                 del player["opponents"]
-        self.view.display_success("Fin du tournoi !")
+        self.utils.display_success("Fin du tournoi !")
 
     def gather_tournament_information(self):
         """

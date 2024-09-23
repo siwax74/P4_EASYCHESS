@@ -1,6 +1,7 @@
 from easychess.models.player import Player
 from easychess.models.tournament import Tournament
 from easychess.utils.reports_validator import ReportsInputValidator
+from easychess.utils.utils import Utils
 from easychess.views.report_view import ReportView
 from settings import PLAYERS_FILE, TOURNAMENTS_FILE
 
@@ -10,7 +11,8 @@ class ReportManagerController:
         self.view = ReportView()
         self.db_players = PLAYERS_FILE
         self.db_tournaments = TOURNAMENTS_FILE
-        self.input_validator = ReportsInputValidator(self.view)
+        self.utils = Utils()
+        self.input_validator = ReportsInputValidator(self.utils)
 
     def show_menu_options(self):
         while True:

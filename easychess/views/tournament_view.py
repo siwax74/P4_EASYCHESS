@@ -2,9 +2,12 @@ import os
 import platform
 import time
 
+from easychess.utils.utils import Utils
+
 
 class TournamentView:
     def display_tournament_menu(self) -> str:
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -20,10 +23,10 @@ class TournamentView:
         menu += "=" * 47 + "\n"
         print(menu)
         choice = input("Entrez votre choix : ")
-        self.clear_terminal()
         return choice
 
     def ask_name(self):
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -34,10 +37,10 @@ class TournamentView:
         menu += "0. Revenir au menu tournois\n"
         print(menu)
         name = input("Entrez le nom du tournoi : ")
-        self.clear_terminal()
         return name
 
     def ask_location(self):
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -51,7 +54,7 @@ class TournamentView:
         return location
 
     def ask_description(self):
-        self.clear_terminal()
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -65,7 +68,7 @@ class TournamentView:
         return description
 
     def ask_add_another_player(self):
-        self.clear_terminal()
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -90,7 +93,7 @@ class TournamentView:
         return selected_player_input
 
     def ask_player_registration_method(self):
-        self.clear_terminal()
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -108,7 +111,7 @@ class TournamentView:
         return method
 
     def ask_start_tournament(self):
-        self.clear_terminal()
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -147,6 +150,7 @@ class TournamentView:
         return user_input
 
     def display(self, round, round_index):
+        Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
         menu += "                 EASYCHESS \n"
@@ -159,26 +163,3 @@ class TournamentView:
         menu += f"Date/heure de fin: {round.end_date_time}\n"
         menu += f"Nombre de match: {len(round.matches)}\n"
         print(menu)
-
-    def display_error(self, message):
-        menu = "=" * 47 + "\n"
-        menu += f"⚠️  ERREUR: {message}\n"
-        menu += "=" * 47 + "\n"
-        print(menu)
-        time.sleep(1)
-
-    def display_success(self, message):
-        menu = "=" * 47 + "\n"
-        menu += f"✔️  SUCCÈS: {message}\n"
-        menu += "=" * 47 + "\n"
-        print(menu)
-        time.sleep(1)
-
-    def clear_terminal(self):
-        if platform.system() == "Windows":
-            time.sleep(0.50)
-            os.system("cls")
-
-        else:
-            time.sleep(0.50)
-            os.system("clear")
