@@ -11,11 +11,7 @@ class Match:
 
     def __str__(self):
         """Représentation en chaîne de caractères de l'objet Match."""
-        return (
-            f"{self.player1['first_name']} {self.player1['last_name']} "
-            f"{self.score1:>2} - {self.score2:<2} "
-            f"{self.player2['first_name']} {self.player2['last_name']}"
-        )
+        return f"{self.player1['first_name']} {self.player1['last_name']} {self.score1:>2} - {self.score2:<2} {self.player2['first_name']} {self.player2['last_name']}"
 
     def set_score(self, score1, score2):
         """

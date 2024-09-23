@@ -1,5 +1,5 @@
 ############################################################################################################
-#  PLAYER VALIDATOR                                                                                        #
+#  VALIDATOR                                                                                               #
 ############################################################################################################
 from datetime import datetime
 import re
@@ -7,12 +7,6 @@ import re
 
 class PlayerInputValidator:
     def __init__(self, utils, sanitize):
-        """
-        Initializes the PlayerInputValidator with utility and sanitization classes.
-
-        :param utils: Utility functions for displaying messages.
-        :param sanitize: Object for sanitizing input data.
-        """
         self.utils = utils
         self.sanitize = sanitize
 
@@ -20,12 +14,6 @@ class PlayerInputValidator:
     #                                                VALID INPUT                                               #
     ############################################################################################################
     def validate_return_to_menu(self, input_function):
-        """
-        Validates the user's response for returning to the menu.
-
-        :param input_function: Function to get user input.
-        :return: "0" if the user wants to return to the menu, False otherwise.
-        """
         while True:
             response = input_function().strip()
             if response == "0":
@@ -39,10 +27,7 @@ class PlayerInputValidator:
     ############################################################################################################
     def validate_choice(self, choice):
         """
-        Validates the user's menu choice.
-
-        :param choice: User's choice input.
-        :return: Validated choice or False if invalid.
+        Prompt and validate the user's choice.
         """
         if choice in ["0", "1", "2", "3"]:
             return choice
@@ -54,12 +39,6 @@ class PlayerInputValidator:
     #                                                INFO_NAME/SURNAME                                         #
     ############################################################################################################
     def validate_info(self, input_function):
-        """
-        Validates a name or surname input from the user.
-
-        :param input_function: Function to get user input.
-        :return: Sanitized name or surname if valid, or False if input is "0".
-        """
         while True:
             info = input_function().strip()
             if re.match("^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$", info):
@@ -74,12 +53,6 @@ class PlayerInputValidator:
     #                                                BIRTHDATE                                                 #
     ############################################################################################################
     def validate_birthdate(self, input_function):
-        """
-        Validates a birthdate input from the user.
-
-        :param input_function: Function to get user input.
-        :return: Validated birthdate in "dd/mm/YYYY" format, or False if input is "0".
-        """
         while True:
             birthdate = input_function()
             try:
@@ -95,12 +68,6 @@ class PlayerInputValidator:
     #                                                NATIONAL_ID                                               #
     ############################################################################################################
     def validate_national_id(self, input_function):
-        """
-        Validates a national ID input from the user.
-
-        :param input_function: Function to get user input.
-        :return: Validated national ID or False if input is "0".
-        """
         while True:
             national_id = input_function()
             if national_id == "0":

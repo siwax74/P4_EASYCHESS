@@ -1,18 +1,11 @@
 ############################################################################################################
-#  TOURNAMENT VALIDATOR                                                                                     #
+#  INPUT VALIDATOR                                                                                         #
 ############################################################################################################
 import re
 
 
 class TournamentInputValidator:
     def __init__(self, utils, file_player, sanitize):
-        """
-        Initializes the TournamentInputValidator with utility functions, player file, and sanitization tools.
-
-        :param utils: Utility functions for displaying messages and errors.
-        :param file_player: Path to the player file.
-        :param sanitize: Sanitization tool for input text.
-        """
         self.utils = utils
         self.file_player = file_player
         self.sanitize = sanitize
@@ -22,10 +15,7 @@ class TournamentInputValidator:
     ############################################################################################################
     def validate_menu_choice(self, choice):
         """
-        Validates the user's menu choice.
-
-        :param choice: User's input choice.
-        :return: Validated choice or False if invalid.
+        Prompt and validate the user's choice.
         """
         if choice in ["0", "1", "2", "3", "4", "5"]:
             return choice
@@ -37,12 +27,6 @@ class TournamentInputValidator:
     #                                                VALID NAME                                                #
     ############################################################################################################
     def validate_name(self, input_function):
-        """
-        Validates the tournament name input.
-
-        :param input_function: Function to get user input.
-        :return: Sanitized tournament name or False if invalid.
-        """
         pattern = "^[0A-Za-zÀ-ÖØ-öø-ÿ' -]+$"
         while True:
             name = input_function().strip()
@@ -60,12 +44,6 @@ class TournamentInputValidator:
     #                                                VALID LOCATION                                            #
     ############################################################################################################
     def validate_location(self, input_function):
-        """
-        Validates the tournament location input.
-
-        :param input_function: Function to get user input.
-        :return: Sanitized location or False if invalid.
-        """
         pattern = "^[,0-9A-Za-zÀ-ÖØ-öø-ÿ' -]+$"
         while True:
             location = input_function().strip()
@@ -83,12 +61,6 @@ class TournamentInputValidator:
     #                                               VALID DESCRIPTION                                          #
     ############################################################################################################
     def validate_description(self, input_function):
-        """
-        Validates the tournament description input.
-
-        :param input_function: Function to get user input.
-        :return: Sanitized description or False if invalid.
-        """
         while True:
             description = input_function().strip()
             if len(description) < 5 or len(description) > 200:
@@ -103,12 +75,6 @@ class TournamentInputValidator:
     #                                           VALID REGISTRATION METHOD                                      #
     ############################################################################################################
     def validate_registration_method(self, choice):
-        """
-        Validates the user's choice for the player registration method.
-
-        :param choice: User's input choice.
-        :return: Validated choice or False if invalid.
-        """
         while True:
             if choice in ["1", "2", "3", "0"]:
                 return choice
@@ -120,26 +86,12 @@ class TournamentInputValidator:
     #                                             VALID PLAYER SELECTION                                       #
     ############################################################################################################
     def validate_selected_players(self, input_function, players):
-        """
-        Validates the user's selection of players.
-
-        :param input_function: Function to get user input.
-        :param players: List of players to validate against.
-        :return: Validated player selections.
-        """
         while True:
             selected_players = input_function(players).strip()
             if self.is_valid_player_selection(selected_players, players):
                 return selected_players
 
     def is_valid_player_selection(self, selected_players, players):
-        """
-        Checks if the selected player indices are valid.
-
-        :param selected_players: User's selected player indices.
-        :param players: List of available players.
-        :return: True if valid, otherwise False.
-        """
         try:
             selected_players = [int(i) - 1 for i in selected_players.split()]
             for idx in selected_players:
@@ -155,12 +107,6 @@ class TournamentInputValidator:
     #                                             VALID INPUT   o/n                                            #
     ############################################################################################################
     def validate_input(self, input_function):
-        """
-        Validates a yes/no input from the user.
-
-        :param input_function: Function to get user input.
-        :return: Validated response (o, n, or 0).
-        """
         while True:
             response = input_function().strip()
             if response in ["o", "n", "0"]:
@@ -172,12 +118,6 @@ class TournamentInputValidator:
     #                                                VALID INPUT                                               #
     ############################################################################################################
     def validate_return_to_menu(self, input_function):
-        """
-        Validates the input to return to the menu.
-
-        :param input_function: Function to get user input.
-        :return: Validated response (0 to return).
-        """
         while True:
             response = input_function().strip()
             if response == "0":
@@ -191,10 +131,7 @@ class TournamentInputValidator:
     ############################################################################################################
     def validate_match(self, input_winner):
         """
-        Validates the user's input to determine the winner of a match.
-
-        :param input_winner: User's input indicating the winner.
-        :return: Validated winner input (0, 1, or 2).
+        Valider l'entrée utilisateur pour déterminer le gagnant d'un match.
         """
         if input_winner in ["0", "1", "2"]:
             return input_winner

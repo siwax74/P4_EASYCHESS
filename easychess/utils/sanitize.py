@@ -1,21 +1,10 @@
-############################################################################################################
-#  SANITIZE                                                                                                #
-############################################################################################################
 class Sanitize:
     def __init__(self, view):
-        """
-        Initializes the Sanitize class with a view.
-
-        :param view: The view object for displaying messages.
-        """
         self.view = view
 
     def sanitize_text(self, text):
         """
-        Replaces accented characters in the input text with their non-accented counterparts.
-
-        :param text: The input string potentially containing accented characters.
-        :return: A string with accented characters replaced by non-accented characters.
+        Replace accented characters with their non-accented counterparts.
         """
         accents = {
             "é": "e",

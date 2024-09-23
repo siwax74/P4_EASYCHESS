@@ -19,11 +19,7 @@ class Player:
         self.score = score
 
     def __str__(self):
-        return (
-            f"Nom: {self.last_name}, Prénom: {self.first_name}, "
-            f"Date de naissance: {self.birthdate.strftime('%d/%m/%Y')}, "
-            f"National ID: {self.national_id}"
-        )
+        return f"Nom: {self.last_name}, Prénom: {self.first_name}, Date de naissance : {self.birthdate.strftime('%d/%m/%Y')} National_id: {self.national_id}"
 
     @classmethod
     def create(cls, player_info):

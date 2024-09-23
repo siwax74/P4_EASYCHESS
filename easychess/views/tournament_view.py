@@ -1,15 +1,12 @@
+import os
+import platform
+import time
+
 from easychess.utils.utils import Utils
 
 
 class TournamentView:
     def display_tournament_menu(self) -> str:
-        """
-        Clears the terminal and displays the tournament menu.
-
-        This menu provides options for managing tournaments.
-
-        :return: The user's choice as a string.
-        """
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -29,11 +26,6 @@ class TournamentView:
         return choice
 
     def ask_name(self):
-        """
-        Prompts the user for the name of the tournament.
-
-        :return: The name of the tournament as a string.
-        """
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -48,11 +40,6 @@ class TournamentView:
         return name
 
     def ask_location(self):
-        """
-        Prompts the user for the location of the tournament.
-
-        :return: The location of the tournament as a string.
-        """
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -67,11 +54,6 @@ class TournamentView:
         return location
 
     def ask_description(self):
-        """
-        Prompts the user for a description of the tournament.
-
-        :return: The description of the tournament as a string.
-        """
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -86,11 +68,6 @@ class TournamentView:
         return description
 
     def ask_add_another_player(self):
-        """
-        Prompts the user to add more players to the tournament.
-
-        :return: The user's response as 'o' for yes or 'n' for no.
-        """
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -105,12 +82,6 @@ class TournamentView:
         return input_add_another_player.lower()
 
     def ask_player_selection(self, players):
-        """
-        Prompts the user to select players to add to the tournament.
-
-        :param players: A list of player dictionaries to choose from.
-        :return: A string of selected player numbers.
-        """
         menu = "=" * 47 + "\n"
         menu += "0. Revenir au menu principal\n"
         for i, player in enumerate(players, start=1):
@@ -122,11 +93,6 @@ class TournamentView:
         return selected_player_input
 
     def ask_player_registration_method(self):
-        """
-        Prompts the user to choose a method for player registration.
-
-        :return: The selected method as a string.
-        """
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -145,11 +111,6 @@ class TournamentView:
         return method
 
     def ask_start_tournament(self):
-        """
-        Prompts the user to confirm if they want to start the tournament.
-
-        :return: The user's response as 'o' for yes or 'n' for no.
-        """
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -164,11 +125,6 @@ class TournamentView:
         return start_tournament_input.lower()
 
     def ask_return_menu(self):
-        """
-        Prompts the user to return to the tournament menu.
-
-        :return: User input for returning to the menu.
-        """
         menu = "=" * 47 + "\n"
         menu += "0. Revenir au menu tournois\n"
         print(menu)
@@ -177,16 +133,13 @@ class TournamentView:
 
     def ask_validate_match(self, match, match_index):
         """
-        Asks the user to validate the winner of a match.
-
-        Returns 1 for player 1, 2 for player 2, or 0 for a draw.
-
-        :param match: The match for which to validate the winner.
-        :param match_index: The index of the match.
-        :return: The user's choice (1, 2, or 0).
+        Demande à l'utilisateur de valider le gagnant du match.
+        Retourne 1 pour le joueur 1, 2 pour le joueur 2, 0 pour un match nul.
+        :param match: Le match pour lequel valider le gagnant.
+        :return: Le choix de l'utilisateur (1, 2, ou 0)
         """
         menu = "=" * 47 + "\n"
-        menu += f"Match {match_index + 1}. {match}\n"
+        menu += f"Match{match_index+1}. {match}\n"
         menu += "=" * 47 + "\n"
         menu += f"1. {match.player1['first_name']} {match.player1['last_name']} (Joueur 1)\n"
         menu += f"2. {match.player2['first_name']} {match.player2['last_name']} (Joueur 2)\n"
@@ -196,16 +149,7 @@ class TournamentView:
         user_input = input("Entrez le numéro du gagnant (1, 2 ou 0) : ")
         return user_input
 
-    def display(self, round, round_index, num_rounds):
-        """
-        Clears the terminal and displays the details of the current round.
-
-        Shows the round number, start and end times, and number of matches.
-
-        :param round: The current round object.
-        :param round_index: The index of the current round.
-        :param num_rounds: The total number of rounds.
-        """
+    def display(self, round, round_index):
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -214,7 +158,7 @@ class TournamentView:
         menu += "╔═════════════════════════════════════════════╗\n"
         menu += "║               MENU TOURNOIS                 ║\n"
         menu += "╚═════════════════════════════════════════════╝\n"
-        menu += f"Round {round_index + 1}/{num_rounds}\n"
+        menu += f"Round {round_index + 1}\n"
         menu += f"Date/heure de départ: {round.start_date_time}\n"
         menu += f"Date/heure de fin: {round.end_date_time}\n"
         menu += f"Nombre de match: {len(round.matches)}\n"

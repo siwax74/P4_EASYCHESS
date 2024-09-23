@@ -14,15 +14,7 @@ class PlayerManagerController:
 
     def __init__(self):
         """
-        Initializes the controller with a view, a filepath, and other necessary components.
-
-        Attributes:
-        - main_view (MainView): The main view for displaying menus.
-        - view (PlayerView): The view for displaying player-related information.
-        - filepath (str): The path to the players file.
-        - sanitize (Sanitize): Utility for sanitizing input.
-        - utils (Utils): General utility functions.
-        - input_validator (PlayerInputValidator): Validator for player input.
+        Initializes the controller with a view and a filepath.
         """
         self.main_view = MainView()
         self.view = PlayerView()
@@ -35,12 +27,6 @@ class PlayerManagerController:
     #                                           PLAYER MENU                                                    #
     ############################################################################################################
     def show_menu_options(self):
-        """
-        Displays the player menu and handles user choices.
-
-        The method continuously prompts the user for a menu option and executes
-        the corresponding action until the user decides to exit.
-        """
         while True:
             choice = self.view.display_player_menu()
             valid_choice = self.input_validator.validate_choice(choice)
@@ -52,20 +38,11 @@ class PlayerManagerController:
                 self.main_view.display_menu()
             elif valid_choice == "0":
                 break
+            ###########################################################################################################
+            #                                       CHOICE 1       CREATE PLAYER                                      #
+            ###########################################################################################################
 
-    ############################################################################################################
-    #                                       CHOICE 1       CREATE PLAYER                                      #
-    ############################################################################################################
     def create_player(self):
-        """
-        Gathers player information and creates a new player.
-
-        If player information is successfully gathered, a new player is created,
-        saved to the file, and a success message is displayed.
-
-        Returns:
-        - Player: The newly created player object, or False if creation failed.
-        """
         player_info = self.gather_player_information()
         if not player_info:
             return False
@@ -73,20 +50,13 @@ class PlayerManagerController:
         Player.save(self.filepath, new_player.as_dict())
         self.utils.display_success(f"Joueurs {new_player.first_name}, ajouté avec succès ! ")
         return new_player
+        ############################################################################################################
+        #                                           GATHER PLAYER INFO                                             #
+        ############################################################################################################
 
-    ############################################################################################################
-    #                                           GATHER PLAYER INFO                                             #
-    ############################################################################################################
     def gather_player_information(self):
         """
-        Handles the flow for prompting and gathering information to create a new player.
-
-        Prompts the user for the player's first name, last name, birthdate, and national ID.
-        Returns a tuple containing the player's information or False if any input validation fails.
-
-        Returns:
-        - tuple: A tuple containing first name, last name, birthdate, and national ID,
-                 or False if information gathering failed.
+        Handles the flow for prompting and creating a new player.
         """
         while True:
             first_name = self.input_validator.validate_info(self.view.ask_first_name)
@@ -104,18 +74,13 @@ class PlayerManagerController:
             player_info = first_name, last_name, birthdate, national_id
             return player_info
 
-    ############################################################################################################
-    #  CHOICE 2    SHOW BDD LIST PLAYERS                                                                      #
-    ############################################################################################################
+            ###########################################################################################################
+            #  CHOICE 2    SHOW BDD LIST PLAYERS                                                                      #
+            ###########################################################################################################
+
     def display_all_players(self):
         """
-        Displays all players by reading from the specified file.
-
-        The method retrieves player data, formats it for display, and shows it to the user.
-        The user can return to the menu after viewing the list.
-
-        Returns:
-        - None
+        Displays all players by reading from a file and passing formatted player information to the view.
         """
         while True:
             players_data = Player.read(self.filepath)
