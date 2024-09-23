@@ -4,6 +4,14 @@ from ..utils.utils import Utils
 class MainView:
     @staticmethod
     def display_menu():
+        """
+        Clears the terminal and displays the main menu for the application.
+
+        This menu includes options for managing players, tournaments,
+        viewing reports, and exiting the application.
+
+        :return: The user's choice as a string.
+        """
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -25,5 +33,3 @@ class MainView:
         menu += "=" * 47 + "\n"
         print(menu)
         return input(" Veuillez choisir une option : ")
-
-
