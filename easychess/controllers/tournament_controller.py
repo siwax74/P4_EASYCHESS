@@ -1,5 +1,4 @@
 from datetime import datetime
-import math
 import random
 from easychess.utils.utils import Utils
 from settings import TOURNAMENTS_FILE, PLAYERS_FILE
@@ -15,12 +14,14 @@ from ..views.tournament_view import TournamentView
 
 class TournamentManagerController:
     """
-    Controller class for managing tournaments.
+    Controller class for managing tournaments, including creating, starting,
+    and managing rounds and matches.
     """
 
     def __init__(self):
         """
-        Controller class for managing tournaments.
+        Initializes the TournamentManagerController with the required views,
+        file paths, and utility objects for managing tournament data.
 
         Attributes:
             view (TournamentView): The view object for displaying tournament information.
@@ -38,7 +39,8 @@ class TournamentManagerController:
 
     def show_menu_options(self):
         """
-        Displays the main menu options and handles user choices.
+        Displays the main menu options for tournament management and handles
+        user choices for creating and starting tournaments.
         """
         while True:
             menu_choice = self.view.display_tournament_menu()
@@ -51,7 +53,13 @@ class TournamentManagerController:
 
     def create_tournament(self, choice):
         """
-        Creates a new tournament.
+        Creates a new tournament by gathering tournament information and registering players.
+
+        Args:
+            choice (str): User choice for tournament creation.
+
+        Returns:
+            Tournament: The newly created tournament object or False if creation fails.
         """
         if not choice:
             return False
@@ -70,7 +78,13 @@ class TournamentManagerController:
 
     def generate_tournament(self, new_tournament):
         """
-        Gère le lancement du tournoi.
+        Manages the initiation of the tournament.
+
+        Args:
+            new_tournament (Tournament): The tournament object to be initiated.
+
+        Returns:
+            Tournament: The initiated tournament object or None if not started.
         """
         choice = self.input_validator.validate_input(self.view.ask_start_tournament)
         if choice == "o":
@@ -81,10 +95,16 @@ class TournamentManagerController:
 
     def generate_rounds(self, new_tournament):
         """
-        Génère les rounds nécessaires.
+        Generates the necessary rounds for the tournament based on the number of players.
+
+        Args:
+            new_tournament (Tournament): The tournament for which rounds are generated.
+
+        Returns:
+            list: A list of Round objects created for the tournament.
         """
         num_players = len(new_tournament.players)
-        num_rounds = max(4, math.ceil(math.log2(num_players)))
+        num_rounds = num_players - 1
         new_tournament.number_of_rounds = num_rounds
         list_rounds = []
         for i in range(1, num_rounds + 1):
@@ -95,22 +115,56 @@ class TournamentManagerController:
         return list_rounds
 
     def get_players(self, new_tournament):
+        """
+        Retrieves the players registered in the tournament.
+
+        Args:
+            new_tournament (Tournament): The tournament from which to get players.
+
+        Returns:
+            list: The list of players participating in the tournament.
+
+        Raises:
+            ValueError: If there are not enough players to create matches.
+        """
         players = new_tournament.players
         if len(players) < 2:
             raise ValueError("Pas assez de joueurs pour créer des matchs.")
         return players
 
     def shuffle_players(self, players):
+        """
+        Randomly shuffles the list of players.
+
+        Args:
+            players (list): The list of players to shuffle.
+
+        Returns:
+            list: The shuffled list of players.
+        """
         random.shuffle(players)
         return players
 
     def sort_players_by_score(self, players_shuffle):
+        """
+        Sorts players by their score in descending order.
+
+        Args:
+            players_shuffle (list): The shuffled list of players to sort.
+
+        Returns:
+            list: The sorted list of players.
+        """
         players_sorted = sorted(players_shuffle, key=lambda x: x["score"], reverse=True)
         return players_sorted
 
     def generate_matches(self, new_tournament, round):
         """
-        Génère des paires de joueurs pour un round.
+        Generates player pairs for a round of the tournament.
+
+        Args:
+            new_tournament (Tournament): The tournament for which matches are generated.
+            round (Round): The current round for which matches are to be created.
         """
         players = self.get_players(new_tournament)
         players_shuffle = self.shuffle_players(players)
@@ -119,7 +173,12 @@ class TournamentManagerController:
 
     def create_matches(self, players_sorted, round, tournament):
         """
-        Crée les matchs pour un round en évitant les rencontres répétées si possible.
+        Creates matches for a round while avoiding repeated encounters if possible.
+
+        Args:
+            players_sorted (list): The sorted list of players to match.
+            round (Round): The current round for which matches are created.
+            tournament (Tournament): The tournament to which the matches belong.
         """
         round.matches = []
         matched_players = set()
@@ -130,7 +189,7 @@ class TournamentManagerController:
 
             player1 = players_sorted[i]
 
-            # Chercher un adversaire que player1 n'a pas encore rencontré
+            # Find an opponent that player1 has not yet faced
             for j in range(i + 1, len(players_sorted)):
                 player2 = players_sorted[j]
                 if not self.have_players_met(player1, player2, tournament):
@@ -141,7 +200,7 @@ class TournamentManagerController:
                     players_sorted.pop(j)
                     break
 
-            # Si aucun adversaire non rencontré n'est trouvé, prendre le suivant disponible
+            # If no new opponent is found, take the next available one
             if player1["last_name"] not in matched_players:
                 player2 = players_sorted[i + 1]
                 match = Match.create(player1, player2)
@@ -149,7 +208,7 @@ class TournamentManagerController:
                 matched_players.add(player1["last_name"])
                 matched_players.add(player2["last_name"])
 
-        # Gérer le cas d'un nombre impair de joueurs
+        # Handle the case of an odd number of players
         if len(players_sorted) % 2 != 0:
             last_player = players_sorted[-1]
             if last_player["last_name"] not in matched_players:
@@ -157,7 +216,15 @@ class TournamentManagerController:
 
     def have_players_met(self, player1, player2, tournament):
         """
-        Vérifie si deux joueurs se sont déjà rencontrés dans le tournoi.
+        Checks if two players have already faced each other in the tournament.
+
+        Args:
+            player1 (dict): The first player.
+            player2 (dict): The second player.
+            tournament (Tournament): The tournament to check against.
+
+        Returns:
+            bool: True if the players have met, False otherwise.
         """
         for round in tournament.list_rounds:
             for match in round.matches:
@@ -173,15 +240,25 @@ class TournamentManagerController:
 
     def handle_odd_player(self, player, round):
         """
-        Gère le cas d'un nombre impair de joueurs.
+        Handles the situation of having an odd number of players.
+
+        Args:
+            player (dict): The player without an opponent.
+            round (Round): The current round where the player needs to be handled.
         """
-        # Implémenter la logique pour gérer un joueur impair
-        # Par exemple, attribuer un bye ou un match contre un "joueur virtuel"
+        # Implement logic to handle an odd player
+        # For example, assigning a bye or a match against a "virtual player"
         pass
 
     def start_tournament(self, new_tournament):
         """
-        Gère le déroulement du tournoi.
+        Manages the flow of the tournament, including starting rounds and playing matches.
+
+        Args:
+            new_tournament (Tournament): The tournament to be started.
+
+        Returns:
+            bool: True if the tournament starts successfully, False otherwise.
         """
         if not new_tournament:
             return False
@@ -199,7 +276,11 @@ class TournamentManagerController:
 
     def play_round(self, round, round_index):
         """
-        Joue un round du tournoi.
+        Plays a round of the tournament, managing individual matches.
+
+        Args:
+            round (Round): The round to be played.
+            round_index (int): The index of the round in the tournament.
         """
         for match_index, match in enumerate(round.matches):
             self.view.display(round, round_index)
@@ -208,7 +289,11 @@ class TournamentManagerController:
 
     def play_match(self, match, match_index):
         """
-        Joue un match et met à jour les scores.
+        Plays a match and updates the scores based on the winner.
+
+        Args:
+            match (Match): The match to be played.
+            match_index (int): The index of the match in the round.
         """
         ask_winner_match = self.input_validator.validate_match(self.view.ask_validate_match(match, match_index))
         if ask_winner_match == "1":
@@ -229,14 +314,21 @@ class TournamentManagerController:
 
     def prepare_next_round(self, new_tournament, round_index):
         """
-        Prépare le prochain round.
+        Prepares for the next round of the tournament.
+
+        Args:
+            new_tournament (Tournament): The tournament for which the next round is prepared.
+            round_index (int): The index of the current round.
         """
-        self.view.display_success("Tour suivant...")
+        self.utils.display_success("Tour suivant...")
         self.generate_matches(new_tournament, new_tournament.list_rounds[round_index + 1])
 
     def end_tournament(self, new_tournament):
         """
-        Termine le tournoi.
+        Ends the tournament, finalizing the results and cleaning up.
+
+        Args:
+            new_tournament (Tournament): The tournament that is being ended.
         """
         new_tournament.end_date = datetime.now()
         for player in new_tournament.players:
@@ -246,7 +338,10 @@ class TournamentManagerController:
 
     def gather_tournament_information(self):
         """
-        Rassemble les informations pour créer un nouveau tournoi.
+        Gathers information necessary to create a new tournament from user input.
+
+        Returns:
+            tuple: A tuple containing the tournament name, location, and description or False if invalid.
         """
         while True:
             name = self.input_validator.validate_name(self.view.ask_name)
@@ -263,7 +358,13 @@ class TournamentManagerController:
 
     def choose_players_registration_method(self, new_tournament):
         """
-        Permet de choisir la méthode d'enregistrement des joueurs.
+        Allows the user to choose a method for registering players to the tournament.
+
+        Args:
+            new_tournament (Tournament): The tournament for which players are being registered.
+
+        Returns:
+            bool: True if players are registered successfully, False otherwise.
         """
         while True:
             choice_players_registration_method = self.view.ask_player_registration_method()
@@ -282,7 +383,16 @@ class TournamentManagerController:
 
     def register_players_automatically(self, new_tournament):
         """
-        Enregistre les joueurs automatiquement à partir d'un fichier et les ajoute au tournoi.
+        Automatically registers players from a file and adds them to the tournament.
+
+        Args:
+            new_tournament (Tournament): The tournament to which players will be added.
+
+        Returns:
+            Tournament: The tournament with players added.
+
+        Raises:
+            Exception: If an error occurs during automatic registration.
         """
         try:
             players = Player.read(self.file_player)
@@ -293,7 +403,17 @@ class TournamentManagerController:
 
     def register_players_manually(self, new_tournament):
         """
-        Permet à l'utilisateur de sélectionner manuellement les joueurs à ajouter au tournoi.
+        Allows the user to manually select players to add to the tournament.
+
+        Args:
+            new_tournament (Tournament): The tournament to which players will be added.
+
+        Returns:
+            Tournament: The tournament with players added.
+
+        Raises:
+            IndexError: If a selected player index does not exist.
+            Exception: If an error occurs during manual registration.
         """
         try:
             players = Player.read(self.file_player)
@@ -313,7 +433,13 @@ class TournamentManagerController:
 
     def add_new_player(self, new_tournament):
         """
-        Ajoute un nouveau joueur au tournoi.
+        Adds a new player to the tournament.
+
+        Args:
+            new_tournament (Tournament): The tournament to which the new player will be added.
+
+        Returns:
+            Player: The newly added player.
         """
         while True:
             self.player_manager_controller = PlayerManagerController()

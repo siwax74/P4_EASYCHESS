@@ -9,12 +9,21 @@ from settings import PLAYERS_FILE
 
 class PlayerManagerController:
     """
-    Controller class for managing players.
+    Controller class for managing player-related operations such as creating a player
+    and displaying all players.
     """
 
     def __init__(self):
         """
-        Initializes the controller with a view and a filepath.
+        Initializes the PlayerManagerController with the required views, utilities, and validation tools.
+
+        Attributes:
+            main_view (MainView): The main view object for general application display.
+            view (PlayerView): The view object for displaying player-related interfaces.
+            filepath (str): The path to the file where player data is stored.
+            sanitize (Sanitize): A sanitization object to clean user inputs.
+            utils (Utils): Utility functions for general use.
+            input_validator (PlayerInputValidator): A validator for ensuring player input correctness.
         """
         self.main_view = MainView()
         self.view = PlayerView()
@@ -27,6 +36,10 @@ class PlayerManagerController:
     #                                           PLAYER MENU                                                    #
     ############################################################################################################
     def show_menu_options(self):
+        """
+        Displays the player management menu and handles user input.
+        The user can choose to create a player, display all players, or return to the main menu.
+        """
         while True:
             choice = self.view.display_player_menu()
             valid_choice = self.input_validator.validate_choice(choice)
@@ -38,11 +51,19 @@ class PlayerManagerController:
                 self.main_view.display_menu()
             elif valid_choice == "0":
                 break
+
             ###########################################################################################################
             #                                       CHOICE 1       CREATE PLAYER                                      #
             ###########################################################################################################
 
     def create_player(self):
+        """
+        Handles the process of gathering player information and creating a new player.
+        The new player is saved to the file specified in `self.filepath`.
+
+        Returns:
+            Player: The newly created player object, or False if player creation was unsuccessful.
+        """
         player_info = self.gather_player_information()
         if not player_info:
             return False
@@ -50,13 +71,21 @@ class PlayerManagerController:
         Player.save(self.filepath, new_player.as_dict())
         self.utils.display_success(f"Joueurs {new_player.first_name}, ajouté avec succès ! ")
         return new_player
+
         ############################################################################################################
         #                                           GATHER PLAYER INFO                                             #
         ############################################################################################################
 
     def gather_player_information(self):
         """
-        Handles the flow for prompting and creating a new player.
+        Prompts the user for all necessary player information (first name, last name, birthdate, national ID)
+        and validates each input.
+
+        If validation fails at any point, the player creation process is aborted.
+
+        Returns:
+            tuple: A tuple containing player information (first_name, last_name, birthdate, national_id),
+            or None if the process is interrupted.
         """
         while True:
             first_name = self.input_validator.validate_info(self.view.ask_first_name)
@@ -80,7 +109,8 @@ class PlayerManagerController:
 
     def display_all_players(self):
         """
-        Displays all players by reading from a file and passing formatted player information to the view.
+        Reads player data from the file and displays a list of all players.
+        The user can return to the player menu after viewing the list.
         """
         while True:
             players_data = Player.read(self.filepath)

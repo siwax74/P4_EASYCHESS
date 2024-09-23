@@ -1,9 +1,13 @@
-import time
 from easychess.utils.utils import Utils
 
 
 class PlayerView:
     def display_player_menu(self) -> str:
+        """
+        Display the player menu and return the user's choice.
+
+        :return: The option selected by the user.
+        """
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -26,6 +30,11 @@ class PlayerView:
         return input(" Veuillez choisir une option : ")
 
     def ask_first_name(self):
+        """
+        Prompt the user to enter the player's first name.
+
+        :return: The first name entered by the user.
+        """
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -40,6 +49,11 @@ class PlayerView:
         return input("Entrez le prénom du joueur : ")
 
     def ask_last_name(self):
+        """
+        Prompt the user to enter the player's last name.
+
+        :return: The last name entered by the user.
+        """
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -55,6 +69,11 @@ class PlayerView:
         return last_name
 
     def ask_birthdate(self):
+        """
+        Prompt the user to enter the player's birthdate.
+
+        :return: The birthdate entered by the user.
+        """
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -70,6 +89,11 @@ class PlayerView:
         return birthdate
 
     def ask_national_id(self):
+        """
+        Prompt the user to enter the player's national ID.
+
+        :return: The national ID entered by the user.
+        """
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -85,6 +109,11 @@ class PlayerView:
         return national_id
 
     def ask_return_menu(self):
+        """
+        Ask the user if they want to return to the player menu.
+
+        :return: The user's response indicating whether to return to the menu.
+        """
         menu = "=" * 47 + "\n"
         menu += "0. Revenir au menu principal\n"
         print(menu)
@@ -92,6 +121,11 @@ class PlayerView:
         return go_menu
 
     def display_player_list(self, formatted_players):
+        """
+        Display the list of players.
+
+        :param formatted_players: A string representing the formatted list of players.
+        """
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"

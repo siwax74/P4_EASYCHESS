@@ -4,6 +4,17 @@ from ..utils.utils import Utils
 class MainView:
     @staticmethod
     def display_menu():
+        """
+        Display the main menu for the EasyChess application.
+
+        The menu includes options for:
+        - Players
+        - Tournaments
+        - Reports
+        - Exiting the application
+
+        :return: The user's choice as input.
+        """
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
         menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
@@ -25,5 +36,3 @@ class MainView:
         menu += "=" * 47 + "\n"
         print(menu)
         return input(" Veuillez choisir une option : ")
-
-
