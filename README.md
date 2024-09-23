@@ -77,9 +77,17 @@ Pour assurer la qualité du code et le respect des normes PEP8, utilisez **flake
 
 2. Exécutez Flake8 pour analyser le code :
    ```
-   flake8 --max-line-length=119 --format=html --htmldir=flake8_rapport
+   cd votre repo
+   
    ```
+   ```
+   flake8 --format=html --htmldir=rapport_flake8
 
+   ```
+   ```
+   start index.html
+
+   ```
 3. Consultez le rapport généré dans le répertoire `flake8_rapport`.
 
 ## 🛠 **Maintenance et Améliorations Futures**
