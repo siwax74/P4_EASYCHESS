@@ -1,9 +1,9 @@
 import sys
 import time
+from easychess.controllers.player_controller import PlayerManagerController
 from easychess.controllers.report_controller import ReportManagerController
-from ..views.main_view import MainView
-from .player_controller import PlayerManagerController
-from .tournament_controller import TournamentManagerController
+from easychess.controllers.tournament_controller import TournamentManagerController
+from easychess.views.main_view import MainView
 
 
 def run() -> None:

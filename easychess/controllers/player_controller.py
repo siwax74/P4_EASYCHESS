@@ -1,9 +1,9 @@
+from easychess.models.player import Player
+from easychess.utils.player_validator import PlayerInputValidator
+from easychess.utils.sanitize import Sanitize
 from easychess.utils.utils import Utils
-from ..utils.player_validator import PlayerInputValidator
-from ..utils.sanitize import Sanitize
-from ..views.main_view import MainView
-from ..views.player_view import PlayerView
-from ..models.player import Player
+from easychess.views.main_view import MainView
+from easychess.views.player_view import PlayerView
 from settings import PLAYERS_FILE
 
 
@@ -20,14 +20,14 @@ class PlayerManagerController:
         Attributes:
             main_view (MainView): The main view object for general application display.
             view (PlayerView): The view object for displaying player-related interfaces.
-            filepath (str): The path to the file where player data is stored.
+            db_players (str): The path to the file where player data is stored.
             sanitize (Sanitize): A sanitization object to clean user inputs.
             utils (Utils): Utility functions for general use.
             input_validator (PlayerInputValidator): A validator for ensuring player input correctness.
         """
         self.main_view = MainView()
         self.view = PlayerView()
-        self.filepath = PLAYERS_FILE
+        self.db_players = PLAYERS_FILE
         self.sanitize = Sanitize(self.view)
         self.utils = Utils()
         self.input_validator = PlayerInputValidator(self.utils, self.sanitize)
@@ -59,7 +59,7 @@ class PlayerManagerController:
     def create_player(self):
         """
         Handles the process of gathering player information and creating a new player.
-        The new player is saved to the file specified in `self.filepath`.
+        The new player is saved to the file specified in `self.db_players`.
 
         Returns:
             Player: The newly created player object, or False if player creation was unsuccessful.
@@ -68,7 +68,7 @@ class PlayerManagerController:
         if not player_info:
             return False
         new_player = Player.create(player_info)
-        Player.save(self.filepath, new_player.as_dict())
+        Player.save(self.db_players, new_player.as_dict())
         self.utils.display_success(f"Joueurs {new_player.first_name}, ajouté avec succès ! ")
         return new_player
 
@@ -113,7 +113,7 @@ class PlayerManagerController:
         The user can return to the player menu after viewing the list.
         """
         while True:
-            players_data = Player.read(self.filepath)
+            players_data = Player.read(self.db_players)
             players = [Player.from_dict(player_data) for player_data in players_data]
             formatted_players = [f"{i+1}. {str(player)}" for i, player in enumerate(players)]
             self.view.display_player_list("\n".join(formatted_players))

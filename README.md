@@ -72,20 +72,16 @@ Pour assurer la qualité du code et le respect des normes PEP8, utilisez **flake
 
 1. Installez Flake8 et Flake8 HTML :
    ```
-   pip install flake8 flake8-html
+   pip install -r requirements.txt
    ```
 
 2. Exécutez Flake8 pour analyser le code :
    ```
-   cd votre repo
-   
-   ```
-   ```
-   flake8 --format=html --htmldir=rapport_flake8
+   flake8 --format=html --htmldir=flake8_repport
 
    ```
    ```
-   start index.html
+   start flake8_repport\index.html
 
    ```
 3. Consultez le rapport généré dans le répertoire `flake8_rapport`.

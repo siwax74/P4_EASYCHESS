@@ -1,4 +1,4 @@
-from ..utils.utils import Utils
+from easychess.utils.utils import Utils
 
 
 class MainView:

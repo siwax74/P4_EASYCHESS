@@ -158,7 +158,7 @@ class TournamentInputValidator:
         """
         while True:
             response = input_function().strip()
-            if response in ["o", "n", "0"]:
+            if response in ["o", "0"]:
                 return response
             else:
                 self.utils.display_error("Veuillez répondre par o, n ou 0 !")
@@ -191,7 +191,9 @@ class TournamentInputValidator:
         :param input_winner: User input for the match winner.
         :return: The validated input for the winner.
         """
-        if input_winner in ["0", "1", "2"]:
-            return input_winner
-        else:
-            self.utils.display_error("Erreur de saisi ! Gagnant : Joueur1 (1) ou Joueur2 (2) ou match nul (0)")
+        while True:
+            if input_winner in ["0", "1", "2"]:
+                return input_winner
+            else:
+                self.utils.display_error("Erreur de saisi ! Gagnant : Joueur1 (1) ou Joueur2 (2) ou match nul (0)")
+                return False

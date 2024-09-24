@@ -89,7 +89,7 @@ class TournamentView:
         """
         Asks the user if they want to add another player to the tournament.
 
-        :return: User's input as 'o' or 'n'.
+        :return: User's input as 'o' or "0".
         """
         Utils.clear_terminal()
         menu = "=" * 47 + "\n"
@@ -101,7 +101,7 @@ class TournamentView:
         menu += "╚═════════════════════════════════════════════╝\n"
         menu += "0. Revenir au menu tournois\n"
         print(menu)
-        input_add_another_player = input("Souhaitez-vous ajouter d'autres joueurs au tournoi ? (o/n): ")
+        input_add_another_player = input("Souhaitez-vous ajouter d'autres joueurs au tournoi ? (o): ")
         return input_add_another_player.lower()
 
     def ask_player_selection(self, players):

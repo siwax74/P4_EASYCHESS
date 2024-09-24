@@ -1,15 +1,16 @@
 from datetime import datetime
 import random
+import time
+from easychess.controllers.player_controller import PlayerManagerController
+from easychess.models.match import Match
+from easychess.models.player import Player
+from easychess.models.round import Round
+from easychess.models.tournament import Tournament
+from easychess.utils.sanitize import Sanitize
+from easychess.utils.tournament_validator import TournamentInputValidator
 from easychess.utils.utils import Utils
+from easychess.views.tournament_view import TournamentView
 from settings import TOURNAMENTS_FILE, PLAYERS_FILE
-from .player_controller import PlayerManagerController
-from ..models.player import Player
-from ..models.round import Round
-from ..models.match import Match
-from ..models.tournament import Tournament
-from ..utils.sanitize import Sanitize
-from ..utils.tournament_validator import TournamentInputValidator
-from ..views.tournament_view import TournamentView
 
 
 class TournamentManagerController:
@@ -25,17 +26,17 @@ class TournamentManagerController:
 
         Attributes:
             view (TournamentView): The view object for displaying tournament information.
-            file_tournament (str): The file path for storing tournament data.
-            file_player (str): The file path for storing player data.
+            db_tournament (str): The file path for storing tournament data.
+            db_player (str): The file path for storing player data.
             sanitize (Sanitize): The sanitizer object for input sanitization.
             input_validator (TournamentInputValidator): The validator object for validating user input.
         """
         self.view = TournamentView()
-        self.file_tournament = TOURNAMENTS_FILE
-        self.file_player = PLAYERS_FILE
+        self.db_tournament = TOURNAMENTS_FILE
+        self.db_player = PLAYERS_FILE
         self.utils = Utils()
         self.sanitize = Sanitize(self.view)
-        self.input_validator = TournamentInputValidator(self.utils, self.file_player, self.sanitize)
+        self.input_validator = TournamentInputValidator(self.utils, self.db_player, self.sanitize)
 
     def show_menu_options(self):
         """
@@ -189,7 +190,6 @@ class TournamentManagerController:
 
             player1 = players_sorted[i]
 
-            # Find an opponent that player1 has not yet faced
             for j in range(i + 1, len(players_sorted)):
                 player2 = players_sorted[j]
                 if not self.have_players_met(player1, player2, tournament):
@@ -200,7 +200,6 @@ class TournamentManagerController:
                     players_sorted.pop(j)
                     break
 
-            # If no new opponent is found, take the next available one
             if player1["last_name"] not in matched_players:
                 player2 = players_sorted[i + 1]
                 match = Match.create(player1, player2)
@@ -208,11 +207,10 @@ class TournamentManagerController:
                 matched_players.add(player1["last_name"])
                 matched_players.add(player2["last_name"])
 
-        # Handle the case of an odd number of players
         if len(players_sorted) % 2 != 0:
             last_player = players_sorted[-1]
             if last_player["last_name"] not in matched_players:
-                self.handle_odd_player(last_player, round)
+                self.handle_odd_player(last_player)
 
     def have_players_met(self, player1, player2, tournament):
         """
@@ -238,17 +236,16 @@ class TournamentManagerController:
                     return True
         return False
 
-    def handle_odd_player(self, player, round):
+    def handle_odd_player(self, player):
         """
         Handles the situation of having an odd number of players.
 
         Args:
             player (dict): The player without an opponent.
-            round (Round): The current round where the player needs to be handled.
         """
-        # Implement logic to handle an odd player
-        # For example, assigning a bye or a match against a "virtual player"
-        pass
+        player["score"] += 0.5
+        self.utils.display_success(f"{player['last_name']} {player['first_name']} a un bye et marque 0,5 point.")
+        time.sleep(2)
 
     def start_tournament(self, new_tournament):
         """
@@ -272,7 +269,7 @@ class TournamentManagerController:
                     print(f"Player {player['last_name']}: Opponents = {player.get('opponents', set())}")
             else:
                 self.end_tournament(new_tournament)
-        Tournament.save(self.file_tournament, new_tournament.as_dict())
+        Tournament.save(self.db_tournament, new_tournament.as_dict())
 
     def play_round(self, round, round_index):
         """
@@ -295,23 +292,26 @@ class TournamentManagerController:
             match (Match): The match to be played.
             match_index (int): The index of the match in the round.
         """
-        ask_winner_match = self.input_validator.validate_match(self.view.ask_validate_match(match, match_index))
-        if ask_winner_match == "1":
-            match.set_score(1, 0)
-            match.player1["score"] += 1
-        elif ask_winner_match == "2":
-            match.set_score(0, 1)
-            match.player2["score"] += 1
-        elif ask_winner_match == "0":
-            match.set_score(0.5, 0.5)
-            match.player1["score"] += 0.5
-            match.player2["score"] += 0.5
+        while True:
+            ask_winner_match = self.input_validator.validate_match(self.view.ask_validate_match(match, match_index))
+            if ask_winner_match:
+                if ask_winner_match == "1":
+                    match.set_score(1, 0)
+                    match.player1["score"] += 1
+                elif ask_winner_match == "2":
+                    match.set_score(0, 1)
+                    match.player2["score"] += 1
+                elif ask_winner_match == "0":
+                    match.set_score(0.5, 0.5)
+                    match.player1["score"] += 0.5
+                    match.player2["score"] += 0.5
 
-        match.player1.setdefault("opponents", set()).add(match.player2["last_name"])
-        match.player2.setdefault("opponents", set()).add(match.player1["last_name"])
-        print(f"Player 1 ({match.player1['last_name']}): Opponents = {match.player1.get('opponents', set())}")
-        print(f"Player 2 ({match.player2['last_name']}): Opponents = {match.player2.get('opponents', set())}")
-
+                match.player1.setdefault("opponents", set()).add(match.player2["last_name"])
+                match.player2.setdefault("opponents", set()).add(match.player1["last_name"])
+                print(f"Player 1 ({match.player1['last_name']}): Opponents = {match.player1.get('opponents', set())}")
+                print(f"Player 2 ({match.player2['last_name']}): Opponents = {match.player2.get('opponents', set())}")
+                break
+            
     def prepare_next_round(self, new_tournament, round_index):
         """
         Prepares for the next round of the tournament.
@@ -395,7 +395,7 @@ class TournamentManagerController:
             Exception: If an error occurs during automatic registration.
         """
         try:
-            players = Player.read(self.file_player)
+            players = Player.read(self.db_player)
             new_tournament.players.extend(players)
             return new_tournament
         except Exception as e:
@@ -416,7 +416,7 @@ class TournamentManagerController:
             Exception: If an error occurs during manual registration.
         """
         try:
-            players = Player.read(self.file_player)
+            players = Player.read(self.db_player)
             selected_player_indices = self.input_validator.validate_selected_players(
                 self.view.ask_player_selection, players
             )
