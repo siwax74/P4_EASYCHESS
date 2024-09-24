@@ -77,6 +77,7 @@ class ReportView:
             menu += f"  Nom: {tournament['name']}\n"
             menu += f"  Date de début: {tournament['start_date']}\n"
             menu += f"  Date de fin: {tournament['end_date']}\n"
+            menu += f"  Localisation: {tournament['location']}\n"
             menu += f"  Nombre de tours: {tournament['number_of_rounds']}\n"
             menu += f"  Description: {tournament['description']}\n"
         print(menu)

@@ -1,5 +1,6 @@
 from datetime import datetime
 import random
+import time
 from easychess.controllers.player_controller import PlayerManagerController
 from easychess.models.match import Match
 from easychess.models.player import Player
@@ -291,29 +292,31 @@ class TournamentManagerController:
         Crée les matches pour un tour du tournoi tout en évitant les rencontres répétées si possible.
 
         Args:
-            players_sorted (list): La liste triée des joueurs à apparié pour les matches.
+            players_sorted (list): La liste triée des joueurs à apparier pour les matches.
             round (Round): Le tour actuel pour lequel les matches sont créés.
             tournament (Tournament): Le tournoi auquel appartiennent les matches.
         """
         # Initialiser la liste des matches pour ce tour
         round.matches = []
-        
+
         # Set pour suivre les joueurs qui ont déjà été appariés dans ce tour
         matched_players = set()
 
-        # Boucle à travers tous les joueurs triés
-        for i in range(0, len(players_sorted)):
-            # Si nous sommes au dernier joueur de la liste (joueur impair), sortir de la boucle
-            if i + 1 >= len(players_sorted):
-                break
+        # Faire une copie de la liste triée et mélanger les joueurs pour plus de diversité
+        player_sorted_copy = players_sorted.copy()
+        random.shuffle(player_sorted_copy)
 
+        # Index pour parcourir les joueurs
+        i = 0
+
+        while i < len(player_sorted_copy) - 1:
             # Joueur principal pour cette itération
-            player1 = players_sorted[i]
+            player1 = player_sorted_copy[i]
             print(f"\nEssai d'appariement pour {player1['last_name']} {player1['first_name']}")
 
             # Chercher un adversaire pour 'player1' parmi les joueurs restants
-            for j in range(i + 1, len(players_sorted)):
-                player2 = players_sorted[j]
+            for j in range(i + 1, len(player_sorted_copy)):
+                player2 = player_sorted_copy[j]
                 print(f"Tentative d'appariement avec {player2['last_name']} {player2['first_name']}")
 
                 # Vérifier si ces deux joueurs se sont déjà rencontrés dans un tour précédent
@@ -322,41 +325,39 @@ class TournamentManagerController:
                     print(f"Appariement réussi: {player1['last_name']} vs {player2['last_name']}")
                     match = Match.create(player1, player2)
                     round.add_match(match)
-                    
+
                     # Marquer les deux joueurs comme appariés
                     matched_players.add(player1["last_name"])
                     matched_players.add(player2["last_name"])
-                    
-                    # Retirer 'player2' de la liste car il a été apparié
-                    players_sorted.pop(j)
-                    
-                    # Sortir de la boucle interne une fois un match trouvé
-                    break
 
-            # Si 'player1' n'a pas encore été apparié dans cette itération
-            if player1["last_name"] not in matched_players:
-                # Appariement par défaut avec le joueur suivant dans la liste
-                player2 = players_sorted[i + 1]
+                    # Retirer les deux joueurs de la liste
+                    player_sorted_copy.pop(j)  # Supprimer player2
+                    player_sorted_copy.pop(i)  # Supprimer player1
+
+                    # Revenir au début de la boucle sans augmenter i, car nous avons modifié la liste
+                    break
+            else:
+                # Si 'player1' n'a pas été apparié dans cette itération, appariement par défaut
+                player2 = player_sorted_copy[i + 1]
                 print(f"Appariement forcé: {player1['last_name']} avec {player2['last_name']} (par défaut)")
-                
+
                 # Créer un match entre 'player1' et 'player2'
                 match = Match.create(player1, player2)
                 round.add_match(match)
-                
+
                 # Ajouter ces deux joueurs à la liste des appariés
                 matched_players.add(player1["last_name"])
                 matched_players.add(player2["last_name"])
 
-        # Si la liste des joueurs est impaire, gérer le dernier joueur restant sans adversaire
-        if len(players_sorted) % 2 != 0:
-            # Prendre le dernier joueur non apparié
-            last_player = players_sorted[-1]
-            
-            # Si ce joueur n'a pas encore été apparié dans ce tour, il obtient un "bye"
-            if last_player["last_name"] not in matched_players:
-                print(f"{last_player['last_name']} reçoit un bye (aucun adversaire disponible)")
-                self.handle_odd_player(last_player)
+                # Retirer les deux joueurs de la liste
+                player_sorted_copy.pop(i + 1)  # Supprimer player2
+                player_sorted_copy.pop(i)  # Supprimer player1
 
+        # Si la liste des joueurs est impaire, gérer le dernier joueur restant sans adversaire
+        if len(player_sorted_copy) == 1:
+            last_player = player_sorted_copy[0]
+            if last_player["last_name"] not in matched_players:
+                self.handle_odd_player(last_player)
 
     def have_players_met(self, player1, player2, tournament):
         """

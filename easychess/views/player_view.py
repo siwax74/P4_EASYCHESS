@@ -19,9 +19,9 @@ class PlayerView:
         menu += "╚═════════════════════════════════════════════╝\n"
         menu += "╔═════════════════════════════════════════════╗\n"
         menu += "║  -- Actions --                              ║\n"
-        menu += "║  0. Revenir au menu principale              ║\n"
         menu += "║  1. Ajouter un nouveau joueur               ║\n"
         menu += "║  2. Voir liste de joueurs                   ║\n"
+        menu += "║  0. Revenir au menu principale              ║\n"
         menu += "╚═════════════════════════════════════════════╝\n"
         menu += "=" * 47 + "\n"
 

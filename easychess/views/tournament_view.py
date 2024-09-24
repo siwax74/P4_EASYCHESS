@@ -20,8 +20,8 @@ class TournamentView:
         menu += "╚═════════════════════════════════════════════╝\n"
         menu += "╔═════════════════════════════════════════════╗\n"
         menu += "║  -- Actions --                              ║\n"
-        menu += "║  0. Revenir au menu principal               ║\n"
         menu += "║  1. Ajouter/démarrer nouveau tournoi        ║\n"
+        menu += "║  0. Revenir au menu principal               ║\n"
         menu += "╚═════════════════════════════════════════════╝\n"
         menu += "=" * 47 + "\n"
         print(menu)

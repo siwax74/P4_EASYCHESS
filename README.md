@@ -1,5 +1,5 @@
-
-# ♟️ **Application de Gestion de Tournois d'Échecs** ♟️
+# ♟️ ***EASYCHESS*** ♟️
+# **Application de Gestion de Tournois d'Échecs**
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
 ![Flake8](https://img.shields.io/badge/Flake8-PEP8--Compliant-green)
@@ -11,6 +11,7 @@ Bienvenue dans l'application de gestion de tournois d'échecs. Cette application
 
 - **Gestion des Joueurs** :
   - Ajout manuel des joueurs (Nom, Prénom, Date de naissance, ID National d'Échecs).
+  - Voir la liste de joueurs.
 - **Tournois** :
   - Création, gestion et suivi des tournois, tours et matchs.
   - Calcul automatique des scores.
