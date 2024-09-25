@@ -1,6 +1,5 @@
 from datetime import datetime
 import random
-import time
 from easychess.controllers.player_controller import PlayerManagerController
 from easychess.models.match import Match
 from easychess.models.player import Player
@@ -290,6 +289,7 @@ class TournamentManagerController:
     def create_matches(self, players_sorted, round, tournament):
         """
         Crée les matches pour un tour du tournoi tout en évitant les rencontres répétées si possible.
+        Si aucun match inédit n'est possible, un appariement forcé est fait.
 
         Args:
             players_sorted (list): La liste triée des joueurs à apparier pour les matches.
@@ -302,60 +302,72 @@ class TournamentManagerController:
         # Set pour suivre les joueurs qui ont déjà été appariés dans ce tour
         matched_players = set()
 
-        # Faire une copie de la liste triée et mélanger les joueurs pour plus de diversité
-        player_sorted_copy = players_sorted.copy()
-        random.shuffle(player_sorted_copy)
+        # Liste des joueurs non appariés dans ce tour
+        unpaired_players = players_sorted[:]
 
-        # Index pour parcourir les joueurs
         i = 0
+        while i < len(unpaired_players):
+            player1 = unpaired_players[i]
 
-        while i < len(player_sorted_copy) - 1:
-            # Joueur principal pour cette itération
-            player1 = player_sorted_copy[i]
-            print(f"\nEssai d'appariement pour {player1['last_name']} {player1['first_name']}")
+            # Si 'player1' est déjà apparié, passer au joueur suivant
+            if player1["last_name"] in matched_players:
+                i += 1
+                continue
 
-            # Chercher un adversaire pour 'player1' parmi les joueurs restants
-            for j in range(i + 1, len(player_sorted_copy)):
-                player2 = player_sorted_copy[j]
-                print(f"Tentative d'appariement avec {player2['last_name']} {player2['first_name']}")
+            # Tenter d'apparier 'player1' avec un adversaire
+            matched = False
+            for j in range(i + 1, len(unpaired_players)):
+                player2 = unpaired_players[j]
 
-                # Vérifier si ces deux joueurs se sont déjà rencontrés dans un tour précédent
+                # Vérifier si les joueurs se sont déjà rencontrés
                 if not self.have_players_met(player1, player2, tournament):
-                    # Créer un match si les deux joueurs ne se sont pas déjà rencontrés
+                    # Créer le match et ajouter les joueurs à la liste des appariés
                     print(f"Appariement réussi: {player1['last_name']} vs {player2['last_name']}")
                     match = Match.create(player1, player2)
                     round.add_match(match)
-
-                    # Marquer les deux joueurs comme appariés
                     matched_players.add(player1["last_name"])
                     matched_players.add(player2["last_name"])
 
-                    # Retirer les deux joueurs de la liste
-                    player_sorted_copy.pop(j)  # Supprimer player2
-                    player_sorted_copy.pop(i)  # Supprimer player1
-
-                    # Revenir au début de la boucle sans augmenter i, car nous avons modifié la liste
+                    # Supprimer 'player2' de la liste des joueurs non appariés
+                    unpaired_players.pop(j)
+                    matched = True
                     break
-            else:
-                # Si 'player1' n'a pas été apparié dans cette itération, appariement par défaut
-                player2 = player_sorted_copy[i + 1]
-                print(f"Appariement forcé: {player1['last_name']} avec {player2['last_name']} (par défaut)")
 
-                # Créer un match entre 'player1' et 'player2'
-                match = Match.create(player1, player2)
-                round.add_match(match)
+            if not matched:
+                # Si aucun appariement inédit n'a été trouvé, tenter d'autres stratégies avant d'appairer de force
+                print(f"Pas d'adversaire inédit pour {player1['last_name']}, recherche plus large...")
 
-                # Ajouter ces deux joueurs à la liste des appariés
-                matched_players.add(player1["last_name"])
-                matched_players.add(player2["last_name"])
+                # Recherche élargie parmi les joueurs non appariés restants
+                for k in range(i + 1, len(unpaired_players)):
+                    player2 = unpaired_players[k]
 
-                # Retirer les deux joueurs de la liste
-                player_sorted_copy.pop(i + 1)  # Supprimer player2
-                player_sorted_copy.pop(i)  # Supprimer player1
+                    # Si un joueur est disponible plus loin dans la liste
+                    if player2["last_name"] not in matched_players:
+                        print(
+                            f"Appariement forcé: {player1['last_name']} avec {player2['last_name']}(recherche étendue)"
+                        )
+                        match = Match.create(player1, player2)
+                        round.add_match(match)
+                        matched_players.add(player1["last_name"])
+                        matched_players.add(player2["last_name"])
+                        unpaired_players.pop(k)
+                        break
+                else:
+                    # Si même la recherche élargie échoue, forcer l'appariement avec le joueur suivant immédiat
+                    if i + 1 < len(unpaired_players):
+                        player2 = unpaired_players[i + 1]
+                        print(f"Appariement forcé final: {player1['last_name']} avec {player2['last_name']}")
+                        match = Match.create(player1, player2)
+                        round.add_match(match)
+                        matched_players.add(player1["last_name"])
+                        matched_players.add(player2["last_name"])
 
-        # Si la liste des joueurs est impaire, gérer le dernier joueur restant sans adversaire
-        if len(player_sorted_copy) == 1:
-            last_player = player_sorted_copy[0]
+            # Passer au joueur suivant
+            i += 1
+
+        # Gérer le cas où le nombre de joueurs est impair
+        if len(unpaired_players) % 2 != 0:
+            last_player = unpaired_players[-1]
             if last_player["last_name"] not in matched_players:
                 self.handle_odd_player(last_player)
 

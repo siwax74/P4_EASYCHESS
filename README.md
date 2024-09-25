@@ -78,12 +78,12 @@ Pour assurer la qualité du code et le respect des normes PEP8, utilisez **flake
 
 2. Exécutez Flake8 pour analyser le code :
    ```
-   flake8 --format=html --htmldir=flake8_repport
+   flake8 --format=html --htmldir=flake8_report
 
    ```
 3. Consultez le rapport généré dans le répertoire `flake8_rapport`.
    ```
-   start flake8_repport\index.html
+   start flake8_report\index.html
 
    ```
 
