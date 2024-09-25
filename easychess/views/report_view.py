@@ -27,7 +27,7 @@ class ReportView:
         menu += "╚═════════════════════════════════════════════╝\n"
         menu += "=" * 47 + "\n"
         print(menu)
-        choice = input("Veuillez sélectionner une option : ")
+        choice = input(" Veuillez choisir une option : ")
         return choice
 
     def display_alphabetical_players(self, formatted_players):

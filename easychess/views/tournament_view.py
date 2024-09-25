@@ -25,7 +25,7 @@ class TournamentView:
         menu += "╚═════════════════════════════════════════════╝\n"
         menu += "=" * 47 + "\n"
         print(menu)
-        choice = input("Entrez votre choix : ")
+        choice = input(" Veuillez choisir une option : ")
         return choice
 
     def ask_name(self):
