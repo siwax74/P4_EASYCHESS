@@ -1,5 +1,6 @@
 from datetime import datetime
 import random
+import time
 from easychess.controllers.player_controller import PlayerManagerController
 from easychess.models.match import Match
 from easychess.models.player import Player
@@ -245,8 +246,7 @@ class TournamentManagerController:
         """
         players = self.get_players(new_tournament)
         players_shuffle = self.shuffle_players(players)
-        players_sorted = self.sort_players_by_score(players_shuffle)
-        self.create_matches(players_sorted, round, new_tournament)
+        self.create_matches(players_shuffle, round, new_tournament)
 
     def get_players(self, new_tournament):
         """
@@ -279,20 +279,7 @@ class TournamentManagerController:
         random.shuffle(players)
         return players
 
-    def sort_players_by_score(self, players_shuffle):
-        """
-        Sorts players by their score in descending order.
-
-        Args:
-            players_shuffle (list): The shuffled list of players to sort.
-
-        Returns:
-            list: The sorted list of players.
-        """
-        players_sorted = sorted(players_shuffle, key=lambda x: x["score"], reverse=True)
-        return players_sorted
-
-    def create_matches(self, players_sorted, round, tournament):
+    def create_matches(self, players_shuffle, round, tournament):
         """
         Crée les matches pour un tour du tournoi tout en évitant les rencontres répétées si possible.
         Si aucun match inédit n'est possible, un appariement forcé est fait.
@@ -304,99 +291,58 @@ class TournamentManagerController:
         """
         # Initialiser la liste des matches pour ce tour
         round.matches = []
-
-        # Set pour suivre les joueurs qui ont déjà été appariés dans ce tour
-        matched_players = set()
-
-        # Liste des joueurs non appariés dans ce tour
-        unpaired_players = players_sorted[:]
-
-        i = 0
-        while i < len(unpaired_players):
-            player1 = unpaired_players[i]
-
-            # Si 'player1' est déjà apparié, passer au joueur suivant
-            if player1["last_name"] in matched_players:
-                i += 1
+        players_set = set()
+        for i in range(0, len(players_shuffle)):
+            player1 = players_shuffle[i]
+            if player1["last_name"] in players_set:
                 continue
+            player2 = self.get_player2(player1, players_shuffle, players_set, tournament)
+            if player2:
+                match = Match(player1, player2)
+                round.add_match(match)
+                players_set.add(player1["last_name"])
+                players_set.add(player2["last_name"])
+            else:
+                print("ok forcage")
+    def get_player2(self, player1, players_shuffle, players_set, tournament):
+        """
+        Trouve un adversaire pour player1 tout en évitant les matchs répétés.
 
-            # Tenter d'apparier 'player1' avec un adversaire
-            matched = False
-            for j in range(i + 1, len(unpaired_players)):
-                player2 = unpaired_players[j]
+        Args:
+            player1 (dict): Le joueur pour lequel on cherche un adversaire.
+            players_shuffle (list): Liste mélangée des joueurs pour le tour actuel.
+            players_set (set): Ensemble des joueurs déjà utilisés dans les matchs du tour actuel.
+            tournament (Tournament): L'objet tournoi contenant tous les tours et matchs précédents.
 
-                # Vérifier si les joueurs se sont déjà rencontrés
-                if not self.have_players_met(player1, player2, tournament):
-                    # Créer le match et ajouter les joueurs à la liste des appariés
-                    print(f"Appariement réussi: {player1['last_name']} vs {player2['last_name']}")
-                    match = Match.create(player1, player2)
-                    round.add_match(match)
-                    matched_players.add(player1["last_name"])
-                    matched_players.add(player2["last_name"])
-
-                    # Supprimer 'player2' de la liste des joueurs non appariés
-                    unpaired_players.pop(j)
-                    matched = True
-                    break
-
-            if not matched:
-                # Si aucun appariement inédit n'a été trouvé, tenter d'autres stratégies avant d'appairer de force
-                print(f"Pas d'adversaire inédit pour {player1['last_name']}, recherche plus large...")
-
-                # Recherche élargie parmi les joueurs non appariés restants
-                for k in range(i + 1, len(unpaired_players)):
-                    player2 = unpaired_players[k]
-
-                    # Si un joueur est disponible plus loin dans la liste
-                    if player2["last_name"] not in matched_players:
-                        print(
-                            f"Appariement forcé: {player1['last_name']} avec {player2['last_name']}(recherche étendue)"
-                        )
-                        match = Match.create(player1, player2)
-                        round.add_match(match)
-                        matched_players.add(player1["last_name"])
-                        matched_players.add(player2["last_name"])
-                        unpaired_players.pop(k)
-                        break
-                else:
-                    # Si même la recherche élargie échoue, forcer l'appariement avec le joueur suivant immédiat
-                    if i + 1 < len(unpaired_players):
-                        player2 = unpaired_players[i + 1]
-                        print(f"Appariement forcé final: {player1['last_name']} avec {player2['last_name']}")
-                        match = Match.create(player1, player2)
-                        round.add_match(match)
-                        matched_players.add(player1["last_name"])
-                        matched_players.add(player2["last_name"])
-
-            # Passer au joueur suivant
-            i += 1
-
-        # Gérer le cas où le nombre de joueurs est impair
-        if len(unpaired_players) % 2 != 0:
-            last_player = unpaired_players[-1]
-            if last_player["last_name"] not in matched_players:
-                self.handle_odd_player(last_player)
+        Returns:
+            dict: Un joueur à apparier avec player1 ou None si aucun joueur disponible.
+        """
+        random.shuffle(players_shuffle)
+        for player2 in players_shuffle:
+            if player2["last_name"] in players_set or player1["last_name"] == player2["last_name"]:
+                continue
+            # Vérifier si player1 et player2 se sont déjà affrontés
+            if not self.have_players_met(player1, player2, tournament):
+                return player2
+        return None
 
     def have_players_met(self, player1, player2, tournament):
         """
-        Checks if two players have already faced each other in the tournament.
+        Vérifie si deux joueurs se sont déjà affrontés dans le tournoi.
 
         Args:
-            player1 (dict): The first player.
-            player2 (dict): The second player.
-            tournament (Tournament): The tournament to check against.
+            player1 (dict): Le premier joueur.
+            player2 (dict): Le second joueur.
+            tournament (Tournament): Le tournoi dans lequel vérifier les matchs.
 
         Returns:
-            bool: True if the players have met, False otherwise.
+            bool: True si les joueurs se sont déjà rencontrés, False sinon.
         """
         for round in tournament.list_rounds:
             for match in round.matches:
                 if (
-                    match.player1["last_name"] == player1["last_name"]
-                    and match.player2["last_name"] == player2["last_name"]
-                ) or (
-                    match.player1["last_name"] == player2["last_name"]
-                    and match.player2["last_name"] == player1["last_name"]
+                    (match.player1["last_name"] == player1["last_name"] and match.player2["last_name"] == player2["last_name"])
+                    or (match.player1["last_name"] == player2["last_name"] and match.player2["last_name"] == player1["last_name"])
                 ):
                     return True
         return False
