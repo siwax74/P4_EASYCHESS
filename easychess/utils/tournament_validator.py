@@ -162,7 +162,7 @@ class TournamentInputValidator:
                 return response
             else:
                 self.utils.display_error("Veuillez répondre par o, n ou 0 !")
-        
+
     def validate_add_new_player(self, input_function):
         """
         Validate user input for yes/no responses.
