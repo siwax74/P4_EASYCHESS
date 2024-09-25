@@ -201,11 +201,19 @@ class TournamentManagerController:
         Returns:
             Tournament: The initiated tournament object or None if not started.
         """
+        if len(new_tournament.players) == 0:
+            self.utils.display_error("Vous devez ajouter des joueurs avant de commencer le tournoi.")
+            return None
+
         choice = self.input_validator.validate_input(self.view.ask_start_tournament)
         if choice == "o":
             list_rounds = self.generate_rounds(new_tournament)
-            self.generate_matches(new_tournament, list_rounds[0])
-            return new_tournament
+            if list_rounds:
+                self.generate_matches(new_tournament, list_rounds[0])
+                return new_tournament
+            else:
+                self.utils.display_error("Impossible de générer les tours et les matchs.")
+                return None
         return choice if choice == "0" else None
 
     def generate_rounds(self, new_tournament):

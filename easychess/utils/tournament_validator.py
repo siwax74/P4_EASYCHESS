@@ -158,7 +158,7 @@ class TournamentInputValidator:
         """
         while True:
             response = input_function().strip()
-            if response in ["o", "0"]:
+            if response in ["o", "n", "0"]:
                 return response
             else:
                 self.utils.display_error("Veuillez répondre par o, n ou 0 !")
