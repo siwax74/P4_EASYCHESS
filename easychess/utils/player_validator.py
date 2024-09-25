@@ -131,7 +131,7 @@ class PlayerInputValidator:
                 return False
             if not national_id:
                 return national_id
-            elif len(national_id) > 7 or not re.match("^[A-Za-z0-9]{2}[0-9]{5}$", national_id):
+            elif len(national_id) > 7 or not re.match("^[A-Za-z]{2}[0-9]{5}$", national_id):
                 self.utils.display_error("Veuillez saisir un national_id valide au format 'AB12345' !")
             else:
                 return national_id
