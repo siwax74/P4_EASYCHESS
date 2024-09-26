@@ -205,8 +205,8 @@ class TournamentManagerController:
         """
         choice = self.input_validator.validate_input(self.view.ask_start_tournament)
         if choice == "o":
-            if len(new_tournament.players) < 2:
-                print("Erreur : Il doit y avoir au moins 2 joueurs pour démarrer le tournoi.")
+            if len(new_tournament.players) < 8:
+                print("Erreur : Il doit y avoir au moins 8 joueurs pour démarrer le tournoi.")
                 return None
             list_rounds = self.generate_rounds(new_tournament)
             self.generate_matches(new_tournament, list_rounds[0])
