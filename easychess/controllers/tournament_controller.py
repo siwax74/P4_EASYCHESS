@@ -452,6 +452,7 @@ class TournamentManagerController:
             self.view.display(round, round_index)
             self.play_match(match, match_index)
         round.end_date_time = datetime.now()
+        new_tournament.current_round += 1
 
     def play_match(self, match, match_index):
         """
@@ -484,8 +485,7 @@ class TournamentManagerController:
 
         next_round_input = self.input_validator.validate_input(self.view.ask_next_round)
         if next_round_input == "o":
-            if new_tournament.current_round < new_tournament.number_of_rounds - 1:
-                new_tournament.current_round += 1
+            if new_tournament.current_round <= new_tournament.number_of_rounds:
                 self.utils.display_success("Tour suivant...")
                 if not new_tournament.list_rounds[new_tournament.current_round].matches:
                     self.generate_matches(new_tournament, new_tournament.list_rounds[new_tournament.current_round])

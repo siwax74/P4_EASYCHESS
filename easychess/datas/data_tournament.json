@@ -1,1 +1,401 @@
-{"tournament1": {"name": "fdgdfg", "location": "dfgdfg", "start_date": "29/09/2024 04:22", "end_date": "29/09/2024 04:22", "number_of_rounds": 7, "current_round": 4, "players": [{"last_name": "Morel", "first_name": "Dorian", "birthdate": "11/10/1997", "national_id": null, "score": 3}, {"last_name": "Perrin", "first_name": "Helene", "birthdate": "08/03/1992", "national_id": null, "score": 0}, {"last_name": "Petit", "first_name": "Benoit", "birthdate": "20/02/1995", "national_id": null, "score": 2}, {"last_name": "Dupont", "first_name": "Florian", "birthdate": "14/12/1994", "national_id": null, "score": 2}, {"last_name": "Fournier", "first_name": "Emma", "birthdate": "27/09/1990", "national_id": null, "score": 2}, {"last_name": "Roux", "first_name": "Gael", "birthdate": "29/06/1996", "national_id": null, "score": 0}, {"last_name": "Moreau", "first_name": "Jacques", "birthdate": "02/09/1991", "national_id": null, "score": 3}, {"last_name": "Lefebvre", "first_name": "Camille", "birthdate": "03/05/1991", "national_id": null, "score": 4}], "list_rounds": [{"name": "Round 1", "start_date_time": "29/09/2024 04:22", "end_date_time": null, "matches": [[["Perrin Helene", 0], ["Dupont Florian", 0]], [["Morel Dorian", 0], ["Roux Gael", 0]], [["Fournier Emma", 0], ["Petit Benoit", 0]], [["Lefebvre Camille", 0], ["Moreau Jacques", 0]]]}, {"name": "Round 2", "start_date_time": "29/09/2024 04:22", "end_date_time": "29/09/2024 04:22", "matches": [[["Morel Dorian", 1], ["Perrin Helene", 0]], [["Petit Benoit", 1], ["Roux Gael", 0]], [["Fournier Emma", 1], ["Moreau Jacques", 0]], [["Lefebvre Camille", 1], ["Dupont Florian", 0]]]}, {"name": "Round 3", "start_date_time": "29/09/2024 04:22", "end_date_time": "29/09/2024 04:22", "matches": [[["Morel Dorian", 1], ["Fournier Emma", 0]], [["Lefebvre Camille", 1], ["Petit Benoit", 0]], [["Moreau Jacques", 1], ["Roux Gael", 0]], [["Dupont Florian", 1], ["Perrin Helene", 0]]]}, {"name": "Round 4", "start_date_time": "29/09/2024 04:22", "end_date_time": "29/09/2024 04:22", "matches": [[["Lefebvre Camille", 1], ["Morel Dorian", 0]], [["Moreau Jacques", 1], ["Dupont Florian", 0]], [["Fournier Emma", 1], ["Perrin Helene", 0]], [["Petit Benoit", 1], ["Roux Gael", 0]]]}, {"name": "Round 5", "start_date_time": "29/09/2024 04:22", "end_date_time": "29/09/2024 04:22", "matches": [[["Lefebvre Camille", 1], ["Fournier Emma", 0]], [["Morel Dorian", 1], ["Petit Benoit", 0]], [["Moreau Jacques", 1], ["Perrin Helene", 0]], [["Dupont Florian", 1], ["Roux Gael", 0]]]}, {"name": "Round 6", "start_date_time": "29/09/2024 04:22", "end_date_time": null, "matches": []}, {"name": "Round 7", "start_date_time": "29/09/2024 04:22", "end_date_time": null, "matches": []}], "description": "dfgdfg", "status": null}}
+{
+    "tournament1": {
+        "name": "sdfsdf",
+        "location": "sdfsdf",
+        "start_date": "29/09/2024 04:55",
+        "end_date": "29/09/2024 04:56",
+        "number_of_rounds": 7,
+        "current_round": 7,
+        "players": [
+            {
+                "last_name": "Lefebvre",
+                "first_name": "Camille",
+                "birthdate": "03/05/1991",
+                "national_id": null,
+                "score": 1
+            },
+            {
+                "last_name": "Dupont",
+                "first_name": "Florian",
+                "birthdate": "14/12/1994",
+                "national_id": null,
+                "score": 6
+            },
+            {
+                "last_name": "Roux",
+                "first_name": "Gael",
+                "birthdate": "29/06/1996",
+                "national_id": null,
+                "score": 2
+            },
+            {
+                "last_name": "Perrin",
+                "first_name": "Helene",
+                "birthdate": "08/03/1992",
+                "national_id": null,
+                "score": 0
+            },
+            {
+                "last_name": "Moreau",
+                "first_name": "Jacques",
+                "birthdate": "02/09/1991",
+                "national_id": null,
+                "score": 5
+            },
+            {
+                "last_name": "Fournier",
+                "first_name": "Emma",
+                "birthdate": "27/09/1990",
+                "national_id": null,
+                "score": 4
+            },
+            {
+                "last_name": "Petit",
+                "first_name": "Benoit",
+                "birthdate": "20/02/1995",
+                "national_id": null,
+                "score": 3
+            },
+            {
+                "last_name": "Morel",
+                "first_name": "Dorian",
+                "birthdate": "11/10/1997",
+                "national_id": null,
+                "score": 3
+            }
+        ],
+        "list_rounds": [
+            {
+                "name": "Round 1",
+                "start_date_time": "29/09/2024 04:55",
+                "end_date_time": null,
+                "matches": [
+                    [
+                        [
+                            "Lefebvre Camille",
+                            0
+                        ],
+                        [
+                            "Roux Gael",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Fournier Emma",
+                            0
+                        ],
+                        [
+                            "Morel Dorian",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Petit Benoit",
+                            0
+                        ],
+                        [
+                            "Dupont Florian",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Moreau Jacques",
+                            0
+                        ],
+                        [
+                            "Perrin Helene",
+                            0
+                        ]
+                    ]
+                ]
+            },
+            {
+                "name": "Round 2",
+                "start_date_time": "29/09/2024 04:55",
+                "end_date_time": "29/09/2024 04:55",
+                "matches": [
+                    [
+                        [
+                            "Moreau Jacques",
+                            1
+                        ],
+                        [
+                            "Fournier Emma",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Petit Benoit",
+                            1
+                        ],
+                        [
+                            "Perrin Helene",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Dupont Florian",
+                            1
+                        ],
+                        [
+                            "Lefebvre Camille",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Morel Dorian",
+                            1
+                        ],
+                        [
+                            "Roux Gael",
+                            0
+                        ]
+                    ]
+                ]
+            },
+            {
+                "name": "Round 3",
+                "start_date_time": "29/09/2024 04:55",
+                "end_date_time": "29/09/2024 04:55",
+                "matches": [
+                    [
+                        [
+                            "Moreau Jacques",
+                            1
+                        ],
+                        [
+                            "Morel Dorian",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Petit Benoit",
+                            1
+                        ],
+                        [
+                            "Lefebvre Camille",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Dupont Florian",
+                            1
+                        ],
+                        [
+                            "Perrin Helene",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Fournier Emma",
+                            1
+                        ],
+                        [
+                            "Roux Gael",
+                            0
+                        ]
+                    ]
+                ]
+            },
+            {
+                "name": "Round 4",
+                "start_date_time": "29/09/2024 04:55",
+                "end_date_time": "29/09/2024 04:55",
+                "matches": [
+                    [
+                        [
+                            "Moreau Jacques",
+                            1
+                        ],
+                        [
+                            "Petit Benoit",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Dupont Florian",
+                            1
+                        ],
+                        [
+                            "Morel Dorian",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Fournier Emma",
+                            1
+                        ],
+                        [
+                            "Perrin Helene",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Roux Gael",
+                            1
+                        ],
+                        [
+                            "Lefebvre Camille",
+                            0
+                        ]
+                    ]
+                ]
+            },
+            {
+                "name": "Round 5",
+                "start_date_time": "29/09/2024 04:55",
+                "end_date_time": "29/09/2024 04:56",
+                "matches": [
+                    [
+                        [
+                            "Dupont Florian",
+                            1
+                        ],
+                        [
+                            "Moreau Jacques",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Fournier Emma",
+                            1
+                        ],
+                        [
+                            "Petit Benoit",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Morel Dorian",
+                            1
+                        ],
+                        [
+                            "Perrin Helene",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Roux Gael",
+                            1
+                        ],
+                        [
+                            "Lefebvre Camille",
+                            0
+                        ]
+                    ]
+                ]
+            },
+            {
+                "name": "Round 6",
+                "start_date_time": "29/09/2024 04:55",
+                "end_date_time": "29/09/2024 04:56",
+                "matches": [
+                    [
+                        [
+                            "Dupont Florian",
+                            1
+                        ],
+                        [
+                            "Fournier Emma",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Moreau Jacques",
+                            1
+                        ],
+                        [
+                            "Roux Gael",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Morel Dorian",
+                            1
+                        ],
+                        [
+                            "Petit Benoit",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Lefebvre Camille",
+                            1
+                        ],
+                        [
+                            "Perrin Helene",
+                            0
+                        ]
+                    ]
+                ]
+            },
+            {
+                "name": "Round 7",
+                "start_date_time": "29/09/2024 04:55",
+                "end_date_time": "29/09/2024 04:56",
+                "matches": [
+                    [
+                        [
+                            "Dupont Florian",
+                            1
+                        ],
+                        [
+                            "Roux Gael",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Moreau Jacques",
+                            1
+                        ],
+                        [
+                            "Lefebvre Camille",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Fournier Emma",
+                            1
+                        ],
+                        [
+                            "Morel Dorian",
+                            0
+                        ]
+                    ],
+                    [
+                        [
+                            "Petit Benoit",
+                            1
+                        ],
+                        [
+                            "Perrin Helene",
+                            0
+                        ]
+                    ]
+                ]
+            }
+        ],
+        "description": "sdfsdf",
+        "status": null
+    }
+}
