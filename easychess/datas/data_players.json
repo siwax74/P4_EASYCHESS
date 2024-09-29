@@ -33,26 +33,5 @@
         "birthdate": "14/12/1994",
         "national_id": null,
         "score": 0
-    },
-    {
-        "last_name": "Roux",
-        "first_name": "Gael",
-        "birthdate": "29/06/1996",
-        "national_id": null,
-        "score": 0
-    },
-    {
-        "last_name": "Perrin",
-        "first_name": "Helene",
-        "birthdate": "08/03/1992",
-        "national_id": null,
-        "score": 0
-    },
-    {
-        "last_name": "Moreau",
-        "first_name": "Jacques",
-        "birthdate": "02/09/1991",
-        "national_id": null,
-        "score": 0
     }
 ]
