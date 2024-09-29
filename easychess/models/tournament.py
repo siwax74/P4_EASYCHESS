@@ -29,7 +29,7 @@ class Tournament:
         start_date=None,
         end_date=None,
         number_of_rounds=None,
-        current_round=1,
+        current_round=0,
         list_rounds=[],
         players=[],
         status=None,

@@ -417,20 +417,17 @@ class TournamentManagerController:
         print(f"Round actuel: {new_tournament.current_round}")
         time.sleep(1)
 
-        while new_tournament.current_round < new_tournament.number_of_rounds:
+        while new_tournament.current_round <= new_tournament.number_of_rounds:
             print(f"Jouer round {new_tournament.current_round}/{new_tournament.number_of_rounds}")
 
             round = new_tournament.list_rounds[new_tournament.current_round]
 
-            # Générer des matchs si pas encore généré
             if not round.matches:
                 self.generate_matches(new_tournament, round)
                 print(f"Matchs générés pour le round {new_tournament.current_round}")
 
-            # Jouer le round actuel
             self.play_round(round, new_tournament, new_tournament.current_round)
 
-            # Préparer le prochain round
             if not self.prepare_next_round(new_tournament):
                 print(f"Le tournoi s'arrête au round {new_tournament.current_round}")
                 new_tournament.status = None

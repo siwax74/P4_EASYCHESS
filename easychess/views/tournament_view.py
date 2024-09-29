@@ -231,7 +231,7 @@ class TournamentView:
         menu += "╔═════════════════════════════════════════════╗\n"
         menu += "║               MENU TOURNOIS                 ║\n"
         menu += "╚═════════════════════════════════════════════╝\n"
-        menu += f"Round {current_round}\n"
+        menu += f"Round {current_round + 1}\n"
         menu += f"Date/heure de départ: {round.start_date_time}\n"
         menu += f"Date/heure de fin: {round.end_date_time}\n"
         menu += f"Nombre de match: {len(round.matches)}\n"
