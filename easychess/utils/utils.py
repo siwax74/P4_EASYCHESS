@@ -13,10 +13,8 @@ class Utils:
         Clear the terminal screen based on the operating system.
         """
         if platform.system() == "Windows":
-            time.sleep(0.50)
             os.system("cls")
         else:
-            time.sleep(0.50)
             os.system("clear")
 
     def display_error(self, message):

@@ -1,6 +1,9 @@
 import json
 import logging
 
+from easychess.models.player import Player
+from easychess.models.round import Round
+
 
 class Tournament:
     """
@@ -18,7 +21,19 @@ class Tournament:
         description (str): A description of the tournament.
     """
 
-    def __init__(self, name, location, description):
+    def __init__(
+        self,
+        name,
+        location,
+        description,
+        start_date=None,
+        end_date=None,
+        number_of_rounds=None,
+        current_round=1,
+        list_rounds=[],
+        players=[],
+        status=None,
+    ):
         """
         Initializes a new tournament with specified details.
 
@@ -29,13 +44,14 @@ class Tournament:
         """
         self.name = name
         self.location = location
-        self.start_date = None
-        self.end_date = None
-        self.number_of_rounds = None
-        self.current_round = 1
-        self.list_rounds = []
-        self.players = []
+        self.start_date = start_date
+        self.end_date = end_date
+        self.number_of_rounds = number_of_rounds
+        self.current_round = current_round
+        self.list_rounds = list_rounds
+        self.players = players
         self.description = description
+        self.status = status
 
     def __str__(self):
         """
@@ -95,8 +111,14 @@ class Tournament:
         """
         try:
             existing_data = cls.read(file_path)
-            tournament_key = f"tournament{len(existing_data) + 1}"
-            existing_data[tournament_key] = tournament_data
+            tournament_name = tournament_data["name"]
+            for key, existing_tournament in existing_data.items():
+                if existing_tournament["name"] == tournament_name:
+                    existing_data[key] = tournament_data
+                    break
+            else:
+                tournament_key = f"tournament{len(existing_data) + 1}"
+                existing_data[tournament_key] = tournament_data
             with open(file_path, "w") as json_file:
                 json.dump(existing_data, json_file)
         except Exception as e:
@@ -119,4 +141,22 @@ class Tournament:
             "players": self.players,
             "list_rounds": [round_.as_dict() for round_ in self.list_rounds] if self.list_rounds else [],
             "description": self.description,
+            "status": self.status,
         }
+
+    @classmethod
+    def from_dict(cls, data):
+        if not isinstance(data, dict):
+            raise ValueError("La donnée doit être un dictionnaire")
+        return cls(
+            name=data["name"],
+            location=data["location"],
+            start_date=data["start_date"],
+            end_date=data["end_date"],
+            number_of_rounds=data["number_of_rounds"],
+            current_round=data["current_round"],
+            players=[Player.from_dict(player) for player in data["players"]],
+            list_rounds=[Round.from_dict(round) for round in data["list_rounds"]],
+            description=data["description"],
+            status=data["status"],
+        )

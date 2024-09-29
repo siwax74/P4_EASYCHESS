@@ -27,10 +27,10 @@ class TournamentInputValidator:
         :param choice: The user's choice input.
         :return: The validated choice or False if invalid.
         """
-        if choice in ["0", "1", "2", "3", "4", "5"]:
+        if choice in ["0", "1", "2"]:
             return choice
         else:
-            self.utils.display_error("Veuillez saisir un choix entre 0, 1, 2, 3, 4 ou 5 !")
+            self.utils.display_error("Veuillez saisir un choix entre 0, 1, 2 ! ")
             return False
 
     ############################################################################################################
@@ -211,3 +211,17 @@ class TournamentInputValidator:
             else:
                 self.utils.display_error("Erreur de saisi ! Gagnant : Joueur1 (1) ou Joueur2 (2) ou match nul (0)")
                 return False
+
+    ############################################################################################################
+    #                                                VALID TOURNAMENT INDEX INPUT                              #
+    ############################################################################################################
+    def validate_tournament_index(self, input_function, none_status_tournaments):
+        while True:
+            try:
+                tournament_index = int(input_function())
+                if tournament_index in none_status_tournaments:
+                    return tournament_index
+                else:
+                    print("Erreur : Index invalide. Veuillez saisir un index valide.")
+            except ValueError:
+                print("Erreur : Veuillez saisir un nombre entier.")

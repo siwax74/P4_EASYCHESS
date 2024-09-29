@@ -9,7 +9,7 @@ class Match:
         score2 (int): Score of the second player.
     """
 
-    def __init__(self, player1, player2):
+    def __init__(self, player1, player2, score1=0, score2=0):
         """
         Initializes a new match.
 
@@ -18,9 +18,9 @@ class Match:
             player2 (dict): Dictionary containing information about the second player.
         """
         self.player1 = player1
-        self.score1 = 0
         self.player2 = player2
-        self.score2 = 0
+        self.score1 = score1
+        self.score2 = score2
 
     @classmethod
     def create(cls, player1, player2):
@@ -71,3 +71,13 @@ class Match:
             [f"{self.player1['last_name']} {self.player1['first_name']}", self.score1],
             [f"{self.player2['last_name']} {self.player2['first_name']}", self.score2],
         )
+
+    @classmethod
+    def from_tuple(cls, match_tuple):
+        player1_name, score1 = match_tuple[0]
+        player2_name, score2 = match_tuple[1]
+        player1_last_name, player1_first_name = player1_name.split()
+        player2_last_name, player2_first_name = player2_name.split()
+        player1 = {"last_name": player1_last_name, "first_name": player1_first_name}
+        player2 = {"last_name": player2_last_name, "first_name": player2_first_name}
+        return cls(player1, player2, score1, score2)

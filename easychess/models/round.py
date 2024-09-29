@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from easychess.models.match import Match
+
 
 class Round:
     """
@@ -9,7 +11,7 @@ class Round:
     and converting to dictionary format.
     """
 
-    def __init__(self, name, start_date_time, end_date_time):
+    def __init__(self, name, start_date_time, end_date_time, matches=None):
         """
         Initialize a Round object.
 
@@ -21,7 +23,7 @@ class Round:
         self.name = name
         self.start_date_time = start_date_time
         self.end_date_time = end_date_time
-        self.matches = []
+        self.matches = matches if matches is not None else []
 
     def add_match(self, match):
         """
@@ -46,16 +48,14 @@ class Round:
         return cls(name, datetime.now(), end_date_time=None)
 
     def as_dict(self):
-        """
-        Convert the Round object to a dictionary.
+        def format_datetime(dt):
+            # If dt is a datetime object, convert to string; otherwise, return as is
+            return dt.strftime("%d/%m/%Y %H:%M") if isinstance(dt, datetime) else dt
 
-        Returns:
-            dict: A dictionary representation of the Round object.
-        """
         return {
             "name": self.name,
-            "start_date_time": self.start_date_time.isoformat(),
-            "end_date_time": self.end_date_time.isoformat() if self.end_date_time else None,
+            "start_date_time": format_datetime(self.start_date_time),
+            "end_date_time": format_datetime(self.end_date_time),
             "matches": [match.as_tuple() for match in self.matches] if self.matches else [],
         }
 
@@ -68,7 +68,21 @@ class Round:
         """
         return (
             f"Round(name={self.name!r}, "
-            f"start_date_time={self.start_date_time.isoformat()!r}, "
-            f"end_date_time={self.end_date_time.isoformat() if self.end_date_time else None!r}, "
+            f"start_date_time={self.start_date_time!r}, "
+            f"end_date_time={self.end_date_time if self.end_date_time else None!r}, "
             f"matches=[{', '.join(repr(match) for match in self.matches)}])"
+        )
+
+    @classmethod
+    def from_dict(cls, data):
+        start_date_time = (
+            datetime.strptime(data["start_date_time"], "%d/%m/%Y %H:%M") if data["start_date_time"] else None
+        )
+        end_date_time = datetime.strptime(data["end_date_time"], "%d/%m/%Y %H:%M") if data["end_date_time"] else None
+
+        return cls(
+            name=data["name"],
+            start_date_time=start_date_time,
+            end_date_time=end_date_time,
+            matches=[Match.from_tuple(match) for match in data["matches"]],
         )

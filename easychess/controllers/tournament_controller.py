@@ -1,5 +1,6 @@
 from datetime import datetime
 import random
+import time
 from easychess.controllers.player_controller import PlayerManagerController
 from easychess.models.match import Match
 from easychess.models.player import Player
@@ -48,6 +49,8 @@ class TournamentManagerController:
             if valid_choice == "1":
                 new_tournament = self.create_tournament(valid_choice)
                 self.start_tournament(new_tournament)
+            elif valid_choice == "2":
+                self.get_tournament_by_name()
             elif valid_choice == "0":
                 break
 
@@ -205,8 +208,8 @@ class TournamentManagerController:
         """
         choice = self.input_validator.validate_input(self.view.ask_start_tournament)
         if choice == "o":
-            if len(new_tournament.players) < 8:
-                print("Erreur : Il doit y avoir au moins 8 joueurs pour démarrer le tournoi.")
+            if len(new_tournament.players) < 5:
+                print("Erreur : Il doit y avoir au moins 5 joueurs pour démarrer le tournoi.")
                 return None
             list_rounds = self.generate_rounds(new_tournament)
             self.generate_matches(new_tournament, list_rounds[0])
@@ -214,15 +217,6 @@ class TournamentManagerController:
         return choice if choice == "0" else None
 
     def generate_rounds(self, new_tournament):
-        """
-        Generates the necessary rounds for the tournament based on the number of players.
-
-        Args:
-            new_tournament (Tournament): The tournament for which rounds are generated.
-
-        Returns:
-            list: A list of Round objects created for the tournament.
-        """
         num_players = len(new_tournament.players)
         num_rounds = num_players - 1
         new_tournament.number_of_rounds = num_rounds
@@ -261,7 +255,7 @@ class TournamentManagerController:
             ValueError: If there are not enough players to create matches.
         """
         players = new_tournament.players
-        if len(players) < 2:
+        if len(players) < 5:
             raise ValueError("Pas assez de joueurs pour créer des matchs.")
         return players
 
@@ -310,8 +304,9 @@ class TournamentManagerController:
         # Liste des joueurs non appariés dans ce tour
         unpaired_players = players_sorted[:]
 
-        i = 0
-        while i < len(unpaired_players):
+        i = 0  # indice pour parcourir la liste des joueurs
+
+        while i < len(unpaired_players):  # tant que i est inférieur à la longueur de la liste des joueurs non appariés
             player1 = unpaired_players[i]
 
             # Si 'player1' est déjà apparié, passer au joueur suivant
@@ -411,28 +406,41 @@ class TournamentManagerController:
         self.utils.display_success(f"{player['last_name']} {player['first_name']} a un bye et marque 0,5 point.")
 
     def start_tournament(self, new_tournament):
-        """
-        Manages the flow of the tournament, including starting rounds and playing matches.
-
-        Args:
-            new_tournament (Tournament): The tournament to be started.
-
-        Returns:
-            bool: True if the tournament starts successfully, False otherwise.
-        """
         if not new_tournament:
             return False
-        new_tournament.start_date = datetime.now()
-        for round_index in range(new_tournament.number_of_rounds):
-            round = new_tournament.list_rounds[round_index]
-            self.play_round(round, round_index)
-            if round_index < new_tournament.number_of_rounds - 1:
-                self.prepare_next_round(new_tournament, round_index)
-            else:
-                self.end_tournament(new_tournament)
-        Tournament.save(self.db_tournament, new_tournament.as_dict())
 
-    def play_round(self, round, round_index):
+        new_tournament.status = True
+        new_tournament.start_date = datetime.now()
+
+        print(f"Début du tournoi: {new_tournament.name}")
+        print(f"Nombre de rounds: {new_tournament.number_of_rounds}")
+        print(f"Round actuel: {new_tournament.current_round}")
+        time.sleep(1)
+
+        while new_tournament.current_round < new_tournament.number_of_rounds:
+            print(f"Jouer round {new_tournament.current_round}/{new_tournament.number_of_rounds}")
+
+            round = new_tournament.list_rounds[new_tournament.current_round]
+
+            # Générer des matchs si pas encore généré
+            if not round.matches:
+                self.generate_matches(new_tournament, round)
+                print(f"Matchs générés pour le round {new_tournament.current_round}")
+
+            # Jouer le round actuel
+            self.play_round(round, new_tournament, new_tournament.current_round)
+
+            # Préparer le prochain round
+            if not self.prepare_next_round(new_tournament):
+                print(f"Le tournoi s'arrête au round {new_tournament.current_round}")
+                new_tournament.status = None
+                self.end_tournament(new_tournament)
+                return False
+
+        self.end_tournament(new_tournament)
+        return True
+
+    def play_round(self, round, new_tournament, round_index):
         """
         Plays a round of the tournament, managing individual matches.
 
@@ -468,16 +476,28 @@ class TournamentManagerController:
                     match.player2["score"] += 0.5
                 break
 
-    def prepare_next_round(self, new_tournament, round_index):
-        """
-        Prepares for the next round of the tournament.
+    def prepare_next_round(self, new_tournament):
+        if new_tournament.current_round >= new_tournament.number_of_rounds:
+            new_tournament.status = True
+            self.end_tournament(new_tournament)
+            return False
 
-        Args:
-            new_tournament (Tournament): The tournament for which the next round is prepared.
-            round_index (int): The index of the current round.
-        """
-        self.utils.display_success("Tour suivant...")
-        self.generate_matches(new_tournament, new_tournament.list_rounds[round_index + 1])
+        next_round_input = self.input_validator.validate_input(self.view.ask_next_round)
+        if next_round_input == "o":
+            if new_tournament.current_round < new_tournament.number_of_rounds - 1:
+                new_tournament.current_round += 1
+                self.utils.display_success("Tour suivant...")
+                if not new_tournament.list_rounds[new_tournament.current_round].matches:
+                    self.generate_matches(new_tournament, new_tournament.list_rounds[new_tournament.current_round])
+            else:
+                # Si c'est le dernier round, jouer les matchs sans incrémenter le round
+                self.utils.display_success("Dernier tour...")
+                if not new_tournament.list_rounds[new_tournament.current_round].matches:
+                    self.generate_matches(new_tournament, new_tournament.list_rounds[new_tournament.current_round])
+            return True
+        elif next_round_input == "n":
+            self.utils.display_success("Retour au menu principal...")
+            return False
 
     def end_tournament(self, new_tournament):
         """
@@ -487,7 +507,39 @@ class TournamentManagerController:
             new_tournament (Tournament): The tournament that is being ended.
         """
         new_tournament.end_date = datetime.now()
-        for player in new_tournament.players:
-            if "opponents" in player:
-                del player["opponents"]
+        Tournament.save(self.db_tournament, new_tournament.as_dict())
         self.utils.display_success("Fin du tournoi !")
+
+    def get_tournament_by_name(self):
+        """
+        Retrieves and displays details of tournaments with 'None' status.
+
+        The method retrieves all tournaments, filters the ones with a 'None' status,
+        and displays their details. If a tournament name is found, it attempts to start that tournament.
+        """
+        tournaments = Tournament.read(self.db_tournament)
+        none_status_tournaments = {
+            key + 1: tournament
+            for key, tournament in enumerate(tournaments.items())
+            if tournament[1].get("status") is None
+        }
+        if not none_status_tournaments:
+            self.utils.display_success("Aucun tournois en cour ! ")
+            return
+        self.view.display_tournaments_name(none_status_tournaments)
+        tournament_index = self.input_validator.validate_tournament_index(
+            self.view.ask_tournament_name_input, none_status_tournaments
+        )
+        if tournament_index in none_status_tournaments:
+            self.transform_to_obj(tournament_index, none_status_tournaments)
+
+    def transform_to_obj(self, tournament_index, none_status_tournaments):
+        selected_tournament = none_status_tournaments[tournament_index]
+        tournament = Tournament(**selected_tournament[1])
+        rounds = []
+        for round_dict in tournament.list_rounds:
+            round = Round(**round_dict)
+            round.matches = [Match.from_tuple(match) for match in round_dict["matches"]]
+            rounds.append(round)
+        tournament.list_rounds = rounds
+        self.start_tournament(tournament)

@@ -1,12 +1,5 @@
 [
     {
-        "last_name": "Martin",
-        "first_name": "Alice",
-        "birthdate": "15/07/1993",
-        "national_id": null,
-        "score": 0
-    },
-    {
         "last_name": "Petit",
         "first_name": "Benoit",
         "birthdate": "20/02/1995",
@@ -59,55 +52,6 @@
         "last_name": "Moreau",
         "first_name": "Jacques",
         "birthdate": "02/09/1991",
-        "national_id": null,
-        "score": 0
-    },
-    {
-        "last_name": "Girard",
-        "first_name": "Isabelle",
-        "birthdate": "19/01/1990",
-        "national_id": null,
-        "score": 0
-    },
-    {
-        "last_name": "Durand",
-        "first_name": "Kevin",
-        "birthdate": "22/11/1996",
-        "national_id": null,
-        "score": 0
-    },
-    {
-        "last_name": "Lemoine",
-        "first_name": "Laetitia",
-        "birthdate": "17/08/1995",
-        "national_id": null,
-        "score": 0
-    },
-    {
-        "last_name": "Bernard",
-        "first_name": "Matthieu",
-        "birthdate": "05/04/1994",
-        "national_id": null,
-        "score": 0
-    },
-    {
-        "last_name": "Blanc",
-        "first_name": "Nathalie",
-        "birthdate": "23/09/1992",
-        "national_id": null,
-        "score": 0
-    },
-    {
-        "last_name": "Faure",
-        "first_name": "Olivier",
-        "birthdate": "15/05/1993",
-        "national_id": null,
-        "score": 0
-    },
-    {
-        "last_name": "Gauthier",
-        "first_name": "Pauline",
-        "birthdate": "11/06/1991",
         "national_id": null,
         "score": 0
     }

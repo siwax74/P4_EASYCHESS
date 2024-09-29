@@ -21,6 +21,7 @@ class TournamentView:
         menu += "╔═════════════════════════════════════════════╗\n"
         menu += "║  -- Actions --                              ║\n"
         menu += "║  1. Ajouter/démarrer nouveau tournoi        ║\n"
+        menu += "║  2. Reprendre un tournoi en cour            ║\n"
         menu += "║  0. Revenir au menu principal               ║\n"
         menu += "╚═════════════════════════════════════════════╝\n"
         menu += "=" * 47 + "\n"
@@ -163,6 +164,23 @@ class TournamentView:
         start_tournament_input = input("Souhaitez-vous commencer le tournoi (o/n) ? : ")
         return start_tournament_input.lower()
 
+    def ask_next_round(self):
+        """
+        Asks the user if they want to proceed to the next round.
+        """
+        Utils.clear_terminal()
+        menu = "=" * 47 + "\n"
+        menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
+        menu += "                 EASYCHESS \n"
+        menu += "=" * 47 + "\n"
+        menu += "╔═════════════════════════════════════════════╗\n"
+        menu += "║               MENU TOURNOIS                 ║\n"
+        menu += "╚═════════════════════════════════════════════╝\n"
+        menu += "0. Revenir au menu tournois\n"
+        print(menu)
+        next_round_input = input("Souhaitez-vous continuer le tournoi (o/n) ? : ")
+        return next_round_input.lower()
+
     def ask_return_menu(self):
         """
         Asks the user if they want to return to the tournament menu.
@@ -196,7 +214,7 @@ class TournamentView:
         user_input = input("Entrez le numéro du gagnant (1, 2 ou 0) : ")
         return user_input
 
-    def display(self, round, round_index):
+    def display(self, round, current_round):
         """
         Clears the terminal and displays the details of the current tournament round.
 
@@ -213,8 +231,44 @@ class TournamentView:
         menu += "╔═════════════════════════════════════════════╗\n"
         menu += "║               MENU TOURNOIS                 ║\n"
         menu += "╚═════════════════════════════════════════════╝\n"
-        menu += f"Round {round_index + 1}\n"
+        menu += f"Round {current_round}\n"
         menu += f"Date/heure de départ: {round.start_date_time}\n"
         menu += f"Date/heure de fin: {round.end_date_time}\n"
         menu += f"Nombre de match: {len(round.matches)}\n"
         print(menu)
+
+    def display_tournaments_name(self, tournaments_with_none_status):
+        Utils.clear_terminal()
+        menu = "=" * 47 + "\n"
+        menu += "         ♛ ♚ ♜ ♝ ♞ ♟ ♔ ♕ ♖ ♗ ♘ ♙ \n"
+        menu += "                 EASYCHESS \n"
+        menu += "=" * 47 + "\n"
+        menu += "╔═════════════════════════════════════════════╗\n"
+        menu += "║               MENU RAPPORTS                 ║\n"
+        menu += "╚═════════════════════════════════════════════╝\n"
+        menu += "=" * 47 + "\n"
+
+        if not tournaments_with_none_status:
+            menu += "Aucun tournoi en pause.\n"
+        else:
+            menu += "Tournaments en pause :\n"
+            menu += "=" * 47 + "\n"
+        for index, tournament in tournaments_with_none_status.items():
+            menu += f"{index}. Nom: {tournament[1]['name']}\n"
+            menu += f"  Lieu: {tournament[1]['location']}\n"
+            menu += f"  Date de début: {tournament[1]['start_date']}\n"
+            menu += f"  Date de fin: {tournament[1]['end_date']}\n"
+            menu += f"  Nombre de tours: {tournament[1]['number_of_rounds']}\n"
+            menu += f"  Tour actuel: {tournament[1]['current_round']}\n"
+            menu += f"  Joueurs: {len(tournament[1]['players'])}\n"
+            menu += "=" * 47 + "\n"
+        print(menu)
+
+    def ask_tournament_name_input(self):
+        """
+        Prompts the user for the name of a tournament.
+
+        :return: The index of the tournament as an integer.
+        """
+        index = int(input("Veuillez saisir le numéro du tournoi : "))
+        return index
